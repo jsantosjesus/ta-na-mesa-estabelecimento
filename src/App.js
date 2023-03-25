@@ -1,23 +1,21 @@
-import logo from './logo.svg';
+import logomarca from './ta-na-mesa-sem-fundo.png';
 import './App.css';
+import ConfirmarMesa from './ConfirmarMesa';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <img src={logomarca} className="App-logo" alt="logo" />
       </header>
+      <div>
+        <h3>Como quer ser chamado?</h3>
+        <input type="text" name='nome' placeholder='Digite aqui' className='Seunome'></input>
+      </div>
+      <div>
+        <h3>Por favor, comfirme sua mesa</h3>
+        <ConfirmarMesa />
+      </div>
     </div>
   );
 }
