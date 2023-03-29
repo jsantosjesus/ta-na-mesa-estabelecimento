@@ -1,0 +1,47 @@
+.menubar{
+    background-color: #ff881f;
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    color: #fff;
+
+}
+
+/* .menubar div{
+    width: 33vw;
+} */
+
+.divHamburguer{
+    width: 40vw;
+    align-items: center;
+}
+
+.hamburguer{
+    font-size: 30px;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+.divLogo{
+    display: flex;
+    justify-content:left ;
+    align-items: center;
+    width: 40vw;
+}
+
+.divLogo img{
+    margin-left: 10%;
+}
+
+.divUser{
+    text-align: end;
+    justify-content: end;
+    align-items: center;
+    display: flex;
+    margin-right: 20px;
+    width: 20vw;
+    
+}

@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Login from './login/Login';
 import reportWebVitals from './reportWebVitals';
-import Menubar from './componentes/menubar/Menubar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './componentes/Header';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     {/* <Login /> */}
-    <Menubar/>
+    {/* <Menubar/> */}
+    <Header />
+    {/* <App/> */}
   </React.StrictMode>
 );
 
