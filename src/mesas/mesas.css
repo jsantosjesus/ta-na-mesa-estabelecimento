@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family= Montserrat :wght@900 & display=swap');
+
+body {
+    position: absolute;
+    top: 20vh;
+    left: 50px;
+}
+
+.mesas{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mesa{
+    background-color: #3520bd;
+    padding: 40px 0px 40px 0px;
+    width: 20vw;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-top: 20px;
+    margin-left: 20px;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+   
+}
+
+@media (max-width: 750px){
+    .mesas{
+        display: block;
+    }
+
+    .mesa{
+        padding-top: 20px;
+        padding-bottom: 10px; 
+        border-radius: 10px;
+        margin-top: 20px;
+        margin-left: 0;
+        width: 80vw;
+    }
+}

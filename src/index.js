@@ -5,6 +5,7 @@ import Login from './login/Login';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './componentes/Header';
+import Mesas from './mesas/Mesas';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -12,6 +13,7 @@ root.render(
     {/* <Login /> */}
     {/* <Menubar/> */}
     <Header />
+    <Mesas />
     {/* <App/> */}
   </React.StrictMode>
 );
