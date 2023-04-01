@@ -12,7 +12,6 @@ body {
 }
 
 .mesa{
-    background-color: #3520bd;
     padding: 40px 0px 40px 0px;
     width: 20vw;
     text-align: center;
@@ -24,6 +23,41 @@ body {
     font-family: 'Montserrat', sans-serif;
     cursor: pointer;
    
+}
+
+#livre{
+    background-color: #3520bd;
+}
+
+#indisponivel{
+    background-color: #818181;
+}
+
+#ocupada{
+    background-color: #de3737;
+}
+
+#open{
+    display: block;
+}
+
+#close{
+    display: none;
+}
+
+.testepp{
+    background-color: red;
+    border: 2px;
+}
+
+.testepp2{
+    background-color: #3520bd;
+    border: 2px;
+    margin-top: 20px;
+}
+
+.poupupmesa{
+    margin-top: 40px;
 }
 
 @media (max-width: 750px){

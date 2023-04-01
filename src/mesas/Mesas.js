@@ -1,30 +1,154 @@
 import React, { useState } from "react";
 import "./mesas.css";
 
+
 function Mesas() {
-  const [myState, setMyState] = useState([{ id: 1, name: "mesa 1" }, { id: 2, name: "Mesa 2" }, { id: 3, name: "Mesa 2" }, { id: 4, name: "Mesa 2" }, { id: 5, name: "Mesa 2" }, { id: 6, name: "Mesa 2" }]);
 
-  // Exemplo de adição de um objeto no array
-//   const addObjectToArray = () => {
-//     const newObject = { id: 1, name: "objeto 1" };
-//     setMyState([...myState, newObject]);
-//   };
+    // puxando atributos das mesas
 
-//   // Exemplo de remoção de um objeto do array
-//   const removeObjectFromArray = () => {
-//     const newArray = myState.filter((object) => object.id !== 1);
-//     setMyState(newArray);
-//   };
+    const [myState, setMyState] = useState([{
+        id: 0, numero: 1, status: "livre", chamandoGarcom: false,
+        pedidos: ["2764", "2765"],
+        clientes: ["jeferson", "natan"],
+        conta: {
+            
+            produtos: [{nome: "hamburguer", quntidade: 2, valor: 30}, {nome: "cerveja", quantidade: 1, valor: 10}],
+            total: 70
+        }
+    },
+    {
+        id: 1, numero: 2, status: "ocupada", chamandoGarcom: false,
+        pedidos: ["2764", "2765"],
+        clientes: ["jadson", "natan"],
+        conta: {
+            
+            produtos: [{nome: "hamburguer", quntidade: 2, valor: 30}, {nome: "cerveja", quantidade: 1, valor: 10}],
+            total: 60
+        }
+    },
+    {
+        id: 2, numero: 3, status: "indisponivel", chamandoGarcom: false,
+        pedidos: ["2764", "2765"],
+        clientes: ["jadson", "natan"],
+        conta: {
+            produtos: [{nome: "hamburguer", quntidade: 2, valor: 30}, {nome: "cerveja", quantidade: 1, valor: 10}],
+            total: 50
+        }
+    }
+    ]);
 
-  return (
-    <div className="mesas">
-      {myState.map((object) => (
-        <div className="mesa" key={object.id}>
-          <h1>{object.name}</h1>
-        </div>
+    // função abrir e fechar poupup da conta
+
+    const [conta, setConta] = React.useState("close");
+    const handleOpenConta = () => setConta("open");
+    const handleCloseConta = () => setConta("close");
+
+    // const style = {
+    //     position: 'absolute',
+    //     top: '50%',
+    //     left: '50%',
+    //     transform: 'translate(-50%, -50%)',
+    //     width: 400,
+    //     bgcolor: 'background.paper',
+    //     border: '2px solid #000',
+    //     boxShadow: 24,
+    //     p: 4,
+    // };
+
+//     const array = [{indice: 0, nome: "elemento1"},
+// {indice: 1, nome: "elemento2"},
+// {indice: 2, nome: "elemento3"}]
+
+
+//  useState para funções de abrir e fechar poupup da mesa
+
+    const [elementoAtivo, setElementoAtivo] = useState(null);
+
+    const handleClick = (id) => {
+        setElementoAtivo(id);
+      }
+
+    
+// popupup da mesa
+
+      const Popup = ({ object }) => {
+        if (elementoAtivo !== object.id) {
+          return null;
+        }
+        
+        const handleClose = () => {
+          setElementoAtivo(null);
+          setConta("close");
+        };
+      
+        return (
+          <div className="poupupmesa">
+            <div className="title"><h1>Mesa {object.numero}</h1><button onClick={handleClose}>Fechar</button></div>
+            <div className="corpo">
+            <h2>Pedidos</h2>
+            {object.pedidos.map((pedido, id) => (
+        <a className="pedido" href="#" key={id}>{pedido}, </a>
       ))}
-    </div>
-  );
+
+      <h2>Clientes</h2>
+      {object.clientes.map((cliente, id) => (
+        <p className="cliente" href="#" key={id}>{cliente} </p>
+      ))}
+        <button onClick={handleOpenConta}>Conta</button>
+      <div id={conta}>
+        <ul>Conta</ul>
+        <li>{object.conta.total}</li>
+        <button onClick={handleCloseConta}>fechar</button>
+
+      </div>
+
+      
+            </div>
+            
+          </div>
+        );
+      };
+
+      
+    // renderizando array de mesas
+
+    return (
+        <div className="mesas">
+            {myState.map((object, id) => (
+                <div >
+                <div id={object.status} className="mesa" onClick={() => handleClick(id)} key={id}>
+                    <h1 ><b>Mesa {object.numero}</b></h1>
+                    </div>
+                    <Popup object={object} />
+                </div>
+
+
+            ))}
+
+
+        </div>
+    );
 }
+
+{/* <Modal 
+        // aria-labelledby="transition-modal-title"
+        // aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <p>mesa {object.numero}</p>
+            <Button onClick={handleClose}>botão</Button>
+          </Box>
+        </Fade>
+      </Modal> */}
 
 export default Mesas;
