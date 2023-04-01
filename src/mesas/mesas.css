@@ -6,12 +6,12 @@ body {
     left: 50px;
 }
 
-.mesas{
+.mesas {
     display: flex;
     flex-wrap: wrap;
 }
 
-.mesa{
+.mesa {
     padding: 40px 0px 40px 0px;
     width: 20vw;
     text-align: center;
@@ -22,55 +22,164 @@ body {
     margin-left: 20px;
     font-family: 'Montserrat', sans-serif;
     cursor: pointer;
-   
+
 }
 
-#livre{
-    background-color: #3520bd;
+
+/* poupup das mesas */
+
+.poupupmesa {
+    position: absolute;
+    top: 20%;
+    left: 40%;
+    background-color: white;
+    border: solid 1px;
+    border-color: #ff881f;
+    border-radius: 10px;
+    width: 70%;
+
 }
 
-#indisponivel{
-    background-color: #818181;
+.title {
+    background-color: #ff881f;
+    color: white;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-radius: 10px 10px 0px 0px;
 }
 
-#ocupada{
-    background-color: #de3737;
+.title button {
+    background-color: white;
+    color: black;
+    border-radius: 70px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: none;
 }
 
-#open{
-    display: block;
+.corpo {
+    margin-left: 30px;
+    padding-bottom: 20px;
 }
 
-#close{
-    display: none;
-}
-
-.testepp{
-    background-color: red;
-    border: 2px;
-}
-
-.testepp2{
-    background-color: #3520bd;
-    border: 2px;
+.pedido, .cliente {
+    display: flex;
     margin-top: 20px;
+
 }
 
-.poupupmesa{
-    margin-top: 40px;
+.pedido p, .cliente p {
+    margin-left: 30px;
 }
 
-@media (max-width: 750px){
-    .mesas{
+.footer {
+    text-align: center;
+    justify-content: center;
+}
+
+.footer button{
+    text-align: center;
+    justify-content: center;
+    background-color: #ff881f;
+    border-radius: 50px;
+    padding: 10px 50px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* conta */
+
+.contaImprimir{
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 80%;
+    height: 100%;
+    background-color: beige;
+    justify-content: center;
+    text-align: center;
+}
+
+.tableConta td{
+    margin-left: 40px;
+}
+
+.footerConta{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+
+
+
+@media (max-width: 750px) {
+    .mesas {
         display: block;
     }
 
-    .mesa{
+    .mesa {
         padding-top: 20px;
-        padding-bottom: 10px; 
+        padding-bottom: 10px;
         border-radius: 10px;
         margin-top: 20px;
         margin-left: 0;
         width: 80vw;
     }
+    .poupupmesa{
+        left: 10%;
+    }
 }
+
+/* status e poupups */
+
+#livre {
+    background-color: #3520bd;
+}
+
+#indisponivel {
+    background-color: #818181;
+}
+
+#ocupada {
+    background-color: #de3737;
+}
+
+#open {
+    display: block;
+}
+
+#close {
+    display: none;
+}
+
+/* imprimir conta */
+
+@media print {
+    body * {
+      visibility: hidden;
+    }
+    .printable-modal,
+    .printable-modal * {
+      visibility: visible;
+    }
+    .printable-modal {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    button{
+        display: none;
+    }
+  }
+  
