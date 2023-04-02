@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family= Montserrat :wght@900 & display=swap');
+body{
+    background-color: #efefef;
+}
+
+.bodyProdutos {
+    margin-top: 20vh;
+ 
+    font-family: 'Montserrat', sans-serif;
+}
+.subHeader{
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+}
+
+.subHeader p{
+    margin-right: 20px;
+}
+
+.subHeader div{
+    width: 30vw;
+}
+
+.filtros{
+    display: flex;
+}
+
+.filtroCategorias{
+    cursor: pointer;
+}
+
+
+.pesquisa{
+    text-align: center;
+    align-items: center;
+}
+
+.pesquisa input{
+    width: 30vw;
+    background-color: #a6a6a6;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+}
+
+.pesquisa input:active{
+    border: none;
+}
+
+.botaoProduto, .botaoProdutoResponsive{
+    align-items: end;
+    text-align: end;
+}
+
+.botaoProduto button, .botaoProdutoResponsive button{
+    background-color: #3520bd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+}
+
+.botaoProduto button:hover, .botaoProdutoResponsive button:hover, .adicionarCategoria button:hover{
+    opacity: 0.8;
+}
+
+.botaoProdutoResponsive{
+    display:none;
+}
+
+@media (max-width: 750px){
+    .botaoProduto{
+        display: none;
+    }
+
+    .botaoProdutoResponsive{
+        display: block;
+    }
+
+    
+}
+
+.produtos{
+    border: solid 1px #a6a6a6;
+    border-radius: 10px;
+    width: 90vw;
+    margin-left: 5vw;
+    margin-top: 20px; 
+    
+    
+}
+
+.tabelaProdutos{
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.cabecalho{
+    display: flex;
+    width: 100%;
+    background-color: #a6a6a6;
+    border-radius: 10px 10px 0 0;
+    justify-content: center;
+}
+
+.cabecalho p, .produto p{
+    width: 25%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.produto{
+    display: flex;
+    width: 100%;
+    border: solid 1px #a6a6a6;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.produto:hover{
+    background-color: #a6a6a6;
+    opacity: 0.8;
+}
+
+
+.adicionarCategoria{
+    width: 90vw;
+    margin-left: 5vw;
+    margin-top: 10px;
+    text-align: end;
+}
+
+.adicionarCategoria button{
+    background-color: #de3737;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+
+}
+
+/* testando poupup com hover */
+
+.popup-container {
+    position: relative;
+  }
+  
+ 
+  
+  .popup-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    padding: 10px;
+    border: 1px solid black;
+  }
+  
+  .popup-button:hover + .popup-content {
+    display: block;
+  }
+  

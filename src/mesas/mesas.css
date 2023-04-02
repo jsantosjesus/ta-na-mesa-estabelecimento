@@ -1,9 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family= Montserrat :wght@900 & display=swap');
 
-body {
-    position: absolute;
-    top: 20vh;
-    left: 50px;
+body{
+    background-color: #efefef;
+}
+
+.bodyMesas {
+    /* position: absolute; */
+    margin-top: 20vh;
+    margin-left: 50px;
 }
 
 .mesas {
@@ -33,8 +37,7 @@ body {
     top: 20%;
     left: 40%;
     background-color: white;
-    border: solid 1px;
-    border-color: #ff881f;
+    
     border-radius: 10px;
     width: 70%;
 
