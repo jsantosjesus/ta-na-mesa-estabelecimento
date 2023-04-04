@@ -3,6 +3,7 @@ import "./produtos.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import pizzaImagem from "../imagens/Pizza de Calabresa.jpg"
 
 
 
@@ -12,15 +13,17 @@ function Produtos() {
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredData, setFilteredData] = useState([]);
     const [categoriaFiltro, setCategoriaFiltro] = useState("");
-    
-    const handleSelectChange = (event) => {
-        filterData();
-        setCategoriaFiltro(event.target.value);
-        filterData();
-        
-      };
 
-      
+    // const handleSelectChange = (event) => {
+    //     setCategoriaFiltro(event.target.value);
+
+    // };
+
+    useEffect(() => {
+        filterData();
+    }, [categoriaFiltro]);
+
+
     // puxando atributos das produtos
 
     const [myState, setMyState] = useState([{
@@ -36,84 +39,86 @@ function Produtos() {
         categoria: "bebidas"
     },
     {
-        id: 0, nome: "hamburguer", imagem: "url", estoque: 100,
+        id: 2, nome: "hamburguer", imagem: "url", estoque: 100,
         preco: 29.00,
         descricao: "produto feito artesanalmente",
         categoria: "lanches"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 3, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja loren loren loren loren", imagem: "url", estoque: 100,
+        id: 4, nome: "cerveja loren loren loren loren", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 5, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 6, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 7, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 8, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 9, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 10, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 11, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 12, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 13, nome: "cerveja", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
         categoria: "bebidas"
     },
     {
-        id: 1, nome: "cerveja", imagem: "url", estoque: 100,
+        id: 14, nome: "pizza de queijo", imagem: "url", estoque: 100,
         preco: 9.00,
         descricao: "se beber, não diriga",
-        categoria: "bebidas"
+        categoria: "pizzas"
     }
     ]);
+
+    const categorias = [{ id: 0, nome: "bebidas" }, { id: 1, nome: "lanches" }, { id: 2, nome: "pizzas" }];
 
     const filterData = () => {
         let results = myState;
@@ -153,68 +158,43 @@ function Produtos() {
     }
 
 
-    // popupup da mesa
+    // popupup do produto
 
-    //   const Popup = ({ object }) => {
-    //     if (elementoAtivo !== object.id) {
-    //       return null;
-    //     }
+    const Popup = ({ object }) => {
+        if (elementoAtivo !== object.id) {
+            return null;
+        }
 
-    //     const handleClose = () => {
-    //       setElementoAtivo(null);
-    //       setConta("close");
-    //     };
 
-    //     return (
-    //       <div className="poupupmesa">
-    //         <div className="title"><h1>Mesa {object.numero}</h1><button onClick={handleClose}>X</button></div>
-    //         <div className="corpo">
-    //           <h2>Pedidos</h2>
-    //           <div className="pedido">
-    //             {object.pedidos.map((pedido, id) => (
-    //               <p key={id}>{pedido}</p>
-    //             ))}
-    //           </div>
+            const handleClose = () => {
+              setElementoAtivo(null);
+              setConta("close");
+            };
 
-    //           <h2>Clientes</h2>
-    //           <div className="cliente">
-    //             {object.clientes.map((cliente, id) => (
-    //               <p key={id}>{cliente} </p>
-    //             ))}
-    //           </div>
-    //           <div className="footer">
-    //             <button onClick={handleOpenConta}>Conta</button>
-    //           </div>
-    //           <div className="printable-modal">
-    //             <div id={conta} className="contaImprimir">
-    //               <h2>Mesa {object.numero}</h2>
-
-    //               {/* produtos da conta */}
-    //               <table >
-    //                 <tbody className="tableConta">
-    //                   {object.conta.produtos.map((produto, id) => (
-    //                     <tr key={id}>
-    //                       <td>{produto.quantidade}</td>
-    //                       <td>{produto.nome}</td>
-    //                       <td>{produto.valor * produto.quantidade}</td>
-    //                     </tr>
-    //                   ))}
-    //                 </tbody>
-    //               </table>
-    //               <p>Valor total: {object.conta.total}</p>
-    //               <div className="footerConta">
-    //                 <button onClick={handleCloseConta}>Fechar</button>
-    //                 <button onClick={() => window.print()}>Imprimir</button>
-    //               </div>
-
+        return (
+            <div className="poupupproduto">
+                <div className="titleproduto"><h1>{object.nome}</h1><button onClick={handleClose}>X</button></div>
+            </div>
+        );
+    }
+    {/* //             <h2>Pedidos</h2>
+    //             <div className="pedido">
+    //                 {object.pedidos.map((pedido, id) => (
+    //                     <p key={id}>{pedido}</p>
+    //                 ))}
     //             </div>
 
-    //           </div>
+    //             <h2>Clientes</h2>
+    //             <div className="cliente">
+    //                 {object.clientes.map((cliente, id) => (
+    //                     <p key={id}>{cliente} </p>
+    //                 ))}
+    //             </div>
     //         </div>
 
-    //       </div>
-    //     );
-    //   };
+    //     </div>
+    // ); */}
+
 
 
     // renderizando array de mesas
@@ -224,10 +204,13 @@ function Produtos() {
             <div className="subHeader">
                 <div className="filtros">
                     <p><FontAwesomeIcon icon={faFilter} /></p>
-                    <div><select value={categoriaFiltro} onChange={handleSelectChange} onClick={e => setCategoriaFiltro(e.target.value)}>
-                        <option value="lanches">bebidas</option>
-                        <option value="bebidas">lanches</option>
-                        {/* <option value="">Categoria</option> */}
+                    <div><select value={categoriaFiltro} onChange={e => setCategoriaFiltro(e.target.value)}>
+                        <option value="">Todos</option>
+                        {categorias.map((object) => (
+                            <option value={object.nome}>{object.nome}</option>
+                        ))}
+
+                       
                     </select></div>
                 </div>
                 <div className="pesquisa">
@@ -252,14 +235,14 @@ function Produtos() {
                 <div className="tabelaProdutos">
                     {filteredData.map((object, id) => (
                         <div >
-                            <div className="produto" >
-                                {/* onClick={() => handleClick(id)} key={id} */}
+                            <div className="produto" onClick={() => handleClick(id)} key={id}>
+                                
                                 <p>{object.nome}</p>
                                 <p>R$ {object.preco.toFixed(2).replace(".", ",")}</p>
                                 <p>{object.categoria}</p>
                                 <p>{object.estoque}</p>
                             </div>
-                            {/* <Popup object={object} /> */}
+                            <Popup object={object} />
                         </div>
 
                     )
