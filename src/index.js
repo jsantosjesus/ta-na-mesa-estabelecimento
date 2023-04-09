@@ -1,22 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Login from './login/Login';
+import Login from './pages/login';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './componentes/Header';
-import Mesas from './mesas/Mesas';
-import Produtos from './produtos/produtos';
+import Mesas from './pages/mesas/Mesas';
+import Produtos from './pages/produtos/produtos';
+import App from './App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     {/* <Login /> */}
     {/* <Menubar/> */}
-    <Header />
+    {/* <Header /> */}
     {/* <Mesas /> */}
-    <Produtos/>
-    {/* <App/> */}
+    {/* <Produtos/> */}
+    <App/>
   </React.StrictMode>
 );
 

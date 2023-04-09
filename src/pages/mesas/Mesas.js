@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./mesas.css";
+import './mesas.css';
+import Header from "../../componentes/Header";
 
 
 function Mesas() {
@@ -136,20 +137,23 @@ function Mesas() {
   // renderizando array de mesas
 
   return (
-    <div className="bodyMesas">
-      <div className="mesas">
-        {myState.map((object, id) => (
-          <div >
-            <div id={object.status} className="mesa" onClick={() => handleClick(id)} key={id}>
-              <h1 ><b>Mesa {object.numero}</b></h1>
+    <div>
+      <Header />
+      <div className="bodyMesas">
+        <div className="mesas">
+          {myState.map((object, id) => (
+            <div >
+              <div id={object.status} className="mesa" onClick={() => handleClick(id)} key={id}>
+                <h1 ><b>Mesa {object.numero}</b></h1>
+              </div>
+              <Popup object={object} />
             </div>
-            <Popup object={object} />
-          </div>
 
 
-        ))}
+          ))}
 
 
+        </div>
       </div>
     </div>
   );

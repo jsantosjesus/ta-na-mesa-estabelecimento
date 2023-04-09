@@ -3,7 +3,7 @@ import { Container } from './styles'
 import { FaBars } from 'react-icons/fa'
 import Sidebar from '../Sidebar'
 import './header.css';
-import logomarcaEmpresa from '../../imagens/logomarca.png';
+import logomarcaEmpresa from '../../assets/logomarca.png';
 
 const Header = () => {
   const [sidebar, setSidebar] = useState(false)

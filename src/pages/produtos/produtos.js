@@ -3,7 +3,7 @@ import "./produtos.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import pizzaImagem from "../imagens/Pizza de Calabresa.jpg"
+import pizzaImagem from "../../assets/Pizza de Calabresa.jpg"
 
 
 
@@ -24,8 +24,16 @@ function Produtos() {
     }, [categoriaFiltro]);
 
 
+
+
     // puxando atributos das produtos
 
+    const [nome, setNome] = useState("");
+    const [imagem, setImagem] = useState("");
+    const [estoque, setEstoque] = useState("");
+    const [preco, setPreco] = useState("");
+    const [categoria, setCategoria] = useState("");
+    const [descricao, setDescricao] = useState("");
     const [myState, setMyState] = useState([{
         id: 0, nome: "hamburguer", imagem: "url", estoque: 100,
         preco: 29.00,
@@ -118,6 +126,29 @@ function Produtos() {
     }
     ]);
 
+    const handleNomeChange = (event) => {
+        setNome(event.target.value);
+    };
+
+    const handleImagemChange = (event) => {
+        setImagem(event.target.value);
+    };
+
+
+    const handleEstoqueChange = (event) => {
+        setEstoque(event.target.value);
+    };
+
+    const handlePrecoChange = (event) => {
+        setPreco(event.target.value);
+    };
+
+    const handleCategoriaChange = (event) => {
+        setCategoria(event.target.value);
+    };
+
+
+
     const categorias = [{ id: 0, nome: "bebidas" }, { id: 1, nome: "lanches" }, { id: 2, nome: "pizzas" }];
 
     const filterData = () => {
@@ -166,14 +197,54 @@ function Produtos() {
         }
 
 
-            const handleClose = () => {
-              setElementoAtivo(null);
-              setConta("close");
-            };
+        const handleClose = () => {
+            setElementoAtivo(null);
+            setConta("close");
+        };
 
         return (
+            <div className="modalTransparent">
             <div className="poupupproduto">
-                <div className="titleproduto"><h1>{object.nome}</h1><button onClick={handleClose}>X</button></div>
+                <div className="titleproduto"><h3>{object.nome}</h3><button onClick={handleClose}>X</button></div>
+                <div className="corpoProduto">
+                    <div className="imagemProduto">
+                        <img src={pizzaImagem} alt="imagem do produto" width="90%"></img>
+                    </div>
+                    <forms>
+                        <div className="aoLadoDaImagem">
+                            <div>
+                                <p>Nome</p>
+                                <input type="text" name="nome" defaultValue={object.nome}></input>
+                            </div>
+                            <div>
+                                <p>Preço</p>
+                                R$<input defaultValue={object.preco.toFixed(2).replace(".", ",")} name="preco"></input>
+                            </div>
+                            <div>
+                                <p>Estoque</p>
+                                <input type="number" defaultValue={object.estoque} name="estoque"></input>
+                            </div>
+                            <div>
+                                <p>Categoria</p>
+                                <select>
+                                    <optgroup label="Selecione uma opção:">
+                                        <option value="">Escolha uma opção</option>
+                                        {categorias.map((categoria) => (
+                                            <option value={categoria.nome}>{categoria.nome}</option>))}
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div><p>adicionar Categoria</p></div>
+                        </div>
+                        <div className="paraDescricao">
+                            <input type="text" name="descricao" defaultValue={object.descricao}></input>
+
+                        </div>
+                        <button>Salvar Alterações</button>
+                    </forms>
+
+                </div>
+                </div>
             </div>
         );
     }
@@ -210,7 +281,7 @@ function Produtos() {
                             <option value={object.nome}>{object.nome}</option>
                         ))}
 
-                       
+
                     </select></div>
                 </div>
                 <div className="pesquisa">
@@ -236,7 +307,7 @@ function Produtos() {
                     {filteredData.map((object, id) => (
                         <div >
                             <div className="produto" onClick={() => handleClick(id)} key={id}>
-                                
+
                                 <p>{object.nome}</p>
                                 <p>R$ {object.preco.toFixed(2).replace(".", ",")}</p>
                                 <p>{object.categoria}</p>
