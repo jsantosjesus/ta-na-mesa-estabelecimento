@@ -18,7 +18,7 @@ let firebaseConfig = {
 
 
 
-  if(firebase.apps.length){
+  if(!firebase.apps.length){
     firebase.initializeApp(firebaseConfig);
   }
 

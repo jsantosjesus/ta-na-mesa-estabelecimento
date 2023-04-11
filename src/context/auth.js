@@ -41,8 +41,8 @@ function AuthProvider({ children }) {
 
                 let data = {
                     uid: uid,
-                    nome: userProfile.data().nome,
                     cargo: userProfile.data().cargo,
+                    nome: userProfile.data().nome,
                     tipo: userProfile.data().tipo,
                     email: value.user.email
                 };
