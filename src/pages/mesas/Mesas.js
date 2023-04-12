@@ -65,15 +65,15 @@ function Mesas() {
 
   const [elementoAtivo, setElementoAtivo] = useState(null);
 
-  const handleClick = (id) => {
-    setElementoAtivo(id);
+  const handleClick = (object) => {
+    setElementoAtivo(object);
   }
 
 
   // popupup da mesa
 
   const Popup = ({ object }) => {
-    if (elementoAtivo !== object.id) {
+    if (elementoAtivo !== object) {
       return null;
     }
 
@@ -83,52 +83,54 @@ function Mesas() {
     };
 
     return (
-      <div className="poupupmesa">
-        <div className="title"><h1>Mesa {object.numero}</h1><button onClick={handleClose}>X</button></div>
-        <div className="corpo">
-          <h2>Pedidos</h2>
-          <div className="pedido">
-            {object.pedidos.map((pedido, id) => (
-              <p key={id}>{pedido}</p>
-            ))}
-          </div>
+      <div className="toogle">
+        <div className="poupupmesa">
+          <div className="title"><h1>Mesa {object.numero}</h1><button onClick={handleClose}>X</button></div>
+          <div className="corpo">
+            <h2>Pedidos</h2>
+            <div className="pedido">
+              {object.pedidos.map((pedido, id) => (
+                <p key={id}>{pedido}</p>
+              ))}
+            </div>
 
-          <h2>Clientes</h2>
-          <div className="cliente">
-            {object.clientes.map((cliente, id) => (
-              <p key={id}>{cliente} </p>
-            ))}
-          </div>
-          <div className="footer">
-            <button onClick={handleOpenConta}>Conta</button>
-          </div>
-          <div className="printable-modal">
-            <div id={conta} className="contaImprimir">
-              <h2>Mesa {object.numero}</h2>
+            <h2>Clientes</h2>
+            <div className="cliente">
+              {object.clientes.map((cliente, id) => (
+                <p key={id}>{cliente} </p>
+              ))}
+            </div>
+            <div className="footer">
+              <button onClick={handleOpenConta}>Conta</button>
+            </div>
+            <div className="printable-modal">
+              <div id={conta} className="contaImprimir">
+                <h2>Mesa {object.numero}</h2>
 
-              {/* produtos da conta */}
-              <table >
-                <tbody className="tableConta">
-                  {object.conta.produtos.map((produto, id) => (
-                    <tr key={id}>
-                      <td>{produto.quantidade}</td>
-                      <td>{produto.nome}</td>
-                      <td>{produto.valor * produto.quantidade}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <p>Valor total: {object.conta.total}</p>
-              <div className="footerConta">
-                <button onClick={handleCloseConta}>Fechar</button>
-                <button onClick={() => window.print()}>Imprimir</button>
+                {/* produtos da conta */}
+                <table >
+                  <tbody className="tableConta">
+                    {object.conta.produtos.map((produto, id) => (
+                      <tr key={id}>
+                        <td>{produto.quantidade}</td>
+                        <td>{produto.nome}</td>
+                        <td>{produto.valor * produto.quantidade}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p>Valor total: {object.conta.total}</p>
+                <div className="footerConta">
+                  <button onClick={handleCloseConta}>Fechar</button>
+                  <button onClick={() => window.print()}>Imprimir</button>
+                </div>
+
               </div>
 
             </div>
-
           </div>
-        </div>
 
+        </div>
       </div>
     );
   };
@@ -143,7 +145,7 @@ function Mesas() {
         <div className="mesas">
           {myState.map((object, id) => (
             <div >
-              <div id={object.status} className="mesa" onClick={() => handleClick(id)} key={id}>
+              <div id={object.status} className="mesa" onClick={() => handleClick(object)} key={id}>
                 <h1 ><b>Mesa {object.numero}</b></h1>
               </div>
               <Popup object={object} />

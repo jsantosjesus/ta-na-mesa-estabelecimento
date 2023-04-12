@@ -12,9 +12,9 @@ export default function Rotas(){
         <Switch>
           <Route exact path="/" component={Login} /> 
 
-          <Route exact path="/mesas" component={Mesas} isPrivate/>
+          <Route exact path="/mesas" component={Mesas} />
 
-          {/* <Route exact path="/produtos" component={Produtos} isPrivate/> */}
+          <Route exact path="/produtos" component={Produtos} />
         </Switch>
     )
 }

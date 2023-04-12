@@ -3,7 +3,10 @@ import "./produtos.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import pizzaImagem from "../../assets/Pizza de Calabresa.jpg"
+import pizzaImagem from "../../assets/Pizza de Calabresa.jpg";
+import Header from '../../componentes/Header';
+import { toast } from 'react-toastify';
+
 
 
 
@@ -126,26 +129,7 @@ function Produtos() {
     }
     ]);
 
-    const handleNomeChange = (event) => {
-        setNome(event.target.value);
-    };
 
-    const handleImagemChange = (event) => {
-        setImagem(event.target.value);
-    };
-
-
-    const handleEstoqueChange = (event) => {
-        setEstoque(event.target.value);
-    };
-
-    const handlePrecoChange = (event) => {
-        setPreco(event.target.value);
-    };
-
-    const handleCategoriaChange = (event) => {
-        setCategoria(event.target.value);
-    };
 
 
 
@@ -172,11 +156,11 @@ function Produtos() {
         filterData();
     }, [searchTerm]);
 
-    // função abrir e fechar poupup da conta
+    // função abrir e fechar poupup de cadastro de categorias
 
-    const [conta, setConta] = React.useState("close");
-    const handleOpenConta = () => setConta("open");
-    const handleCloseConta = () => setConta("close");
+    const [cadCategorias, setCadCategorias] = React.useState(false);
+    const handleOpenCadCategorias = () => setCadCategorias(true);
+    const handleCloseCadCategorias = () => setCadCategorias(false);
 
 
 
@@ -184,149 +168,179 @@ function Produtos() {
 
     const [elementoAtivo, setElementoAtivo] = useState(null);
 
-    const handleClick = (id) => {
-        setElementoAtivo(id);
+    const handleClick = (object) => {
+        setElementoAtivo(object);
     }
 
 
     // popupup do produto
 
     const Popup = ({ object }) => {
-        if (elementoAtivo !== object.id) {
+        if (elementoAtivo !== object) {
             return null;
         }
 
 
         const handleClose = () => {
             setElementoAtivo(null);
-            setConta("close");
+            // setConta("close");
         };
 
         return (
             <div className="modalTransparent">
-            <div className="poupupproduto">
-                <div className="titleproduto"><h3>{object.nome}</h3><button onClick={handleClose}>X</button></div>
-                <div className="corpoProduto">
-                    <div className="imagemProduto">
-                        <img src={pizzaImagem} alt="imagem do produto" width="90%"></img>
+                <div className="poupupproduto">
+                    <div className="titleproduto"><h3>{object.nome}</h3><button onClick={handleClose}>X</button><hr /></div>
+                    <hr />
+                    <div className="corpoProduto">
+                        <forms>
+                            <div className="corpoProduto1">
+                                <div className="imagemProduto">
+                                    <img src={pizzaImagem} alt="imagem do produto" width="70%"></img>
+                                </div>
+
+                                <div className="aoLadoDaImagem">
+                                    <div className="nome">
+                                        <p>Nome</p>
+                                        <input type="text" name="nome" defaultValue={object.nome}></input>
+                                    </div>
+                                    <div className="estoqueEpreco">
+                                        <div>
+                                            <p>Preço</p>
+                                            <input defaultValue={object.preco.toFixed(2).replace(".", ",")} name="preco" />
+                                        </div>
+                                        <div className="estoque">
+                                            <p>Estoque</p>
+                                            <input type="number" defaultValue={object.estoque} name="estoque"></input>
+                                        </div>
+                                    </div>
+                                    <div className="categoriaEadicionar">
+                                        <div>
+                                            <p>Categoria</p>
+                                            <select>
+                                                <optgroup label="Selecione:">
+                                                    <option defaultValue={object.categoria}>{object.categoria}</option>
+                                                    {categorias.map((categoria) => {
+                                                        if (categoria.nome !== object.categoria) {
+                                                            return <option value={categoria.nome}>{categoria.nome}</option>
+                                                        }
+                                                    })}
+
+                                                </optgroup>
+                                            </select>
+                                        </div>
+
+                                        <p onClick={handleOpenCadCategorias} className="adicionarCategoria">Adicionar categoria</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="descricao">
+                                <textarea type="text" name="descricao" defaultValue={object.descricao} />
+
+                            </div>
+                            <div className="salvar">
+                                <button className="botaoSalvarProduto" onClick={salvar}>Salvar Alterações</button>
+                            </div>
+                        </forms>
+
+
                     </div>
-                    <forms>
-                        <div className="aoLadoDaImagem">
-                            <div>
-                                <p>Nome</p>
-                                <input type="text" name="nome" defaultValue={object.nome}></input>
-                            </div>
-                            <div>
-                                <p>Preço</p>
-                                R$<input defaultValue={object.preco.toFixed(2).replace(".", ",")} name="preco"></input>
-                            </div>
-                            <div>
-                                <p>Estoque</p>
-                                <input type="number" defaultValue={object.estoque} name="estoque"></input>
-                            </div>
-                            <div>
-                                <p>Categoria</p>
-                                <select>
-                                    <optgroup label="Selecione uma opção:">
-                                        <option value="">Escolha uma opção</option>
-                                        {categorias.map((categoria) => (
-                                            <option value={categoria.nome}>{categoria.nome}</option>))}
-                                    </optgroup>
-                                </select>
-                            </div>
-                            <div><p>adicionar Categoria</p></div>
-                        </div>
-                        <div className="paraDescricao">
-                            <input type="text" name="descricao" defaultValue={object.descricao}></input>
-
-                        </div>
-                        <button>Salvar Alterações</button>
-                    </forms>
-
                 </div>
-                </div>
-            </div>
+            </div >
         );
     }
-    {/* //             <h2>Pedidos</h2>
-    //             <div className="pedido">
-    //                 {object.pedidos.map((pedido, id) => (
-    //                     <p key={id}>{pedido}</p>
-    //                 ))}
-    //             </div>
 
-    //             <h2>Clientes</h2>
-    //             <div className="cliente">
-    //                 {object.clientes.map((cliente, id) => (
-    //                     <p key={id}>{cliente} </p>
-    //                 ))}
-    //             </div>
-    //         </div>
+    // poupup para cadastrar categorias
 
-    //     </div>
-    // ); */}
+   function Categorias(){
+        if (cadCategorias === false) {
+            return (null);
+
+        }
+
+        return (
+
+            <div className="modalTransparent">
+                <div>deu certo</div>
+                <button onClick={handleCloseCadCategorias}>fechar</button>
+
+            </div>
+        );
+
+    }
 
 
 
-    // renderizando array de mesas
+
+    // renderizando array de produtos
 
     return (
-        <div className="bodyProdutos">
-            <div className="subHeader">
-                <div className="filtros">
-                    <p><FontAwesomeIcon icon={faFilter} /></p>
-                    <div><select value={categoriaFiltro} onChange={e => setCategoriaFiltro(e.target.value)}>
-                        <option value="">Todos</option>
-                        {categorias.map((object) => (
-                            <option value={object.nome}>{object.nome}</option>
-                        ))}
+        <div>
+            <Header />
+            <div className="bodyProdutos">
+                <div className="subHeader">
+                    <div className="filtros">
+                        <p><FontAwesomeIcon icon={faFilter} /></p>
+                        <div><select value={categoriaFiltro} onChange={e => setCategoriaFiltro(e.target.value)}>
+                            <option value="">Todos</option>
+                            {categorias.map((object) => (
+                                <option value={object.nome}>{object.nome}</option>
+                            ))}
 
 
-                    </select></div>
+                        </select></div>
+                    </div>
+                    <div className="pesquisa">
+                        <input type="text" placeholder="Pesquisar" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}></input>
+                    </div>
+                    <div className="botaoProduto">
+                        <button>Adicionar Produto</button>
+                    </div>
+                    <div className="botaoProdutoResponsive">
+                        <button>+</button>
+                    </div>
                 </div>
-                <div className="pesquisa">
-                    <input type="text" placeholder="Pesquisar" value={searchTerm} onChange={e => setSearchTerm(e.target.value)}></input>
-                </div>
-                <div className="botaoProduto">
-                    <button>Adicionar Produto</button>
-                </div>
-                <div className="botaoProdutoResponsive">
-                    <button>+</button>
-                </div>
-            </div>
 
 
-            <div className="produtos">
-                <div className="cabecalho">
-                    <p><b>Nome</b></p>
-                    <p><b>Preço</b></p>
-                    <p><b>Categoria</b></p>
-                    <p><b>Estoque</b></p>
-                </div>
-                <div className="tabelaProdutos">
-                    {filteredData.map((object, id) => (
-                        <div >
-                            <div className="produto" onClick={() => handleClick(id)} key={id}>
+                <div className="produtos">
+                    <div className="cabecalho">
+                        <p><b>Nome</b></p>
+                        <p><b>Preço</b></p>
+                        <p><b>Categoria</b></p>
+                        <p><b>Estoque</b></p>
+                    </div>
+                    <div className="tabelaProdutos">
+                        {filteredData.map((object, id) => (
+                            <div >
+                                <div className="produto" onClick={() => handleClick(object)}>
 
-                                <p>{object.nome}</p>
-                                <p>R$ {object.preco.toFixed(2).replace(".", ",")}</p>
-                                <p>{object.categoria}</p>
-                                <p>{object.estoque}</p>
+                                    <p>{object.nome}</p>
+                                    <p>R$ {object.preco.toFixed(2).replace(".", ",")}</p>
+                                    <p>{object.categoria}</p>
+                                    <p>{object.estoque}</p>
+                                </div>
+                                <Popup object={object} />
                             </div>
-                            <Popup object={object} />
-                        </div>
 
-                    )
+                        )
 
-                    )
-                    }
+                        )
+                        }
+                    </div>
                 </div>
-            </div>
-            {/* <div className="adicionarCategoria">
+                {/* <div className="adicionarCategoria">
             <button >Adicionar Categoria</button>
             </div> */}
+            </div>
         </div>
     );
+
+
+    function salvar() {
+
+        toast.success('Salvo com sucesso');
+        setElementoAtivo(null);
+
+    }
 }
 
 

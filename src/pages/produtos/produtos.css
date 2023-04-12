@@ -54,7 +54,7 @@ body{
     text-align: end;
 }
 
-.botaoProduto button, .botaoProdutoResponsive button{
+.botaoProduto button, .botaoProdutoResponsive button, .botaoSalvarProduto{
     background-color: #3520bd;
     color: white;
     border: none;
@@ -62,7 +62,7 @@ body{
     padding: 5px 20px;
 }
 
-.botaoProduto button:hover, .botaoProdutoResponsive button:hover, .adicionarCategoria button:hover{
+.botaoProduto button:hover, .botaoProdutoResponsive button:hover, .adicionarCategoria button:hover, .botaoSalvarProduto{
     opacity: 0.8;
 }
 
@@ -171,18 +171,26 @@ body{
         border: solid 1px #a6a6a6;
         width: 80%;
         border-radius: 20px;
+        padding: 20px;
+  }
+
+  .poupupproduto hr{
+    margin-top: 0;
   }
 
   .titleproduto{
     display: flex;
-    padding: 10px;
     width: 100%;
+  }
+
+  .titleproduto h3{
+    margin-left: 20px;
   }
 
   .titleproduto button{
     background-color: #a6a6a6;
     border-radius: 20px;
-    
+   
     color: white;
     border:none;
     font-size: 10px;
@@ -193,30 +201,102 @@ body{
     right: 20px;
   }
 
-  .corpoProduto{
+  .corpoProduto1{
     display: flex;
     width: 100%;
+    
   }
 
   .imagemProduto{
-    width: 50%;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+   
   }
 
   .imagemProduto img{
-    border-radius: 50%;
+    border-radius: 20px;
+    /* margin-top: 10%; */
+    height: auto;
+    
   }
 
-  .corpoProduto div{
+ 
+
+  .modalTransparent{
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .aoLadoDaImagem{
+    width: 50%;
+  }
+
+  .nome{
+    width: 100%;
+  }
+
+  .corpoProduto input, .corpoProduto select, .corpoProduto textarea{
+    background-color: transparent;
+    border-radius: 5px;
+    padding: 10px;
+    border: solid 1px;
+    border-color: rgba(0, 0, 0, 0.466);
+  }
+
+  .nome input{
+    
+    width: 100%;
+  }
+
+  .estoqueEpreco, .categoriaEadicionar{
+    display: flex;
+  }
+
+  .estoque{
+    margin-left: 10px;
+  }
+
+  .descricao textarea{
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .categoriaEadicionar{
+    align-items: end;
+  }
+
+  .adicionarCategoria{
+    text-align: left;
+
+  }
+
+  .adicionarCategoria:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .salvar{
+    width: 100%;
+   text-align: end;
+  }
+
+  .botaoSalvarProduto{
+    margin-top: 10px;
+  }
+
+  #open{
     display: block;
   }
 
-  .modalTransparent{
-    width: 100vw;
-    height: 100vh;
-    background-color: transparent;
-    top: 0;
-    left: 0;
-    display: flex;
-
+  #close{
+    display: none;
   }
+
+ 
    

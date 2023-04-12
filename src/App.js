@@ -4,12 +4,14 @@ import firebase from './services/firebaseConnection';
 import { BrowserRouter } from 'react-router-dom';
 import Rotas from './routes';
 import AuthProvider from './context/auth';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        {/* <Header /> */}
+      <ToastContainer autoClose={3000}/>
         <Rotas />
       </BrowserRouter>
     </AuthProvider>

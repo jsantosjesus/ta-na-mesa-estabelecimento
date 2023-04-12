@@ -1,7 +1,8 @@
 import React, { Component, useContext, useState } from 'react';
 import './Login.css';
 import logomarcaEmpresa from '../../assets/logomarca.png';
-import {AuthContext} from '../../context/auth'
+import {AuthContext} from '../../context/auth';
+
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,10 @@ function Login() {
     e.preventDefault();
 
     if(email !== '' && password !== ''){
-      signIn(email, password)
+      // signIn(email, password)
+
+    
+
     }
 
   }

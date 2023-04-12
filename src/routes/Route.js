@@ -1,5 +1,5 @@
 import { Route, Redirect } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/auth";
 
 export default function RouteWrapper({
@@ -8,18 +8,20 @@ export default function RouteWrapper({
     ...rest
 }){
 
-    let { signed, loading } = useContext(AuthContext);
+    // const { loading } = useContext(AuthContext);
+    const { signed, setSigned} = useState(false);
 
-    signed = true;
-    
-
-    if(loading){
-        return(
-            <div>
-
-            </div>
-        )
+    function Logar(){
+        setSigned = true;
     }
+
+    // if(loading){
+    //     return(
+    //         <div>
+
+    //         </div>
+    //     )
+    // }
 
     if(!signed && isPrivate){
         return <Redirect to="/" />
@@ -38,3 +40,6 @@ export default function RouteWrapper({
         />
     )
 }
+
+
+
