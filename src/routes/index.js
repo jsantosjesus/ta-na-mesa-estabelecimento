@@ -5,6 +5,7 @@ import  {Switch}  from 'react-router-dom';
 import Mesas from '../pages/mesas/Mesas';
 
 import Produtos from '../pages/produtos/produtos';
+import Colaboradores from '../pages/Colaboradores';
 import Route from './Route';
 
 export default function Rotas(){
@@ -15,6 +16,8 @@ export default function Rotas(){
           <Route exact path="/mesas" component={Mesas} />
 
           <Route exact path="/produtos" component={Produtos} />
+
+          <Route exact path="/colaboradores" component={Colaboradores}/>
         </Switch>
     )
 }

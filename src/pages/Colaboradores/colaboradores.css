@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family= Montserrat :wght@900 & display=swap');
+body{
+    background-color: #efefef;
+}
+
+.bodyProdutos {
+    margin-top: 20vh;
+ 
+    font-family: 'Montserrat', sans-serif;
+}
+.subHeader{
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+}
+
+.subHeader p{
+    margin-right: 20px;
+}
+
+.subHeader div{
+    width: 30vw;
+}
+
+.filtros{
+    display: flex;
+}
+
+.filtroCategorias{
+    cursor: pointer;
+}
+
+
+.pesquisa{
+    text-align: center;
+    align-items: center;
+}
+
+.pesquisa input{
+    width: 30vw;
+    background-color: #a6a6a6;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+}
+
+.pesquisa input:active{
+    border: none;
+}
+
+.botaoProduto, .botaoProdutoResponsive{
+    align-items: end;
+    text-align: end;
+}
+
+.botaoProduto button, .botaoProdutoResponsive button, .botaoSalvarProduto{
+    background-color: #3520bd;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+}
+
+.botaoProduto button:hover, .botaoProdutoResponsive button:hover, .adicionarCategoria button:hover, .botaoSalvarProduto{
+    opacity: 0.8;
+}
+
+.botaoProdutoResponsive{
+    display:none;
+}
+
+@media (max-width: 750px){
+    .botaoProduto{
+        display: none;
+    }
+
+    .botaoProdutoResponsive{
+        display: block;
+    }
+
+    
+}
+
+.produtos{
+    border: solid 1px #a6a6a6;
+    border-radius: 10px;
+    width: 90vw;
+    margin-left: 5vw;
+    margin-top: 20px; 
+    
+    
+}
+
+.tabelaProdutos{
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.cabecalho{
+    display: flex;
+    width: 100%;
+    background-color: #a6a6a6;
+    border-radius: 10px 10px 0 0;
+    justify-content: center;
+}
+
+.cabecalho p, .produto p{
+    width: 25%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.produto{
+    display: flex;
+    width: 100%;
+    border: solid 1px #a6a6a6;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.produto:hover{
+    background-color: #a6a6a6;
+    opacity: 0.8;
+}
+
+
+.adicionarCategoria{
+    width: 90vw;
+    margin-left: 5vw;
+    margin-top: 10px;
+    text-align: end;
+}
+
+.adicionarCategoria button{
+    background-color: #de3737;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 20px;
+
+}
+
+/* testando poupup com hover */
+
+.popup-container {
+    position: relative;
+  }
+  
+ 
+  
+  .popup-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    padding: 10px;
+    border: 1px solid black;
+  }
+  
+  .popup-button:hover + .popup-content {
+    display: block;
+  }
+
+  .poupupcolaborador{
+    
+        position: absolute;
+        top: 10%;
+        left: 20%;
+        width: 60%;
+        background-color: #efefef;
+        border: solid 1px #a6a6a6;
+        border-radius: 20px;
+        padding: 20px;
+  }
+
+  .poupupcolaborador hr{
+    margin-top: 0;
+  }
+
+  .titleproduto{
+    display: flex;
+    width: 100%;
+  }
+
+  .titleproduto h3{
+    margin-left: 20px;
+  }
+
+  .titleproduto button{
+    background-color: #a6a6a6;
+    border-radius: 20px;
+   
+    color: white;
+    border:none;
+    font-size: 10px;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .corpoProduto1{
+    display: flex;
+    width: 100%;
+    
+  }
+ 
+
+  .modalTransparent{
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .inputs{
+    width: 100%;
+  }
+
+ 
+
+  .nome{
+    width: 100%;
+  }
+
+  .corpoProduto input, .corpoProduto select, .corpoProduto textarea{
+    background-color: transparent;
+    border-radius: 5px;
+    padding: 10px;
+    border: solid 1px;
+    border-color: rgba(0, 0, 0, 0.466);
+  }
+
+  .nome input{
+    
+    width: 100%;
+  }
+
+  .estoqueEpreco, .categoriaEadicionar{
+    display: flex;
+  }
+
+  .estoque{
+    margin-left: 10px;
+  }
+
+  .descricao textarea{
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .categoriaEadicionar{
+    align-items: end;
+  }
+
+  .mesasColaborador{
+    
+    display: flex;
+    margin-left: 40px;
+   
+  }
+
+  .mesasColaborador p{
+    margin-left: 10px;
+  }
+
+  
+  .salvar{
+    width: 100%;
+   text-align: end;
+  }
+
+  .botaoSalvarProduto{
+    margin-top: 10px;
+  }
+
+  #open{
+    display: block;
+  }
+
+  #close{
+    display: none;
+  }
+
+ 
+   
