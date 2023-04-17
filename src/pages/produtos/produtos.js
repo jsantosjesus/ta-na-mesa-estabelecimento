@@ -131,8 +131,6 @@ function Produtos() {
 
 
 
-
-
     const categorias = [{ id: 0, nome: "bebidas" }, { id: 1, nome: "lanches" }, { id: 2, nome: "pizzas" }];
 
     const filterData = () => {
@@ -251,7 +249,7 @@ function Produtos() {
 
     // poupup para cadastrar categorias
 
-   function Categorias(){
+    function Categorias() {
         if (cadCategorias === false) {
             return (null);
 

@@ -1,291 +1,382 @@
 @import url('https://fonts.googleapis.com/css2?family= Montserrat :wght@900 & display=swap');
-body{
-    background-color: #efefef;
+
+body {
+  background-color: #efefef;
 }
 
 .bodyProdutos {
-    margin-top: 20vh;
- 
-    font-family: 'Montserrat', sans-serif;
-}
-.subHeader{
-    display: flex;
-    justify-content: center;
-    width: 100vw;
+  margin-top: 20vh;
+
+  font-family: 'Montserrat', sans-serif;
 }
 
-.subHeader p{
-    margin-right: 20px;
+.subHeader {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
 }
 
-.subHeader div{
-    width: 30vw;
+.subHeader p {
+  margin-right: 20px;
 }
 
-.filtros{
-    display: flex;
+.subHeader div {
+  width: 30vw;
 }
 
-.filtroCategorias{
-    cursor: pointer;
+.filtros {
+  display: flex;
 }
 
-
-.pesquisa{
-    text-align: center;
-    align-items: center;
-}
-
-.pesquisa input{
-    width: 30vw;
-    background-color: #a6a6a6;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 20px;
-}
-
-.pesquisa input:active{
-    border: none;
-}
-
-.botaoProduto, .botaoProdutoResponsive{
-    align-items: end;
-    text-align: end;
-}
-
-.botaoProduto button, .botaoProdutoResponsive button, .botaoSalvarProduto{
-    background-color: #3520bd;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 20px;
-}
-
-.botaoProduto button:hover, .botaoProdutoResponsive button:hover, .adicionarCategoria button:hover, .botaoSalvarProduto{
-    opacity: 0.8;
-}
-
-.botaoProdutoResponsive{
-    display:none;
-}
-
-@media (max-width: 750px){
-    .botaoProduto{
-        display: none;
-    }
-
-    .botaoProdutoResponsive{
-        display: block;
-    }
-
-    
-}
-
-.produtos{
-    border: solid 1px #a6a6a6;
-    border-radius: 10px;
-    width: 90vw;
-    margin-left: 5vw;
-    margin-top: 20px; 
-    
-    
-}
-
-.tabelaProdutos{
-    overflow-y: auto;
-    max-height: 60vh;
-}
-
-.cabecalho{
-    display: flex;
-    width: 100%;
-    background-color: #a6a6a6;
-    border-radius: 10px 10px 0 0;
-    justify-content: center;
-}
-
-.cabecalho p, .produto p{
-    width: 25%;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.produto{
-    display: flex;
-    width: 100%;
-    border: solid 1px #a6a6a6;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.produto:hover{
-    background-color: #a6a6a6;
-    opacity: 0.8;
+.filtroCategorias {
+  cursor: pointer;
 }
 
 
-.adicionarCategoria{
-    width: 90vw;
-    margin-left: 5vw;
-    margin-top: 10px;
-    text-align: end;
+.pesquisa {
+  text-align: center;
+  align-items: center;
 }
 
-.adicionarCategoria button{
-    background-color: #de3737;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 20px;
+.pesquisa input {
+  width: 30vw;
+  background-color: #a6a6a6;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 20px;
+}
+
+.pesquisa input:active {
+  border: none;
+}
+
+.botaoProduto,
+.botaoProdutoResponsive {
+  align-items: end;
+  text-align: end;
+}
+
+.botaoProduto button,
+.botaoProdutoResponsive button,
+.botaoSalvarProduto, .footermesasGarcom button {
+  background-color: #3520bd;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 20px;
+}
+
+.botaoProduto button:hover,
+.botaoProdutoResponsive button:hover,
+.adicionarCategoria button:hover,
+.botaoSalvarProduto, .footermesasGarcom button {
+  opacity: 0.8;
+}
+
+.botaoProdutoResponsive {
+  display: none;
+}
+
+@media (max-width: 750px) {
+  .botaoProduto {
+    display: none;
+  }
+
+  .botaoProdutoResponsive {
+    display: block;
+  }
+
+
+}
+
+.produtos {
+  border: solid 1px #a6a6a6;
+  border-radius: 10px;
+  width: 90vw;
+  margin-left: 5vw;
+  margin-top: 20px;
+
+
+}
+
+.tabelaProdutos {
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+.cabecalho {
+  display: flex;
+  width: 100%;
+  background-color: #a6a6a6;
+  border-radius: 10px 10px 0 0;
+  justify-content: center;
+}
+
+.cabecalho p,
+.produto p {
+  width: 25%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.produto {
+  display: flex;
+  width: 100%;
+  border: solid 1px #a6a6a6;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.produto:hover {
+  background-color: #a6a6a6;
+  opacity: 0.8;
+}
+
+
+.adicionarCategoria {
+  width: 90vw;
+  margin-left: 5vw;
+  margin-top: 10px;
+  text-align: end;
+}
+
+.adicionarCategoria button {
+  background-color: #de3737;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 20px;
 
 }
 
 /* testando poupup com hover */
 
 .popup-container {
-    position: relative;
-  }
-  
- 
-  
-  .popup-content {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    display: none;
-    padding: 10px;
-    border: 1px solid black;
-  }
-  
-  .popup-button:hover + .popup-content {
-    display: block;
-  }
+  position: relative;
+}
 
-  .poupupcolaborador{
-    
-        position: absolute;
-        top: 10%;
-        left: 20%;
-        width: 60%;
-        background-color: #efefef;
-        border: solid 1px #a6a6a6;
-        border-radius: 20px;
-        padding: 20px;
-  }
 
-  .poupupcolaborador hr{
-    margin-top: 0;
-  }
 
-  .titleproduto{
-    display: flex;
-    width: 100%;
-  }
+.popup-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  padding: 10px;
+  border: 1px solid black;
+}
 
-  .titleproduto h3{
-    margin-left: 20px;
-  }
+.popup-button:hover+.popup-content {
+  display: block;
+}
 
-  .titleproduto button{
-    background-color: #a6a6a6;
-    border-radius: 20px;
-   
-    color: white;
-    border:none;
-    font-size: 10px;
-    height: 20px;
-    width: 20px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
+.poupupcolaborador {
 
-  .corpoProduto1{
-    display: flex;
-    width: 100%;
-    
-  }
- 
+  position: absolute;
+  top: 10%;
+  left: 20%;
+  width: 60%;
+  background-color: #efefef;
+  border: solid 1px #a6a6a6;
+  border-radius: 20px;
+  padding: 20px;
+}
 
-  .modalTransparent{
-    position: fixed;
-    margin: 0;
-    padding: 0;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
+.poupupcolaborador hr {
+  margin-top: 0;
+}
 
-  .inputs{
-    width: 100%;
-  }
+.titleproduto {
+  display: flex;
+  width: 100%;
+}
 
- 
+.titleproduto h3 {
+  margin-left: 20px;
+}
 
-  .nome{
-    width: 100%;
-  }
+/* .titleproduto button {
+  background-color: #a6a6a6;
+  border-radius: 20px;
+  cursor: pointer;
+  color: white;
+  border: none;
+  font-size: 10px;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+} */
 
-  .corpoProduto input, .corpoProduto select, .corpoProduto textarea{
-    background-color: transparent;
-    border-radius: 5px;
-    padding: 10px;
-    border: solid 1px;
-    border-color: rgba(0, 0, 0, 0.466);
-  }
+.corpoProduto1 {
+  display: flex;
+  width: 100%;
 
-  .nome input{
-    
-    width: 100%;
-  }
+}
 
-  .estoqueEpreco, .categoriaEadicionar{
-    display: flex;
-  }
 
-  .estoque{
-    margin-left: 10px;
-  }
+.modalTransparent,
+.modalTransparentMesas {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.466);
+}
 
-  .descricao textarea{
-    width: 100%;
-    margin-top: 10px;
-  }
+.modalTransparentMesas {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
 
-  .categoriaEadicionar{
-    align-items: end;
-  }
+.inputs {
+  width: 100%;
+}
 
-  .mesasColaborador{
-    
-    display: flex;
-    margin-left: 40px;
-   
-  }
 
-  .mesasColaborador p{
-    margin-left: 10px;
-  }
 
-  
-  .salvar{
-    width: 100%;
-   text-align: end;
-  }
+.nome {
+  width: 100%;
+}
 
-  .botaoSalvarProduto{
-    margin-top: 10px;
-  }
+.corpoProduto input,
+.corpoProduto select,
+.corpoProduto textarea {
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 10px;
+  border: solid 1px;
+  border-color: rgba(0, 0, 0, 0.466);
+}
 
-  #open{
-    display: block;
-  }
+.nome input {
 
-  #close{
-    display: none;
-  }
+  width: 100%;
+}
 
- 
-   
+.estoqueEpreco,
+.categoriaEadicionar {
+  display: flex;
+}
+
+.estoque {
+  margin-left: 10px;
+}
+
+.descricao textarea {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.categoriaEadicionar {
+  align-items: end;
+}
+
+.salvar {
+  width: 100%;
+  text-align: end;
+}
+
+.botaoSalvarProduto {
+  margin-top: 10px;
+}
+
+#open {
+  display: block;
+}
+
+#close {
+  display: none;
+}
+
+.linkMesas {
+  margin-left: 30px;
+  cursor: pointer;
+  color:#3520bd;
+}
+
+.linkMesas:hover {
+  text-decoration: underline;
+}
+
+.mesasThisGarcom{
+  display: flex;
+  margin-left: 20px;
+}
+
+.mesasThisGarcom p{
+  margin-left: 10px;
+}
+
+.mesasColaborador {
+  width: 60%;
+  background-color: #efefef;
+  border-radius: 10px;
+  border: solid 1px;
+  border-color: rgba(0, 0, 0, 0.466);
+  position: fixed;
+  top: 10%;
+  left: 20%;
+  padding: 20px;
+}
+
+.mesaGarcom {
+  border: solid 1px rgba(0, 0, 0, 0.466);
+  padding: 25px 0px;
+  text-align: center;
+  width: 30%;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.bodyMesasGarcom {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.titleMesasGarcom {
+  display: flex;
+}
+
+
+.fecharMesas, .fecharColaborador {
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 20px;
+}
+
+.nomeGarcomMesa{
+  /* position: absolute; */
+  bottom: 2px;
+  right: 2px;
+}
+
+.bodyMesasGarcom{
+    overflow-y: auto;
+    max-height: 60vh;
+
+}
+
+.footermesasGarcom{
+  display: flex;
+  width: 100%;
+  justify-content: right;
+}
+
+.footermesasGarcom p{
+  margin-right: 20px;
+  cursor: pointer;
+  align-items: end;
+}
+
+.footermesasGarcom p:hover{
+  text-decoration: underline;
+}

@@ -11,7 +11,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-      <ToastContainer autoClose={3000}/>
+      <ToastContainer autoClose={1000}/>
         <Rotas />
       </BrowserRouter>
     </AuthProvider>

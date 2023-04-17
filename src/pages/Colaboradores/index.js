@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./colaboradores.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import pizzaImagem from "../../assets/Pizza de Calabresa.jpg";
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
+import styled from "styled-components";
 
 
 
@@ -31,28 +30,63 @@ function Colaboradores() {
 
     // puxando atributos das produtos
 
-   
+
     const [myState, setMyState] = useState([{
         id: 0, nome: "Jadson", email: "jadson@teste", senha: "123456", tipo: "Garçom",
-        mesas: ["9", "10", "13"]
+        mesas: ["1", "2", "3"]
     },
     {
         id: 1, nome: "Natan", email: "natan@teste", senha: "123456", tipo: "Garçom",
-        mesas: ["5", "7", "8"]
+        mesas: ["4", "5", "6", "7"]
     },
     {
-        id: 2, nome: "Ilmar", email: "ilmar@teste", senha: "123456", tipo: "Cozinha"
+        id: 2, nome: "Ilmar", email: "ilmar@teste", senha: "123456", tipo: "Cozinha", mesas:[]
     },
     {
-        id: 0, nome: "Christiano", email: "christiano@teste", senha: "123456", tipo: "Administrador"
+        id: 0, nome: "Christiano", email: "christiano@teste", senha: "123456", tipo: "Administrador",
+        mesas:[]
     }
     ]);
 
+    const [table, setTable] = useState([{
+        id: 0,
+        numero: "1",
+        garcomId: "Jadson"
+
+    }, {
+        id: 1,
+        numero: "2",
+        garcomId: "Jadson"
+    }, {
+        id: 2,
+        numero: "3",
+        garcomId: "Jadson"
+    }, {
+        id: 3,
+        numero: "4",
+        garcomId: "Natan"
+    }, {
+        id: 4,
+        numero: "5",
+        garcomId: "Natan"
+    }, {
+        id: 5,
+        numero: "6",
+        garcomId: "Natan"
+    }, {
+        id: 6,
+        numero: "7",
+        garcomId: "Natan"
+    }, {
+        id: 7,
+        numero: "8"
+    }])
 
 
 
 
-    const cargos = [{ id: 0, nome: "Administrador" }, { id: 1, nome: "Garçom" }, { id: 2, nome: "Cozinha"}];
+
+    const cargos = [{ id: 0, nome: "Administrador" }, { id: 1, nome: "Garçom" }, { id: 2, nome: "Cozinha" }];
 
     const filterData = () => {
         let results = myState;
@@ -75,24 +109,46 @@ function Colaboradores() {
         filterData();
     }, [searchTerm]);
 
-    // função abrir e fechar poupup de cadastro de categorias
 
-    const [cadCategorias, setCadCategorias] = React.useState(false);
-    const handleOpenCadCategorias = () => setCadCategorias(true);
-    const handleCloseCadCategorias = () => setCadCategorias(false);
+    // abrir mesas de garçom
 
+    const [mesasGarcom, setMesasGarcom] = useState("close");
 
+    const abrirMesasGarcom = () => {
+        setMesasGarcom("open");
+    }
 
-    //  useState para funções de abrir e fechar poupup da mesa
+    // fechar mesas de garçom
+
+    const fecharMesasGarcom = () => {
+        setMesasGarcom("close");
+    }
+
+    //pegando valor do select de cargo
+
+        const [selectedValue, setSelectedValue] = useState('');
+        
+        function handleChange(event) {
+          setSelectedValue(event.target.value);
+        }
+        
+        // function handleSubmit(event) {
+        //   event.preventDefault();
+        //   console.log(selectedValue);
+        //   // faça algo com o valor selecionado...
+        // }
+
+    //  useState para funções de abrir e fechar poupup da colaborador
 
     const [elementoAtivo, setElementoAtivo] = useState(null);
 
     const handleClick = (object) => {
         setElementoAtivo(object);
+        setSelectedValue(object.tipo);
     }
 
 
-    // popupup do produto
+    // popupup do colaborador
 
     const Popup = ({ object }) => {
         if (elementoAtivo !== object) {
@@ -102,18 +158,18 @@ function Colaboradores() {
 
         const handleClose = () => {
             setElementoAtivo(null);
-            // setConta("close");
+            
         };
 
         return (
             <div className="modalTransparent">
                 <div className="poupupcolaborador">
-                    <div className="titleproduto"><h3>{object.nome}</h3><button onClick={handleClose}>X</button><hr /></div>
+                    <div className="titleproduto"><h3>{object.nome}</h3><button className="fecharColaborador" onClick={handleClose}>X</button><hr /></div>
                     <hr />
                     <div className="corpoProduto">
                         <forms>
                             <div className="corpoProduto1">
-                               
+
 
                                 <div className="inputs">
                                     <div className="nome">
@@ -129,11 +185,11 @@ function Colaboradores() {
                                         <p>Senha</p>
                                         <input type="password" name="senha" defaultValue={object.senha}></input>
                                     </div>
-                                    
+
                                     <div className="categoriaEadicionar">
                                         <div>
                                             <p>Cargo</p>
-                                            <select>
+                                            <select defultValue={object.tipo} value={selectedValue} onChange={handleChange}>
                                                 <optgroup label="Selecione:">
                                                     <option defaultValue={object.tipo}>{object.tipo}</option>
                                                     {cargos.map((cargos) => {
@@ -145,25 +201,29 @@ function Colaboradores() {
                                                 </optgroup>
                                             </select>
                                         </div>
-                                        {object.tipo === "Garçom" ? (
-  <p className="mesasColaborador">
-    Mesas:{" "}
-    {object.mesas.map((mesa, index) => (
-      <p key={index}>
-        {mesa}
-        {index === object.mesas.length - 1 ? "" : ", "}
-      </p>
-    ))}
-  </p>
-) : (
-  <p></p>
-)}
-                                               
-                                        
+                                        {selectedValue === "Garçom"? (
+                                            <div className="mesasThisGarcom">
+                                                Mesas:{" "}
+                                                {object.mesas.map((mesa, index) => (
+                                                    <p key={index}>
+                                                        {mesa}
+                                                        {index === object.mesas.length - 1 ? "" : ", "}
+                                                    </p>
+                                                ))}
+                                                <p className="linkMesas" onClick={abrirMesasGarcom}>Gerenciar mesas</p>
+                                            </div>
+
+
+                                        ) : (
+                                            <p></p>
+
+                                        )}
+
+
                                     </div>
                                 </div>
                             </div>
-                        
+
                             <div className="salvar">
                                 <button className="botaoSalvarProduto" onClick={salvar}>Salvar Alterações</button>
                             </div>
@@ -171,14 +231,45 @@ function Colaboradores() {
 
 
                     </div>
+                    <div id={mesasGarcom} className="modalTransparentMesas">
+                        <div className="mesasColaborador">
+                            <div className="titleMesasGarcom">
+                                <p>Selecione as mesas</p>
+                                <p onClick={fecharMesasGarcom} className="fecharMesas">X</p>
+                            </div>
+                            <div className="bodyMesasGarcom">
+                                {table.map((table, index) => {
+
+                                    if (table.garcomId !== object.id) {
+
+                                        const style = {
+                                            border: table.garcomId === object.nome ? "solid 4px #3520bd" : "solid 1px black",
+                                          };
+                                            
+                                        
+                                        return (
+                                            <div style={style}
+                                             className="mesaGarcom" key={index}>
+                                                {table.numero}
+                                                <p className="nomeGarcomMesa">{table.garcomId}</p>
+                                            </div>
+                                        )
+                                    }
+                                })}
+                            </div>
+                            <div className="footermesasGarcom">
+                                <p onClick={fecharMesasGarcom}>Cancelar</p><button onClick={salvarMesasGarcom}>Salvar</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div >
         );
     }
 
- 
 
-   
+
+
 
 
 
@@ -217,7 +308,7 @@ function Colaboradores() {
                         <p><b>Nome</b></p>
                         <p><b>Email</b></p>
                         <p><b>Cargo</b></p>
-                        
+
                     </div>
                     <div className="tabelaProdutos">
                         {filteredData.map((object, id) => (
@@ -246,7 +337,11 @@ function Colaboradores() {
 
         toast.success('Salvo com sucesso');
         setElementoAtivo(null);
+    }
 
+    function salvarMesasGarcom(){
+        toast.success('Salvo com sucesso');
+        fecharMesasGarcom();
     }
 }
 
