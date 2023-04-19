@@ -40,51 +40,56 @@ function Colaboradores() {
         mesas: ["4", "5", "6", "7"]
     },
     {
-        id: 2, nome: "Ilmar", email: "ilmar@teste", senha: "123456", tipo: "Cozinha", mesas:[]
+        id: 2, nome: "Ilmar", email: "ilmar@teste", senha: "123456", tipo: "Cozinha", mesas: []
     },
     {
         id: 0, nome: "Christiano", email: "christiano@teste", senha: "123456", tipo: "Administrador",
-        mesas:[]
+        mesas: []
     }
     ]);
 
     const [table, setTable] = useState([{
         id: 0,
         numero: "1",
-        garcomId: "Jadson"
+        garcomId: "Jadson",
+        mesaGarcom: false
 
     }, {
         id: 1,
         numero: "2",
-        garcomId: "Jadson"
+        garcomId: "Jadson",
+        mesaGarcom: false
     }, {
         id: 2,
         numero: "3",
-        garcomId: "Jadson"
+        garcomId: "Jadson",
+        mesaGarcom: false
     }, {
         id: 3,
         numero: "4",
-        garcomId: "Natan"
+        garcomId: "Natan",
+        mesaGarcom: false
     }, {
         id: 4,
         numero: "5",
-        garcomId: "Natan"
+        garcomId: "Natan",
+        mesaGarcom: false
     }, {
         id: 5,
         numero: "6",
-        garcomId: "Natan"
+        garcomId: "Natan",
+        mesaGarcom: false
     }, {
         id: 6,
         numero: "7",
-        garcomId: "Natan"
+        garcomId: "Natan",
+        mesaGarcom: false
     }, {
         id: 7,
-        numero: "8"
+        numero: "8",
+        garcomId: "",
+        mesaGarcom: false
     }])
-
-
-
-
 
     const cargos = [{ id: 0, nome: "Administrador" }, { id: 1, nome: "Garçom" }, { id: 2, nome: "Cozinha" }];
 
@@ -126,17 +131,12 @@ function Colaboradores() {
 
     //pegando valor do select de cargo
 
-        const [selectedValue, setSelectedValue] = useState('');
-        
-        function handleChange(event) {
-          setSelectedValue(event.target.value);
-        }
-        
-        // function handleSubmit(event) {
-        //   event.preventDefault();
-        //   console.log(selectedValue);
-        //   // faça algo com o valor selecionado...
-        // }
+    const [selectedValue, setSelectedValue] = useState('');
+
+    function handleChange(event) {
+        setSelectedValue(event.target.value);
+    }
+
 
     //  useState para funções de abrir e fechar poupup da colaborador
 
@@ -158,7 +158,7 @@ function Colaboradores() {
 
         const handleClose = () => {
             setElementoAtivo(null);
-            
+
         };
 
         return (
@@ -201,7 +201,7 @@ function Colaboradores() {
                                                 </optgroup>
                                             </select>
                                         </div>
-                                        {selectedValue === "Garçom"? (
+                                        {selectedValue === "Garçom" ? (
                                             <div className="mesasThisGarcom">
                                                 Mesas:{" "}
                                                 {object.mesas.map((mesa, index) => (
@@ -239,22 +239,17 @@ function Colaboradores() {
                             </div>
                             <div className="bodyMesasGarcom">
                                 {table.map((table, index) => {
+                                    {table.garcomId === object.nome ? table.mesaGarcom = true : table.mesaGarcom = false }
 
-                                    if (table.garcomId !== object.id) {
 
-                                        const style = {
-                                            border: table.garcomId === object.nome ? "solid 4px #3520bd" : "solid 1px black",
-                                          };
-                                            
-                                        
-                                        return (
-                                            <div style={style}
-                                             className="mesaGarcom" key={index}>
-                                                {table.numero}
-                                                <p className="nomeGarcomMesa">{table.garcomId}</p>
-                                            </div>
-                                        )
-                                    }
+                                    return (
+                                        <div style={{ border: table.mesaGarcom === true ? "solid 4px #3520bd" : "solid 1px black", }}
+                                            className="mesaGarcom" key={index}>
+                                            {table.numero}
+                                            <p className="nomeGarcomMesa">{table.garcomId}</p>
+                                        </div>
+                                    )
+
                                 })}
                             </div>
                             <div className="footermesasGarcom">
@@ -339,7 +334,7 @@ function Colaboradores() {
         setElementoAtivo(null);
     }
 
-    function salvarMesasGarcom(){
+    function salvarMesasGarcom() {
         toast.success('Salvo com sucesso');
         fecharMesasGarcom();
     }
