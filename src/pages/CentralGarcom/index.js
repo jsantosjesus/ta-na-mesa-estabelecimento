@@ -52,6 +52,24 @@ function CentralGarcom() {
         }
     ]);
 
+    const [mesas, setMesas] = useState([{
+        id: 0,
+        numero: 14,
+        chamandoGarcom: true
+    },
+    {
+        id: 1,
+        numero: 15,
+        chamandoGarcom: true
+    },
+    {
+        id: 2,
+        numero: 16,
+        chamandoGarcom: true
+    }
+
+])
+
     return (
         <div>
             <Header />
@@ -76,6 +94,20 @@ function CentralGarcom() {
                             </div>
                             <div className="notificacaoButton">
                                 <button>Entregue</button>
+                            </div>
+                        </div>
+                    ) : null
+                ))}
+
+                {mesas.map((mesa, index) => (
+                    mesa.chamandoGarcom ? (
+                        <div key={index} className="notificacao">
+                            <div className="div80notificacao">
+                                <h2><b>Mesa {mesa.numero} precisa de ajuda</b></h2>
+                                
+                            </div>
+                            <div className="notificacaoButton">
+                                <button>Certinho</button>
                             </div>
                         </div>
                     ) : null
