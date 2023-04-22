@@ -9,6 +9,7 @@ import styled from "styled-components";
 
 
 
+
 function Colaboradores() {
 
 
@@ -91,6 +92,20 @@ function Colaboradores() {
         mesaGarcom: false
     }])
 
+    const [changeTable, setChangeTable] = useState([]);
+    
+    function trocarParaNewTable() {
+        const newTable = table.map((element) => element);
+        setTable(newTable);
+      };
+
+    // const GerenciarMesas = (object) => {
+    //     return (
+    
+            
+    //     )
+    // }
+
     const cargos = [{ id: 0, nome: "Administrador" }, { id: 1, nome: "Garçom" }, { id: 2, nome: "Cozinha" }];
 
     const filterData = () => {
@@ -121,6 +136,8 @@ function Colaboradores() {
 
     const abrirMesasGarcom = () => {
         setMesasGarcom("open");
+        trocarParaNewTable();
+        
     }
 
     // fechar mesas de garçom
@@ -160,6 +177,18 @@ function Colaboradores() {
             setElementoAtivo(null);
 
         };
+
+        // //administrando mesas
+
+        // function handleClick(){
+        //     const newTables = [...table];
+
+        //     const tableIndex = newTables.findIndex(table => table.id === 5);
+
+        //     newTables[tableIndex].mesaGarcom = true;
+
+        //     setTable(newTables);
+        // }
 
         return (
             <div className="modalTransparent">
@@ -238,19 +267,28 @@ function Colaboradores() {
                                 <p onClick={fecharMesasGarcom} className="fecharMesas">X</p>
                             </div>
                             <div className="bodyMesasGarcom">
-                                {table.map((table, index) => {
-                                    {table.garcomId === object.nome ? table.mesaGarcom = true : table.mesaGarcom = false }
-
-
-                                    return (
-                                        <div style={{ border: table.mesaGarcom === true ? "solid 4px #3520bd" : "solid 1px black", }}
-                                            className="mesaGarcom" key={index}>
-                                            {table.numero}
-                                            <p className="nomeGarcomMesa">{table.garcomId}</p>
-                                        </div>
-                                    )
-
-                                })}
+                            {table.map((table) => {
+                { table.garcomId === object.nome ? table.mesaGarcom = true : table.mesaGarcom = false }
+    
+                // const teste = () => {
+                //     { table.mesaGarcom === false ? table.mesaGarcom = true : table.mesaGarcom = false };
+                //     trocarParaNewTable();
+                //     console.log(table);
+                // }
+    
+    
+    
+                return (
+                    <div style={{ border: table.mesaGarcom ? "solid 4px #3520bd" : "solid 1px black", }}
+                        className="mesaGarcom" key={table.id}
+                    >
+                        {table.numero}
+                        <p className="nomeGarcomMesa">{table.garcomId}</p>
+                    </div>
+                )
+    
+            })}
+                                
                             </div>
                             <div className="footermesasGarcom">
                                 <p onClick={fecharMesasGarcom}>Cancelar</p><button onClick={salvarMesasGarcom}>Salvar</button>
@@ -260,6 +298,7 @@ function Colaboradores() {
                 </div>
             </div >
         );
+
     }
 
 

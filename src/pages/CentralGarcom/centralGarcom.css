@@ -1,0 +1,61 @@
+body {
+    background-color: #efefef;
+}
+
+.titulo {
+    text-align: center;
+    margin-top: 12vh;
+}
+
+.notificacoes {
+    width: 100vw;
+}
+
+.notificacao {
+    background-color: white;
+    width: 99%;
+    border-radius: 20px;
+    padding: 10px;
+    margin-bottom: 5px;
+    margin-left: 0.5%;
+    display: flex;
+
+}
+
+.notificacao h2 {
+    color: #ff881f;
+}
+
+.notificacao p {
+    display: flex;
+    
+}
+
+.produtosP{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.produtoCentral {
+    margin-left: 2px;
+    
+}
+
+.div80notificacao{
+    width: 78%;
+}
+
+.notificacaoButton button {
+
+    background-color: #ff881f;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    margin-left: 10px;
+    margin-top: 70%;
+    font-size: 15px;
+}
