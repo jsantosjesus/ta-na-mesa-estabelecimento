@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import Header from "../../componentes/Header";
 import './centralGarcom.css';
 
+function puxandoNotificacoes(arr){
+    return arr.filter((obj) => obj.ativo === true);
+}
+
+
+window.setInterval(puxandoNotificacoes(), 1000)
 
 function CentralGarcom() {
 
@@ -68,54 +74,62 @@ function CentralGarcom() {
         chamandoGarcom: true
     }
 
-])
+]);
 
-    return (
-        <div>
-            <Header />
-            <div className="titulo">
-                <h2>Notificações</h2>
-            </div>
-            <div className="notificacoes">
-                {pedidos.map((pedido, index) => (
-                    pedido.status === "pronto" ? (
-                        <div key={index} className="notificacao">
-                            <div className="div80notificacao">
-                                <h2><b>Mesa {pedido.mesa}: pedido pronto</b></h2>
-                                <p className="produtosP">
-                                    {pedido.produtos.map((produto, index) => (
-                                        <p className="produtoCentral" key={index}>
-                                            {produto.quantidade} {produto.nome}
-                                            {index === pedido.produtos.length - 1 ? "" : ","}
-                                        </p>
-                                    ))}
+const central = puxandoNotificacoes(pedidos);
 
-                                </p>
-                            </div>
-                            <div className="notificacaoButton">
-                                <button>Entregue</button>
-                            </div>
-                        </div>
-                    ) : null
-                ))}
+    // return (
+    //     <div>
+    //         <Header />
+    //         <div className="titulo">
+    //             <h2>Notificações</h2>
+    //         </div>
+    //         <div className="notificacoes">
+    //             {pedidos.map((pedido, index) => (
+    //                 pedido.status === "pronto" ? (
+    //                     <div key={index} className="notificacao">
+    //                         <div className="div80notificacao">
+    //                             <h2><b>Mesa {pedido.mesa}: pedido pronto</b></h2>
+    //                             <p className="produtosP">
+    //                                 {pedido.produtos.map((produto, index) => (
+    //                                     <p className="produtoCentral" key={index}>
+    //                                         {produto.quantidade} {produto.nome}
+    //                                         {index === pedido.produtos.length - 1 ? "" : ","}
+    //                                     </p>
+    //                                 ))}
 
-                {mesas.map((mesa, index) => (
-                    mesa.chamandoGarcom ? (
-                        <div key={index} className="notificacao">
-                            <div className="div80notificacao">
-                                <h2><b>Mesa {mesa.numero} precisa de ajuda</b></h2>
+    //                             </p>
+    //                         </div>
+    //                         <div className="notificacaoButton">
+    //                             <button>Entregue</button>
+    //                         </div>
+    //                     </div>
+    //                 ) : null
+    //             ))}
+
+    //             {mesas.map((mesa, index) => (
+    //                 mesa.chamandoGarcom ? (
+    //                     <div key={index} className="notificacao">
+    //                         <div className="div80notificacao">
+    //                             <h2><b>Mesa {mesa.numero} precisa de ajuda</b></h2>
                                 
-                            </div>
-                            <div className="notificacaoButton">
-                                <button>Certinho</button>
-                            </div>
-                        </div>
-                    ) : null
-                ))}
+    //                         </div>
+    //                         <div className="notificacaoButton">
+    //                             <button>Certinho</button>
+    //                         </div>
+    //                     </div>
+    //                 ) : null
+    //             ))}
 
-            </div>
+    //         </div>
+    //     </div>
+    // );
+
+    return(
+        <div>
+            {central.map((pedido, index) => <p>{pedido.numero}</p>)}
         </div>
-    );
+    )
 
 
 
