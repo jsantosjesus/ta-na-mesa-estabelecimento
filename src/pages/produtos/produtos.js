@@ -5,11 +5,28 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
 import { ModalProduto } from '../../componentes/produtos/modal-produto';
+import { apiClient } from '../../config/api';
 
 function Produtos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
+
+  //buscando categorias
+  const [categorias, setCategorias] = useState([]);
+
+  const getCategorias = async () => {
+    const estabelecimentoId = '5e5fdd34-89df-483b-8bd1-39ad953046ba';
+    const result = await apiClient.get(`/categorias/estabelecimento/${estabelecimentoId}`, {
+      params: { limit: 30, offset: 0 }
+    });
+    console.log(result);
+    setCategorias(result.data);
+  };
+
+  useEffect(() => {
+    getCategorias();
+  }, []);
 
   // const handleSelectChange = (event) => {
   //     setCategoriaFiltro(event.target.value);
@@ -165,11 +182,11 @@ function Produtos() {
     setProdutoAtivo(null);
   };
 
-  const categorias = [
-    { id: 0, nome: 'bebidas' },
-    { id: 1, nome: 'lanches' },
-    { id: 2, nome: 'pizzas' }
-  ];
+  // const categorias = [
+  //   { id: 0, nome: 'bebidas' },
+  //   { id: 1, nome: 'lanches' },
+  //   { id: 2, nome: 'pizzas' }
+  // ];
 
   const filterData = () => {
     let results = myState;
