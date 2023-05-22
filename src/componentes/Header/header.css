@@ -37,8 +37,8 @@
 }
 
 .divUser{
-    text-align: end;
-    justify-content: end;
+    text-align: right;
+    justify-content: flex-end;
     align-items: center;
     display: flex;
     margin-right: 20px;

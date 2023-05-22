@@ -1,18 +1,13 @@
+/* eslint-disable prettier/prettier */
 import React from 'react'
 import { Container, Content } from './styles';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKitchenSet } from "@fortawesome/free-solid-svg-icons";
 import { 
   FaTimes, 
-  FaHome, 
-  FaEnvelope, 
-  FaRegSun, 
-  FaUserAlt, 
-  FaIdCardAlt, 
-  FaRegFileAlt,
-  FaRegCalendarAlt,
-  FaChartBar
-} from 'react-icons/fa'
+} from 'react-icons/fa';
+import { BsFillPersonFill, BsFillTagsFill, BsGrid1X2Fill, BsReceiptCutoff, BsGearFill } from "react-icons/bs";
+
+
+import { Link } from 'react-router-dom';
 
 import SidebarItem from '../SidebarItem'
 
@@ -27,10 +22,11 @@ const Sidebar = ({ active }) => {
     <Container sidebar={active}>
       <FaTimes onClick={closeSidebar} />  
       <Content>
-        <SidebarItem Icon={FaHome} Text="Cozinha" />
-        <SidebarItem Icon={FaChartBar} Text="Mesas" />
-        <SidebarItem Icon={FaUserAlt} Text="Colaboradores" />
-        <SidebarItem Icon={FaEnvelope} Text="Produtos" />
+        <Link to="/cozinha"><SidebarItem Icon={BsReceiptCutoff} Text="Cozinha" /></Link>
+        <Link to="/mesas"><SidebarItem Icon={BsGrid1X2Fill} Text="Mesas" /></Link>
+        <Link to="/colaboradores"><SidebarItem Icon={BsFillPersonFill} Text="Colaboradores" /></Link>
+        <Link to="/produtos"><SidebarItem Icon={BsFillTagsFill} Text="Produtos" /></Link>
+        <Link to="/configuracoes"><SidebarItem Icon={BsGearFill} Text="Configurações" /></Link>
         {/* <SidebarItem Icon={FaRegCalendarAlt} Text="Calendar" />
         <SidebarItem Icon={FaIdCardAlt} Text="Employees" />
         <SidebarItem Icon={FaRegFileAlt} Text="Reports" />

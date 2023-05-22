@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState } from 'react'
 import { Container } from './styles'
 import { FaBars } from 'react-icons/fa'

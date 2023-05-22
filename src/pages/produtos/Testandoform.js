@@ -1,11 +1,12 @@
-import { useState } from "react";
+/* eslint-disable prettier/prettier */
+import { useState } from 'react';
 
 function Formulario() {
-  const [nome, setNome] = useState("");
-  const [idade, setIdade] = useState("");
+  const [nome, setNome] = useState('');
+  const [idade, setIdade] = useState('');
   const [pessoas, setPessoas] = useState([
-    { nome: "João", idade: 20 },
-    { nome: "Maria", idade: 30 },
+    { nome: 'João', idade: 20 },
+    { nome: 'Maria', idade: 30 }
   ]);
 
   const handleNomeChange = (event) => {
@@ -20,16 +21,16 @@ function Formulario() {
     event.preventDefault();
     const novaPessoa = { nome, idade };
     setPessoas([...pessoas, novaPessoa]);
-    setNome("");
-    setIdade("");
+    setNome('');
+    setIdade('');
   };
 
   const handleFinalizar = (index) => {
     const novaArray = [...pessoas];
     novaArray[index] = { nome, idade };
     setPessoas(novaArray);
-    setNome("");
-    setIdade("");
+    setNome('');
+    setIdade('');
   };
 
   return (

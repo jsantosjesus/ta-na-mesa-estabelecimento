@@ -1,48 +1,63 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import './mesas.css';
-import Header from "../../componentes/Header";
-
+import Header from '../../componentes/Header';
 
 function Mesas() {
-
   // puxando atributos das mesas
 
-  const [myState, setMyState] = useState([{
-    id: 0, numero: 1, status: "livre", chamandoGarcom: false,
-    pedidos: ["2764", "2765"],
-    clientes: ["jeferson", "natan"],
-    conta: {
-
-      produtos: [{ id: 1, nome: "hamburguer", quantidade: 2, valor: 30 }, { id: 2, nome: "cerveja", quantidade: 1, valor: 10 }],
-      total: 70
+  const [myState] = useState([
+    {
+      id: 0,
+      numero: 1,
+      status: 'livre',
+      chamandoGarcom: false,
+      pedidos: ['2764', '2765'],
+      clientes: ['jeferson', 'natan'],
+      conta: {
+        produtos: [
+          { id: 1, nome: 'hamburguer', quantidade: 2, valor: 30 },
+          { id: 2, nome: 'cerveja', quantidade: 1, valor: 10 }
+        ],
+        total: 70
+      }
+    },
+    {
+      id: 1,
+      numero: 2,
+      status: 'ocupada',
+      chamandoGarcom: false,
+      pedidos: ['2764', '2765'],
+      clientes: ['jadson', 'natan'],
+      conta: {
+        produtos: [
+          { id: 1, nome: 'hamburguer', quantidade: 2, valor: 30 },
+          { id: 2, nome: 'cerveja', quantidade: 1, valor: 10 }
+        ],
+        total: 60
+      }
+    },
+    {
+      id: 2,
+      numero: 3,
+      status: 'indisponivel',
+      chamandoGarcom: false,
+      pedidos: ['2764', '2765'],
+      clientes: ['jadson', 'natan'],
+      conta: {
+        produtos: [
+          { id: 1, nome: 'hamburguer', quantidade: 2, valor: 30 },
+          { id: 2, nome: 'cerveja', quantidade: 1, valor: 10 }
+        ],
+        total: 50
+      }
     }
-  },
-  {
-    id: 1, numero: 2, status: "ocupada", chamandoGarcom: false,
-    pedidos: ["2764", "2765"],
-    clientes: ["jadson", "natan"],
-    conta: {
-
-      produtos: [{ id: 1, nome: "hamburguer", quantidade: 2, valor: 30 }, { id: 2, nome: "cerveja", quantidade: 1, valor: 10 }],
-      total: 60
-    }
-  },
-  {
-    id: 2, numero: 3, status: "indisponivel", chamandoGarcom: false,
-    pedidos: ["2764", "2765"],
-    clientes: ["jadson", "natan"],
-    conta: {
-      produtos: [{ id: 1, nome: "hamburguer", quantidade: 2, valor: 30 }, { id: 2, nome: "cerveja", quantidade: 1, valor: 10 }],
-      total: 50
-    }
-  }
   ]);
 
   // função abrir e fechar poupup da conta
 
-  const [conta, setConta] = React.useState("close");
-  const handleOpenConta = () => setConta("open");
-  const handleCloseConta = () => setConta("close");
+  const [conta, setConta] = React.useState('close');
+  const handleOpenConta = () => setConta('open');
+  const handleCloseConta = () => setConta('close');
 
   // const style = {
   //     position: 'absolute',
@@ -60,15 +75,13 @@ function Mesas() {
   // {indice: 1, nome: "elemento2"},
   // {indice: 2, nome: "elemento3"}]
 
-
   //  useState para funções de abrir e fechar poupup da mesa
 
   const [elementoAtivo, setElementoAtivo] = useState(null);
 
   const handleClick = (object) => {
     setElementoAtivo(object);
-  }
-
+  };
 
   // popupup da mesa
 
@@ -79,13 +92,16 @@ function Mesas() {
 
     const handleClose = () => {
       setElementoAtivo(null);
-      setConta("close");
+      setConta('close');
     };
 
     return (
       <div className="toogle">
         <div className="poupupmesa">
-          <div className="title"><h1>Mesa {object.numero}</h1><button onClick={handleClose}>X</button></div>
+          <div className="title">
+            <h1>Mesa {object.numero}</h1>
+            <button onClick={handleClose}>X</button>
+          </div>
           <div className="corpo">
             <h2>Pedidos</h2>
             <div className="pedido">
@@ -108,7 +124,7 @@ function Mesas() {
                 <h2>Mesa {object.numero}</h2>
 
                 {/* produtos da conta */}
-                <table >
+                <table>
                   <tbody className="tableConta">
                     {object.conta.produtos.map((produto, id) => (
                       <tr key={id}>
@@ -124,17 +140,13 @@ function Mesas() {
                   <button onClick={handleCloseConta}>Fechar</button>
                   <button onClick={() => window.print()}>Imprimir</button>
                 </div>
-
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     );
   };
-
 
   // renderizando array de mesas
 
@@ -144,24 +156,23 @@ function Mesas() {
       <div className="bodyMesas">
         <div className="mesas">
           {myState.map((object, id) => (
-            <div >
+            <div key={object.id}>
               <div id={object.status} className="mesa" onClick={() => handleClick(object)} key={id}>
-                <h1 ><b>Mesa {object.numero}</b></h1>
+                <h1>
+                  <b>Mesa {object.numero}</b>
+                </h1>
               </div>
               <Popup object={object} />
             </div>
-
-
           ))}
-
-
         </div>
       </div>
     </div>
   );
 }
 
-{/* <Modal 
+{
+  /* <Modal 
         // aria-labelledby="transition-modal-title"
         // aria-describedby="transition-modal-description"
         open={open}
@@ -180,6 +191,7 @@ function Mesas() {
             <Button onClick={handleClose}>botão</Button>
           </Box>
         </Fade>
-      </Modal> */}
+      </Modal> */
+}
 
 export default Mesas;

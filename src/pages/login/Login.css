@@ -1,17 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family= Montserrat :wght@900 & display=swap');
 
-body{
-  font-family: 'Montserrat', sans-serif;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-}
-
 .login{
   background-color: #ff881f;
   height: 100vh;
   width: 100vw;
-  
+  font-family: 'Montserrat', sans-serif;
+  color: #fff;
+  margin: 0;
+  padding: 0;
 }
 
 .oitenta{
@@ -79,8 +75,8 @@ label{
 
 .footer{
   display: flex;
-  justify-content: end;
-  align-items: end;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .footer img{

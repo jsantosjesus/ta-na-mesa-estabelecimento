@@ -293,5 +293,18 @@ body{
     display: none;
   }
 
+  #openNewProduto{
+    display: block;
+  }
+
+  #closeNewProduto{
+    display: none
+  }
+
+  .errorInput{
+    color: red;
+    font-size: 10px;
+  }
+
  
    
