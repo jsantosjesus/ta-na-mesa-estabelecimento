@@ -141,10 +141,26 @@ function Colaboradores() {
     filterData();
   }, [cargoFiltro]);
 
+  //MODAL
+  //abrindo novo colaborador
+
   const [isCreatingColaborador, setIsCreatingColaborador] = useState(false);
 
   const handleOpenNewColaborador = () => setIsCreatingColaborador(true);
   const handleCloseNewColaborador = () => setIsCreatingColaborador(false);
+
+  //abrrindo colaborador existente para editar
+  const [colaboradorAtivo, setColaboradorAtivo] = useState(null);
+
+  const handleOpenColaborador = (colaborador) => {
+    setColaboradorAtivo(colaborador);
+    // isCreatingColaborador && setselectValueCargo(colaborador.tipo);
+  };
+
+  const handleCloseColaboradorModal = () => {
+    setColaboradorAtivo(null);
+    setIsCreatingColaborador(false);
+  };
 
   //MESAS
   // abrir mesas de garçom
@@ -179,18 +195,6 @@ function Colaboradores() {
   // }
 
   //  useState para funções de abrir e fechar poupup da colaborador
-
-  const [colaboradorAtivo, setColaboradorAtivo] = useState(null);
-
-  const handleOpenColaborador = (colaborador) => {
-    setColaboradorAtivo(colaborador);
-    // isCreatingColaborador && setselectValueCargo(colaborador.tipo);
-  };
-
-  const handleCloseColaboradorModal = () => {
-    setColaboradorAtivo(null);
-    setIsCreatingColaborador(false);
-  };
 
   //salvando alterações
 
