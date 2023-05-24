@@ -12,7 +12,7 @@ function Produtos() {
   const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
 
-  //buscando categorias
+  //buscando categorias em conexão com a API
   const [categorias, setCategorias] = useState([]);
 
   const getCategorias = async () => {
@@ -39,7 +39,7 @@ function Produtos() {
 
   // puxando atributos das produtos
 
-  const [myState] = useState([
+  const [produtos] = useState([
     {
       id: 0,
       nome: 'hamburguer',
@@ -189,19 +189,19 @@ function Produtos() {
   // ];
 
   const filterData = () => {
-    let results = myState;
+    let results = produtos;
 
     if (searchTerm === '' && categoriaFiltro == '') {
-      results = myState;
+      results = produtos;
     }
     if (searchTerm !== '') {
-      results = myState.filter((object) =>
+      results = produtos.filter((object) =>
         object.nome.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (searchTerm === '' && categoriaFiltro !== '') {
-      results = myState.filter((object) => object.categoria == categoriaFiltro);
+      results = produtos.filter((object) => object.categoria == categoriaFiltro);
     }
 
     setFilteredData(results);

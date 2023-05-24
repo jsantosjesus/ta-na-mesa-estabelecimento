@@ -2,7 +2,10 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
-function Modalcolaborador({ colaborador, onClose, cargos, onSave, selectedValue, abrirMesasGarcom }) {
+
+function Modalcolaborador({ colaborador, onClose, cargos, onSave, 
+    // selectedValue, abrirMesasGarcom 
+}) {
     const isEditingcolaborador = !!colaborador;
 
     const colaboradorSchema = Yup.object().shape({
@@ -128,7 +131,7 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave, selectedValue,
                                                     </optgroup>
                                                 </select>
                                             </div>
-                                            {selectedValue === 'Garçom' ? (
+                                            {/* {selectedValue === 'Garçom' ? (
                                                 <div className="mesasThisGarcom">
                                                     Mesas:{' '}
                                                     {colaborador.mesas.map((mesa, index) => (
@@ -143,7 +146,7 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave, selectedValue,
                                                 </div>
                                             ) : (
                                                 <p></p>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 </div>
