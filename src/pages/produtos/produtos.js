@@ -16,9 +16,12 @@ function Produtos() {
   const [categorias, setCategorias] = useState([]);
 
   const getCategorias = async () => {
-    const estabelecimentoId = '5e5fdd34-89df-483b-8bd1-39ad953046ba';
+    const estabelecimentoId = '8fb6e710-07c7-4c41-a7ab-2ad9bdf1cd7d';
     const result = await apiClient.get(`/categorias/estabelecimento/${estabelecimentoId}`, {
-      params: { limit: 30, offset: 0 }
+      params: { limit: 30, offset: 0 },
+      headers: {
+        'ngrok-skip-browser-warning': true
+      }
     });
     console.log(result);
     setCategorias(result.data);
