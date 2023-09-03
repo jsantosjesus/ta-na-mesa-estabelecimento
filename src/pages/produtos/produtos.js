@@ -68,7 +68,7 @@ function Produtos() {
       estoque: 100,
       preco: 29.0,
       descricao: 'produto feito artesanalmente',
-      categoria: 'lanches'
+      categoria: 'Hamburguer'
     },
     {
       id: 3,
