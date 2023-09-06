@@ -10,7 +10,7 @@ function Login() {
       <div className="oitenta">
         <div className="formulario">
           <Formik
-            initialValues={{ email: '', password: '' }}
+            initialValues={{ email: '', senha: '' }}
             validate={(values) => {
               const errors = {};
               if (!values.email) {
@@ -66,10 +66,10 @@ function Login() {
                   </p>
                   <input
                     type="password"
-                    name="password"
+                    name="senha"
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    value={values.password}
+                    value={values.senha}
                     placeholder="Digite sua senha"
                   />
                   {/* <p className="erroLogin">{errors.password && touched.password && errors.password}</p> */}
