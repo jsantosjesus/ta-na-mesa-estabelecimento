@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './Login.css';
 import logomarcaEmpresa from '../../assets/logomarca.png';
 import { Formik } from 'formik';
 import { apiClient } from '../../config/api';
 
 function Login() {
+  const [messageErro, setMessageErro] = useState();
+
   return (
     <div className="login">
       <div className="oitenta">
@@ -29,10 +31,16 @@ function Login() {
                   }
               })
                 .then(response => {
-                  console.log(response);
+                  console.log(response.mensage);
                   localStorage.setItem("usuarioLogado", JSON.stringify(response.data));
                   setSubmitting(false);
-                });
+                  localStorage.setItem('usuarioLogado', JSON.stringify(response.data));
+                })
+                .catch(function (error) {
+                  if (error.response) {
+                    console.error(error.response.data.message);
+                    setMessageErro(error.response.data.message);
+                  }});
             }}>
             {({
               values,
@@ -45,6 +53,7 @@ function Login() {
               /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit}>
+                <p className="erroMessage">{messageErro}</p>
                 <label>
                   <p>
                     <b>Usuário</b>
