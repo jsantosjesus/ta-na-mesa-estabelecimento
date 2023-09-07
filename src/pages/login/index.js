@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './Login.css';
 import logomarcaEmpresa from '../../assets/logomarca.png';
 import { Formik } from 'formik';
@@ -23,16 +23,15 @@ function Login() {
               return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              apiClient.post(
-                `/auth/login`,
-                values, {
+              apiClient
+                .post(`/auth/login`, values, {
                   headers: {
                     'ngrok-skip-browser-warning': true
                   }
-              })
-                .then(response => {
+                })
+                .then((response) => {
                   console.log(response.mensage);
-                  localStorage.setItem("usuarioLogado", JSON.stringify(response.data));
+                  localStorage.setItem('usuarioLogado', JSON.stringify(response.data));
                   setSubmitting(false);
                   localStorage.setItem('usuarioLogado', JSON.stringify(response.data));
                 })
@@ -40,7 +39,8 @@ function Login() {
                   if (error.response) {
                     console.error(error.response.data.message);
                     setMessageErro(error.response.data.message);
-                  }});
+                  }
+                });
             }}>
             {({
               values,
