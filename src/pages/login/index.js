@@ -7,7 +7,7 @@ import { AuthContext } from '../../contexts/auth';
 
 function Login() {
   const [messageErro, setMessageErro] = useState();
-  const { authenticated, login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   return (
     <div className="login">
@@ -56,7 +56,6 @@ function Login() {
             }) => (
               <form onSubmit={handleSubmit}>
                 <p className="erroMessage">{messageErro}</p>
-                <p>{String(authenticated)}</p>
                 <label>
                   <p>
                     <b>Usuário</b>
