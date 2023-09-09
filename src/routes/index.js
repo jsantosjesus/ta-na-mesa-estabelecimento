@@ -1,22 +1,71 @@
 import Login from '../pages/login';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Mesas from '../pages/mesas/Mesas';
 import CentralGarcom from '../pages/CentralGarcom';
 import Produtos from '../pages/produtos/produtos';
 import Colaboradores from '../pages/Colaboradores';
+import { AuthContext, AuthProvicer } from '../contexts/auth';
+import { useContext } from 'react';
 
 export default function Rotas() {
+  const Private = ({ children }) => {
+    const { authenticated, loading } = useContext(AuthContext);
+
+    if (loading) {
+      return <div>Carregando...</div>;
+    }
+
+    if (!authenticated) {
+      return <Navigate to="/login" />;
+    }
+
+    return children;
+  };
   return (
-    <Routes>
-      <Route exact path="/" element={<Login />} />
+    <AuthProvicer>
+      <Routes>
+        <Route exact path="/login" element={<Login />} />
 
-      <Route exact path="/mesas" element={<Mesas />} />
+        <Route
+          exact
+          path="/mesas"
+          element={
+            <Private>
+              <Mesas />
+            </Private>
+          }
+        />
 
-      <Route exact path="/produtos" element={<Produtos />} />
+        <Route
+          exact
+          path="/"
+          element={
+            <Private>
+              <Produtos />
+            </Private>
+          }
+        />
 
-      <Route exact path="/colaboradores" element={<Colaboradores />} />
+        <Route
+          exact
+          path="/colaboradores"
+          element={
+            <Private>
+              <Colaboradores />
+            </Private>
+          }
+        />
 
-      <Route exact path="/central" element={<CentralGarcom />} />
-    </Routes>
+        <Route
+          exact
+          path="/central"
+          element={
+            <Private>
+              <CentralGarcom />
+            </Private>
+          }
+        />
+      </Routes>
+    </AuthProvicer>
   );
 }

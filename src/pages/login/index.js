@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './Login.css';
 import logomarcaEmpresa from '../../assets/logomarca.png';
 import { Formik } from 'formik';
 import { apiClient } from '../../config/api';
+import { AuthContext } from '../../contexts/auth';
 
 function Login() {
   const [messageErro, setMessageErro] = useState();
+  const { authenticated, login } = useContext(AuthContext);
 
   return (
     <div className="login">
@@ -31,9 +33,9 @@ function Login() {
                 })
                 .then((response) => {
                   console.log(response.mensage);
-                  localStorage.setItem('usuarioLogado', JSON.stringify(response.data));
                   setSubmitting(false);
-                  localStorage.setItem('usuarioLogado', JSON.stringify(response.data));
+                  setMessageErro('');
+                  login(values.email, values.senha, response.data);
                 })
                 .catch(function (error) {
                   if (error.response) {
@@ -54,6 +56,7 @@ function Login() {
             }) => (
               <form onSubmit={handleSubmit}>
                 <p className="erroMessage">{messageErro}</p>
+                <p>{String(authenticated)}</p>
                 <label>
                   <p>
                     <b>Usuário</b>
