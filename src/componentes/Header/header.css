@@ -42,6 +42,14 @@
     align-items: center;
     display: flex;
     margin-right: 20px;
-    width: 20vw;
-    
+    width: 20vw;   
+}
+
+.divUser .logout:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.divUser .logout{
+    margin-left: 10px;
 }
