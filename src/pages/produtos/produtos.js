@@ -6,17 +6,19 @@ import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
 import { ModalProduto } from '../../componentes/produtos/modal-produto';
 import { apiClient } from '../../config/api';
+// import { AuthContext } from '../../contexts/auth';
 
 function Produtos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
+  // const { user } = useContext(AuthContext);
+  const estabelecimentoId = '8fb6e710-07c7-4c41-a7ab-2ad9bdf1cd7d';
 
   //buscando categorias em conexão com a API
   const [categorias, setCategorias] = useState([]);
 
   const getCategorias = async () => {
-    const estabelecimentoId = '8fb6e710-07c7-4c41-a7ab-2ad9bdf1cd7d';
     const result = await apiClient.get(`/categorias/estabelecimento/${estabelecimentoId}`, {
       params: { limit: 30, offset: 0 },
       headers: {
@@ -27,8 +29,23 @@ function Produtos() {
     setCategorias(result.data);
   };
 
+  const [produtos, setProdutos] = useState([]);
+
+  const getProdutos = async () => {
+    const result = await apiClient.get(`/produtos/estabelecimento/${estabelecimentoId}`, {
+      params: { limit: 30, offset: 0 },
+      headers: {
+        'ngrok-skip-browser-warning': true
+      }
+    });
+    setProdutos(result.data);
+    setFilteredData(result.data);
+    console.log(produtos);
+  };
+
   useEffect(() => {
     getCategorias();
+    getProdutos();
   }, []);
 
   // const handleSelectChange = (event) => {
@@ -40,156 +57,10 @@ function Produtos() {
     filterData();
   }, [categoriaFiltro]);
 
-  // puxando atributos das produtos
-
-  const [produtos] = useState([
-    {
-      id: 0,
-      nome: 'hamburguer',
-      imagem: 'url',
-      estoque: 100,
-      preco: 29.0,
-      descricao: 'produto feito artesanalmente',
-      categoria: 'lanches'
-    },
-    {
-      id: 1,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 2,
-      nome: 'hamburguer',
-      imagem: 'url',
-      estoque: 100,
-      preco: 29.0,
-      descricao: 'produto feito artesanalmente',
-      categoria: 'Hamburguer'
-    },
-    {
-      id: 3,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 4,
-      nome: 'cerveja loren loren loren loren',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 5,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 6,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 7,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 8,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 9,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 10,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 11,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 12,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 13,
-      nome: 'cerveja',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'bebidas'
-    },
-    {
-      id: 14,
-      nome: 'pizza de queijo',
-      imagem: 'url',
-      estoque: 100,
-      preco: 9.0,
-      descricao: 'se beber, não diriga',
-      categoria: 'pizzas'
-    }
-  ]);
-
   const handleSalvarProduto = () => {
     toast.success('Salvo com sucesso');
     setProdutoAtivo(null);
   };
-
-  // const categorias = [
-  //   { id: 0, nome: 'bebidas' },
-  //   { id: 1, nome: 'lanches' },
-  //   { id: 2, nome: 'pizzas' }
-  // ];
 
   const filterData = () => {
     let results = produtos;
@@ -248,9 +119,9 @@ function Produtos() {
             <div>
               <select value={categoriaFiltro} onChange={(e) => setCategoriaFiltro(e.target.value)}>
                 <option value="">Todos</option>
-                {categorias.map((object) => (
-                  <option key={object.id} value={object.nome}>
-                    {object.nome}
+                {categorias.map((categoria) => (
+                  <option key={categoria.id} value={categoria.nome}>
+                    {categoria.nome}
                   </option>
                 ))}
               </select>
@@ -287,16 +158,28 @@ function Produtos() {
             </p>
           </div>
           <div className="tabelaProdutos">
-            {filteredData.map((produto) => (
-              <div key={produto.id}>
-                <div className="produto" onClick={() => handleClickProduto(produto)}>
-                  <p>{produto.nome}</p>
-                  <p>R$ {produto.preco.toFixed(2).replace('.', ',')}</p>
-                  <p>{produto.categoria}</p>
-                  <p>{produto.estoque}</p>
+            {filteredData.map((produto) => {
+              return (
+                <div key={produto.id}>
+                  <div className="produto" onClick={() => handleClickProduto(produto)}>
+                    <p>{produto.nome}</p>
+                    <p>R$ {produto.preco.toFixed(2).replace('.', ',')}</p>
+                    <p>
+                      {categorias.map((categoria) => {
+                        let categoriaNome;
+
+                        if (categoria.id === produto.categoriaId) {
+                          categoriaNome = categoria.nome;
+                        }
+
+                        return <>{categoriaNome}</>;
+                      })}
+                    </p>
+                    <p>{produto.estoque}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
         {/* <div className="adicionarCategoria">
