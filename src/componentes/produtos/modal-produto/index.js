@@ -1,10 +1,12 @@
 import pizzaImagem from '../../../assets/Pizza de Calabresa.jpg';
 import { Formik } from 'formik';
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 
 function ModalProduto({ produto, onClose, categorias, onSave }) {
   const isEditingProduto = !!produto;
-
+  const [imagemProduto, setImagemProduto] = useState(pizzaImagem);
+  const [imgPreview, setImgPreview] = useState('');
   const ProdutoSchema = Yup.object().shape({
     nome: Yup.string()
       .min(5, 'Muito pequeno!')
@@ -20,6 +22,21 @@ function ModalProduto({ produto, onClose, categorias, onSave }) {
       .required('Campo obrigatorio'),
     categoria: Yup.string().required('Campo obrigatorio')
   });
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() => {
+    produto ? setImagemProduto(produto.imagem.url) : setImagemProduto(pizzaImagem);
+  }, [produto]);
 
   return (
     <div className="modalTransparent">
@@ -64,7 +81,12 @@ function ModalProduto({ produto, onClose, categorias, onSave }) {
               <form onSubmit={handleSubmit}>
                 <div className="corpoProduto1">
                   <div className="imagemProduto">
-                    <img src={pizzaImagem} alt="imagem do produto" width="70%"></img>
+                    {imgPreview ? (
+                      <img src={imgPreview} alt="imagem do produto" width="70%" />
+                    ) : (
+                      <img src={imagemProduto} alt="imagem do produto" width="70%" />
+                    )}
+                    <input type="file" name="imagem" onChange={handleImageChange}></input>
                   </div>
 
                   <div className="aoLadoDaImagem">

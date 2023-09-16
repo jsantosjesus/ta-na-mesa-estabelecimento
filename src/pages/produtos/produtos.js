@@ -6,6 +6,8 @@ import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
 import { ModalProduto } from '../../componentes/produtos/modal-produto';
 import { apiClient } from '../../config/api';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 // import { AuthContext } from '../../contexts/auth';
 
 function Produtos() {
@@ -14,6 +16,7 @@ function Produtos() {
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   // const { user } = useContext(AuthContext);
   const estabelecimentoId = '8fb6e710-07c7-4c41-a7ab-2ad9bdf1cd7d';
+  const [loading, setLoading] = useState(false);
 
   //buscando categorias em conexão com a API
   const [categorias, setCategorias] = useState([]);
@@ -32,6 +35,7 @@ function Produtos() {
   const [produtos, setProdutos] = useState([]);
 
   const getProdutos = async () => {
+    setLoading(true);
     const result = await apiClient.get(`/produtos/estabelecimento/${estabelecimentoId}`, {
       params: { limit: 30, offset: 0 },
       headers: {
@@ -41,6 +45,7 @@ function Produtos() {
     setProdutos(result.data);
     setFilteredData(result.data);
     console.log(produtos);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -54,12 +59,25 @@ function Produtos() {
   // };
 
   useEffect(() => {
-    filterData();
+    getProdutos();
+    filterDataByCategoria();
   }, [categoriaFiltro]);
 
   const handleSalvarProduto = () => {
     toast.success('Salvo com sucesso');
     setProdutoAtivo(null);
+  };
+
+  const filterDataByCategoria = async () => {
+    setLoading(true);
+    const result = await apiClient.get(`/produtos/categoria/${categoriaFiltro}`, {
+      params: { limit: 30, offset: 0 },
+      headers: {
+        'ngrok-skip-browser-warning': true
+      }
+    });
+    setFilteredData(result.data);
+    setLoading(false);
   };
 
   const filterData = () => {
@@ -120,7 +138,7 @@ function Produtos() {
               <select value={categoriaFiltro} onChange={(e) => setCategoriaFiltro(e.target.value)}>
                 <option value="">Todos</option>
                 {categorias.map((categoria) => (
-                  <option key={categoria.id} value={categoria.nome}>
+                  <option key={categoria.id} value={categoria.id}>
                     {categoria.nome}
                   </option>
                 ))}
@@ -158,28 +176,34 @@ function Produtos() {
             </p>
           </div>
           <div className="tabelaProdutos">
-            {filteredData.map((produto) => {
-              return (
-                <div key={produto.id}>
-                  <div className="produto" onClick={() => handleClickProduto(produto)}>
-                    <p>{produto.nome}</p>
-                    <p>R$ {produto.preco.toFixed(2).replace('.', ',')}</p>
-                    <p>
-                      {categorias.map((categoria) => {
-                        let categoriaNome;
+            {loading ? (
+              <Box sx={{ display: 'grid', placeItems: 'center' }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              filteredData.map((produto) => {
+                return (
+                  <div key={produto.id}>
+                    <div className="produto" onClick={() => handleClickProduto(produto)}>
+                      <p>{produto.nome}</p>
+                      <p>R$ {produto.preco.toFixed(2).replace('.', ',')}</p>
+                      <p>
+                        {categorias.map((categoria) => {
+                          let categoriaNome;
 
-                        if (categoria.id === produto.categoriaId) {
-                          categoriaNome = categoria.nome;
-                        }
+                          if (categoria.id === produto.categoriaId) {
+                            categoriaNome = categoria.nome;
+                          }
 
-                        return <>{categoriaNome}</>;
-                      })}
-                    </p>
-                    <p>{produto.estoque}</p>
+                          return <>{categoriaNome}</>;
+                        })}
+                      </p>
+                      <p>{produto.estoque}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
         {/* <div className="adicionarCategoria">
