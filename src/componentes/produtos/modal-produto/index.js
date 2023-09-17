@@ -2,9 +2,12 @@ import pizzaImagem from '../../../assets/Pizza de Calabresa.jpg';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
+import { apiClient } from '../../../config/api';
 
-function ModalProduto({ produto, onClose, categorias, onSave }) {
+function ModalProduto({ produto, onClose, categorias, onSave, user }) {
   const isEditingProduto = !!produto;
+  const token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hYW5AZ21haWwuY29tIiwic2VuaGEiOiIkMmEkMTAkOXdsN1NiMXVHaTRiTjVxTmNDZ3FidTR2cEJ4WE95Y3Z2Nm1keWpBNzIzSy5BOW9OTEdYYXEiLCJpYXQiOjE2OTQ5MDYwNDUsImV4cCI6MTcwMjY4MjA0NX0.WLF6inxtRFbBUKcaZ9lBKL7zmmANQdpvDQC9Hmwpxl8';
   const [imagemProduto, setImagemProduto] = useState(pizzaImagem);
   const [imgPreview, setImgPreview] = useState('');
   const ProdutoSchema = Yup.object().shape({
@@ -29,6 +32,7 @@ function ModalProduto({ produto, onClose, categorias, onSave }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImgPreview(reader.result);
+        console.log(imgPreview);
       };
       reader.readAsDataURL(file);
     }
@@ -36,6 +40,7 @@ function ModalProduto({ produto, onClose, categorias, onSave }) {
 
   useEffect(() => {
     produto ? setImagemProduto(produto.imagem.url) : setImagemProduto(pizzaImagem);
+    console.log(user.token);
   }, [produto]);
 
   return (
@@ -55,15 +60,27 @@ function ModalProduto({ produto, onClose, categorias, onSave }) {
                     nome: produto.nome,
                     preco: produto.preco,
                     estoque: produto.estoque,
-                    categoria: produto.categoria,
+                    categoria: produto.categoriaId,
                     descricao: produto.descricao
                   }
                 : {}
             }
             validationSchema={ProdutoSchema}
-            onSubmit={(values, { setSubmitting }) => {
+            onSubmit={async (values, { setSubmitting }) => {
+              if (imgPreview) {
+                values.imagem = imgPreview;
+              }
+              await apiClient
+                .put(`/produtos/${produto.id}`, values, {
+                  headers: {
+                    'ngrok-skip-browser-warning': true,
+                    'Authorization' : `Bearer ${token}`
+                  }
+                })
+                .then((response) => console.log(response.mensage));
               setTimeout(() => {
                 console.log(JSON.stringify(values, null, 2));
+                console.log(imgPreview);
                 onSave();
                 setSubmitting(false);
               }, 400);
@@ -86,7 +103,11 @@ function ModalProduto({ produto, onClose, categorias, onSave }) {
                     ) : (
                       <img src={imagemProduto} alt="imagem do produto" width="70%" />
                     )}
-                    <input type="file" name="imagem" onChange={handleImageChange}></input>
+                    <input
+                      type="file"
+                      name="imagem"
+                      onChange={handleImageChange}
+                      value={values.imagem}></input>
                   </div>
 
                   <div className="aoLadoDaImagem">
@@ -139,12 +160,22 @@ function ModalProduto({ produto, onClose, categorias, onSave }) {
                           onBlur={handleBlur}
                           value={values.categoria}>
                           <optgroup label="Selecione:">
-                            {isEditingProduto && <option>{produto.categoria}</option>}
+                            {isEditingProduto &&
+                              categorias.map((categoria) => {
+                                if (categoria.id === produto.categoriaId) {
+                                  // eslint-disable-next-line prettier/prettier
+                                  return (
+                                    <option key={categoria.id} value={categoria.id}>
+                                      {categoria.nome}
+                                    </option>
+                                  );
+                                }
+                              })}
                             {categorias.map((categoria) => {
-                              if (!isEditingProduto || categoria.nome !== produto.categoria) {
+                              if (!isEditingProduto || categoria.id !== produto.categoriaId) {
                                 // eslint-disable-next-line prettier/prettier
                                 return (
-                                  <option key={categoria.id} value={categoria.nome}>
+                                  <option key={categoria.id} value={categoria.id}>
                                     {categoria.nome}
                                   </option>
                                 );

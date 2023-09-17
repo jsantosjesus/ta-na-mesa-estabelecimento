@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './produtos.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
@@ -8,13 +8,13 @@ import { ModalProduto } from '../../componentes/produtos/modal-produto';
 import { apiClient } from '../../config/api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-// import { AuthContext } from '../../contexts/auth';
+import { AuthContext } from '../../contexts/auth';
 
 function Produtos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
-  // const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const estabelecimentoId = '8fb6e710-07c7-4c41-a7ab-2ad9bdf1cd7d';
   const [loading, setLoading] = useState(false);
 
@@ -189,13 +189,9 @@ function Produtos() {
                       <p>R$ {produto.preco.toFixed(2).replace('.', ',')}</p>
                       <p>
                         {categorias.map((categoria) => {
-                          let categoriaNome;
-
                           if (categoria.id === produto.categoriaId) {
-                            categoriaNome = categoria.nome;
+                            return <>{categoria.nome}</>;
                           }
-
-                          return <>{categoriaNome}</>;
                         })}
                       </p>
                       <p>{produto.estoque}</p>
@@ -215,6 +211,7 @@ function Produtos() {
         <ModalProduto
           produto={produtoAtivo}
           categorias={categorias}
+          user={user}
           onClose={handleCloseProdutoModal}
           onSave={handleSalvarProduto}
         />
@@ -222,6 +219,7 @@ function Produtos() {
       {isCreatingProduto && (
         <ModalProduto
           categorias={categorias}
+          user={user}
           onClose={handleCloseNewProduto}
           onSave={handleSalvarProduto}
         />
