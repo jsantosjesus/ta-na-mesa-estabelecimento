@@ -68,22 +68,26 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
             validationSchema={ProdutoSchema}
             onSubmit={async (values, { setSubmitting }) => {
               if (imgPreview) {
-                values.imagem = imgPreview;
+                values.imagem = imgPreview.data;
               }
-              await apiClient
-                .put(`/produtos/${produto.id}`, values, {
-                  headers: {
-                    'ngrok-skip-browser-warning': true,
-                    'Authorization' : `Bearer ${token}`
-                  }
-                })
-                .then((response) => console.log(response.mensage));
-              setTimeout(() => {
-                console.log(JSON.stringify(values, null, 2));
-                console.log(imgPreview);
-                onSave();
-                setSubmitting(false);
-              }, 400);
+              {
+                isEditingProduto &&
+                  (
+                    await apiClient.put(`/produtos/${produto.id}`, values, {
+                      headers: {
+                        'ngrok-skip-browser-warning': true,
+                        Authorization: `Bearer ${token}`
+                      }
+                    })
+                  ).then((response) => console.log(response.mensage))
+                  .catch((error) => console.log(error.data))
+                setTimeout(() => {
+                  console.log(JSON.stringify(values, null, 2));
+                  console.log(imgPreview);
+                  onSave();
+                  setSubmitting(false);
+                }, 400);
+              }
             }}>
             {({
               errors,
