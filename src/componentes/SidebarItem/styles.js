@@ -11,15 +11,12 @@ export const Container = styled.div`
   border-radius: 10px;
   margin: 0 15px 20px;
 
-  > a {
-    text-decoration: none;
-  }
-
   > svg {
     margin: 0 20px;
   }
 
   &:hover {
     opacity: 0.7;
+    text-decoration: none;
   }
 `;

@@ -23,7 +23,7 @@ const Sidebar = ({ active }) => {
       <FaTimes onClick={closeSidebar} />  
       <Content>
         <Link to="/cozinha"><SidebarItem Icon={BsReceiptCutoff} Text="Cozinha" /></Link>
-        <Link to="/mesas"><SidebarItem Icon={BsGrid1X2Fill} Text="Mesas" /></Link>
+        <Link to="/salao"><SidebarItem Icon={BsGrid1X2Fill} Text="Salao" /></Link>
         <Link to="/colaboradores"><SidebarItem Icon={BsFillPersonFill} Text="Colaboradores" /></Link>
         <Link to="/produtos"><SidebarItem Icon={BsFillTagsFill} Text="Produtos" /></Link>
         <Link to="/configuracoes"><SidebarItem Icon={BsGearFill} Text="Configurações" /></Link>
