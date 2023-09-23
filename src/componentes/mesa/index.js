@@ -3,27 +3,14 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 
-function ModalMesa({ mesa, onClose, onSave }) {
+function ModalMesa({ mesa, onClose, onSave, colaborador }) {
     const isEditingMesa = !!mesa;
 
+    const status = ['LIVRE', 'OCUPADA', 'INATIVA'];
+
     const mesaSchema = Yup.object().shape({
-        nome: Yup.string()
-            .min(5, 'Muito pequeno!')
-            .max(100, 'Muito grande!')
+        numero: Yup.string()
             .required('Campo obrigatorio'),
-        email: Yup.string()
-            .email('email invalido')
-            .min(5, 'Muito pequeno!')
-            .max(100, 'Muito grande!')
-            .required('Campo obrigatorio'),
-        senha: Yup.string()
-            .required('Senha obrigatória')
-            .matches(
-                /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                'A senha precisa ter no mínimo 8 caracteres, ' +
-                'uma letra maiúscula e uma letra minúscula, ' +
-                'um número e um caracter especial'
-            ),
         garcom: Yup.string()
             .required('Campo obrigatorio')
     });
@@ -42,11 +29,9 @@ function ModalMesa({ mesa, onClose, onSave }) {
                         initialValues={
                             isEditingMesa
                                 ? {
-                                    // nome: mesa.nome,
-                                    // email: colaborador.email,
-                                    // senha: colaborador.senha,
-                                    // cargo: colaborador.cargo,
-                                    // mesas: colaborador.mesas
+                                    numero: mesa.numero,
+                                    status: mesa.status,
+                                    garcom: mesa.colaboradorId
                                 }
                                 : {}
                         }
@@ -72,41 +57,50 @@ function ModalMesa({ mesa, onClose, onSave }) {
                                 <div className="corpoProduto1">
                                     <div className="inputs">
                                         <div className="nome">
-                                            <p>Nome</p>
+                                            <p>Numero</p>
                                             <input
                                                 type="name"
-                                                name="nome"
+                                                name="numero"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
-                                                value={values.nome}></input>
-                                            {errors.nome && touched.nome ? (
-                                                <div className="errorInput">{errors.nome}</div>
+                                                value={values.numero}></input>
+                                            {errors.numero && touched.numero ? (
+                                                <div className="errorInput">{errors.numero}</div>
                                             ) : null}
                                         </div>
 
                                         <div className="nome">
-                                            <p>Email</p>
-                                            <input
+                                            <p>status</p>
+                                            <select
                                                 type="name"
-                                                name="email"
+                                                name="status"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
-                                                value={values.email}></input>
-                                            {errors.email && touched.email ? (
-                                                <div className="errorInput">{errors.email}</div>
-                                            ) : null}
-                                        </div>
-                                        <div className="nome">
-                                            <p>Senha</p>
-                                            <input
-                                                type="password"
-                                                name="senha"
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={values.senha}></input>
-                                            {errors.senha && touched.senha ? (
-                                                <div className="errorInput">{errors.senha}</div>
-                                            ) : null}
+                                                value={values.status}>
+                                                <optgroup label="Selecione:">
+                                                    {isEditingMesa &&
+                                                        status.map((status) => {
+                                                            if (status === mesa.status) {
+                                                                // eslint-disable-next-line prettier/prettier
+                                                                return (
+                                                                    <option key={status} value={status}>
+                                                                        {status}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        })}
+                                                    {status.map((status) => {
+                                                        if (!isEditingMesa || status !== mesa.status) {
+                                                            // eslint-disable-next-line prettier/prettier
+                                                            return (
+                                                                <option key={status} value={status}>
+                                                                    {status}
+                                                                </option>
+                                                            );
+                                                        }
+                                                    })}
+                                                </optgroup>
+                                            </select>
                                         </div>
 
                                         <div className="categoriaEadicionar">
@@ -119,11 +113,27 @@ function ModalMesa({ mesa, onClose, onSave }) {
                                                     onBlur={handleBlur}
                                                     value={values.garcom}>
                                                     <optgroup label="Selecione:">
-                                                        {isEditingMesa && <option>{'colaborador.tipo'}</option>}
-                                                        {/* {cargos.map((cargo) => {
-                                                            if (isEditingMesa || cargo.nome !== colaborador.tipo) {
-                                                                // eslint-disable-next-line react/jsx-key
-                                                                return <option value={cargos.nome}>{cargos.nome}</option>;
+                                                        {isEditingMesa &&
+                                                            colaborador.map((colaborador) => {
+                                                                if (colaborador.tipo !== 'garcom') {
+                                                                    if (colaborador.id === mesa.colaboradorId) {
+                                                                        // eslint-disable-next-line prettier/prettier
+                                                                        return (
+                                                                            <option key={colaborador.id} value={colaborador.id}>
+                                                                                {colaborador.nome}
+                                                                            </option>
+                                                                        );
+                                                                    }
+                                                                }
+                                                            })}
+                                                        {/* {categorias.map((categoria) => {
+                                                            if (!isEditingProduto || categoria.id !== produto.categoriaId) {
+                                                                // eslint-disable-next-line prettier/prettier
+                                                                return (
+                                                                    <option key={categoria.id} value={categoria.id}>
+                                                                        {categoria.nome}
+                                                                    </option>
+                                                                );
                                                             }
                                                         })} */}
                                                     </optgroup>
