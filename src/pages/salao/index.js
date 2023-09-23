@@ -35,12 +35,6 @@ function Salao() {
     getMesas();
   }, []);
 
-  // função abrir e fechar poupup da conta
-
-  const [conta, setConta] = React.useState('close');
-  const handleOpenConta = () => setConta('open');
-  const handleCloseConta = () => setConta('close');
-
   //  useState para funções de abrir e fechar poupup da mesa
 
   const [mesaAtiva, setMesaAtiva] = useState(null);
@@ -50,73 +44,8 @@ function Salao() {
   };
 
   const handleClose = () => {
-    setMesaAtiva(null)
-  }
-
-  // popupup da mesa
-
-  // const Popup = ({ mesa }) => {
-  //   if (mesaAtiva !== mesa) {
-  //     return null;
-  //   }
-
-  //   const handleClose = () => {
-  //     setMesaAtiva(null);
-  //     setConta('close');
-  //   };
-
-  //   return (
-  //     <div className="toogle">
-  //       <div className="poupupmesa">
-  //         <div className="title">
-  //           <h1>Mesa {mesa.numero}</h1>
-  //           <button onClick={handleClose}>X</button>
-  //         </div>
-  //         <div className="corpo">
-  //           <h2>Pedidos</h2>
-  //           <div className="pedido">
-  //             {mesa.pedidos.map((pedido, id) => (
-  //               <p key={id}>{pedido}</p>
-  //             ))}
-  //           </div>
-
-  //           <h2>Clientes</h2>
-  //           <div className="cliente">
-  //             {mesa.clientes.map((cliente, id) => (
-  //               <p key={id}>{cliente} </p>
-  //             ))}
-  //           </div>
-  //           <div className="footer">
-  //             <button onClick={handleOpenConta}>Conta</button>
-  //           </div>
-  //           <div className="printable-modal">
-  //             <div id={conta} className="contaImprimir">
-  //               <h2>Mesa {mesa.numero}</h2>
-
-  //               {/* produtos da conta */}
-  //               <table>
-  //                 <tbody className="tableConta">
-  //                   {mesa.conta.produtos.map((produto, id) => (
-  //                     <tr key={id}>
-  //                       <td>{produto.quantidade}</td>
-  //                       <td>{produto.nome}</td>
-  //                       <td>{produto.valor * produto.quantidade}</td>
-  //                     </tr>
-  //                   ))}
-  //                 </tbody>
-  //               </table>
-  //               <p>Valor total: {mesa.conta.total}</p>
-  //               <div className="footerConta">
-  //                 <button onClick={handleCloseConta}>Fechar</button>
-  //                 <button onClick={() => window.print()}>Imprimir</button>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // };
+    setMesaAtiva(null);
+  };
 
   // renderizando array de mesas
 
@@ -136,9 +65,7 @@ function Salao() {
           ))}
         </div>
       </div>
-      {mesaAtiva && <NestedModal 
-      mesa={mesaAtiva}
-      close={handleClose}/>}
+      {mesaAtiva && <NestedModal mesa={mesaAtiva} close={handleClose} />}
     </div>
   );
 }

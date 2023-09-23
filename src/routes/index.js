@@ -6,6 +6,7 @@ import Produtos from '../pages/produtos/produtos';
 import Colaboradores from '../pages/Colaboradores';
 import { AuthContext, AuthProvicer } from '../contexts/auth';
 import { useContext } from 'react';
+import Mesas from '../pages/mesas';
 
 export default function Rotas() {
   const Private = ({ children }) => {
@@ -32,6 +33,16 @@ export default function Rotas() {
           element={
             <Private>
               <Salao />
+            </Private>
+          }
+        />
+
+        <Route
+          exact
+          path="/mesas"
+          element={
+            <Private>
+              <Mesas />
             </Private>
           }
         />

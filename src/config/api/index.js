@@ -1,5 +1,5 @@
 import axios from 'axios';
 
-const baseUrl = 'https://7c14-2804-5dc-232-4300-599c-bb0a-8b6-5dea.ngrok-free.app' || '';
+const baseUrl = 'https://6a71-2804-5dc-232-4300-fc91-1dd1-d732-f3aa.ngrok-free.app' || '';
 
 export const apiClient = axios.create({ baseURL: baseUrl });

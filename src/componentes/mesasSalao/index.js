@@ -14,10 +14,10 @@ const style = {
   boxShadow: 24,
   pt: 2,
   px: 4,
-  pb: 3,
+  pb: 3
 };
 
-function ChildModal(mesa) {
+function ChildModal({ mesa }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -28,13 +28,12 @@ function ChildModal(mesa) {
 
   return (
     <React.Fragment>
-      {mesa.status === "OCUPADA" && <Button onClick={handleOpen}>Ver Conta</Button>}
+      <Button onClick={handleOpen}>Ver {mesa.status === 'LIVRE' && 'última '}conta</Button>
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description"
-      >
+        aria-describedby="child-modal-description">
         <Box sx={{ ...style, width: 200 }}>
           <h2 id="child-modal-title">Text in a child modal</h2>
           <p id="child-modal-description">
@@ -46,29 +45,18 @@ function ChildModal(mesa) {
     </React.Fragment>
   );
 }
-
-export default function NestedModal({mesa, close = () =>{}}) {
-  const [open, setOpen] = React.useState(true);
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
-
+export default function NestedModal({ mesa, close = () => {} }) {
   return (
     <div>
       <Modal
         open={open}
         onClose={close}
         aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
+        aria-describedby="parent-modal-description">
         <Box sx={{ ...style, width: 400 }}>
           <h2 id="parent-modal-title">Mesa {`${mesa.numero} (${mesa.status})`}</h2>
-          <p id="parent-modal-description">
-            Garçom responsável: <br />
-            Conta: R$
-          </p>
-          <ChildModal 
-          mesa={mesa}/>
+          <p id="parent-modal-description">{mesa.status === 'LIVRE' ? 'Última c' : 'C'}onta: R$</p>
+          <ChildModal mesa={mesa} />
         </Box>
       </Modal>
     </div>
