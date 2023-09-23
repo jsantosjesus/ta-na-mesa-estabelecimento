@@ -15,8 +15,7 @@ function Colaboradores() {
       nome: 'Jadson',
       email: 'jadson@teste',
       senha: '123456',
-      tipo: 'Garçom',
-      mesas: ['1', '2', '3']
+      tipo: 'Garçom'
     },
     {
       id: 1,
@@ -43,59 +42,6 @@ function Colaboradores() {
       mesas: []
     }
   ]);
-
-  // array de mesas
-
-  // const [table, setTable] = useState([
-  //   {
-  //     id: 0,
-  //     numero: '1',
-  //     garcomId: 'Jadson',
-  //     mesaGarcom: false
-  //   },
-  //   {
-  //     id: 1,
-  //     numero: '2',
-  //     garcomId: 'Jadson',
-  //     mesaGarcom: false
-  //   },
-  //   {
-  //     id: 2,
-  //     numero: '3',
-  //     garcomId: 'Jadson',
-  //     mesaGarcom: false
-  //   },
-  //   {
-  //     id: 3,
-  //     numero: '4',
-  //     garcomId: 'Natan',
-  //     mesaGarcom: false
-  //   },
-  //   {
-  //     id: 4,
-  //     numero: '5',
-  //     garcomId: 'Natan',
-  //     mesaGarcom: false
-  //   },
-  //   {
-  //     id: 5,
-  //     numero: '6',
-  //     garcomId: 'Natan',
-  //     mesaGarcom: false
-  //   },
-  //   {
-  //     id: 6,
-  //     numero: '7',
-  //     garcomId: 'Natan',
-  //     mesaGarcom: false
-  //   },
-  //   {
-  //     id: 7,
-  //     numero: '8',
-  //     garcomId: '',
-  //     mesaGarcom: false
-  //   }
-  // ]);
 
   //array de cargos
   const cargos = [

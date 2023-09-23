@@ -9,7 +9,7 @@ function Salao() {
 
   const estabelecimentoId = 'ac95ba93-1124-41cf-b1d1-5005b62686b6';
   const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hYW5AZ21haWwuY29tIiwic2VuaGEiOiIkMmEkMTAkOXdsN1NiMXVHaTRiTjVxTmNDZ3FidTR2cEJ4WE95Y3Z2Nm1keWpBNzIzSy5BOW9OTEdYYXEiLCJpYXQiOjE2OTQ5MDYwNDUsImV4cCI6MTcwMjY4MjA0NX0.WLF6inxtRFbBUKcaZ9lBKL7zmmANQdpvDQC9Hmwpxl8';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlQGdtYWlsLmNvbSIsInNlbmhhIjoiJDJhJDEwJFVMR1QyelZsbkRLUGoyekZURm5PaU9DYThXd1RQa2VTYUhxTGJhaXl4UmhPdnhlbDlFZ3ZTIiwiaWF0IjoxNjk1NDk4OTgzLCJleHAiOjE3MDMyNzQ5ODN9.Jom7A-zLUO0EQkr4euRQPpC9jyTHdT7Nq5p_Cvb0EAg';
 
   const [mesas, setMesas] = useState([]);
 

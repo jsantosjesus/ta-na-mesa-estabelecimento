@@ -47,8 +47,7 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave,
                                     nome: colaborador.nome,
                                     email: colaborador.email,
                                     senha: colaborador.senha,
-                                    cargo: colaborador.cargo,
-                                    mesas: colaborador.mesas
+                                    cargo: colaborador.cargo
                                 }
                                 : {}
                         }
@@ -65,12 +64,12 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave,
                             values,
                             touched,
                             handleChange,
-                            handleBlur
-                            // handleSubmit,
-                            // isSubmitting
+                            handleBlur,
+                            handleSubmit,
+                            isSubmitting
                             /* and other goodies */
                         }) => (
-                            <forms>
+                            <form onSubmit={handleSubmit}>
                                 <div className="corpoProduto1">
                                     <div className="inputs">
                                         <div className="nome">
@@ -125,38 +124,22 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave,
                                                         {cargos.map((cargo) => {
                                                             if (isEditingcolaborador || cargo.nome !== colaborador.tipo) {
                                                                 // eslint-disable-next-line react/jsx-key
-                                                                return <option value={cargos.nome}>{cargos.nome}</option>;
+                                                                return <option value={cargo.nome}>{cargo.nome}</option>;
                                                             }
                                                         })}
                                                     </optgroup>
                                                 </select>
                                             </div>
-                                            {/* {selectedValue === 'Garçom' ? (
-                                                <div className="mesasThisGarcom">
-                                                    Mesas:{' '}
-                                                    {colaborador.mesas.map((mesa, index) => (
-                                                        <p key={index}>
-                                                            {mesa}
-                                                            {index === colaborador.mesas.length - 1 ? '' : ', '}
-                                                        </p>
-                                                    ))}
-                                                    <p className="linkMesas" onClick={abrirMesasGarcom}>
-                                                        Gerenciar mesas
-                                                    </p>
-                                                </div>
-                                            ) : (
-                                                <p></p>
-                                            )} */}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="salvar">
-                                    <button className="botaoSalvarProduto">
+                                    <button type="submit" disabled={isSubmitting} className="botaoSalvarProduto">
                                         Salvar Alterações
                                     </button>
                                 </div>
-                            </forms>
+                            </form>
                         )}
                     </Formik>
                 </div>

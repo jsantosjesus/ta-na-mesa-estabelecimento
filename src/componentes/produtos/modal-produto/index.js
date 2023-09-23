@@ -79,8 +79,9 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
                         Authorization: `Bearer ${token}`
                       }
                     })
-                  ).then((response) => console.log(response.mensage))
-                  .catch((error) => console.log(error.data))
+                  )
+                    .then((response) => console.log(response.mensage))
+                    .catch((error) => console.log(error.data));
                 setTimeout(() => {
                   console.log(JSON.stringify(values, null, 2));
                   console.log(imgPreview);
