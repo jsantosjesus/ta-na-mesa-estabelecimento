@@ -48,12 +48,12 @@ function ModalMesa({ mesa, onClose, onSave, colaborador }) {
                             values,
                             touched,
                             handleChange,
-                            handleBlur
-                            // handleSubmit,
-                            // isSubmitting
+                            handleBlur,
+                            handleSubmit,
+                            isSubmitting
                             /* and other goodies */
                         }) => (
-                            <forms>
+                            <form onSubmit={handleSubmit}>
                                 <div className="corpoProduto1">
                                     <div className="inputs">
                                         <div className="nome">
@@ -126,16 +126,16 @@ function ModalMesa({ mesa, onClose, onSave, colaborador }) {
                                                                     }
                                                                 }
                                                             })}
-                                                        {/* {categorias.map((categoria) => {
-                                                            if (!isEditingProduto || categoria.id !== produto.categoriaId) {
+                                                        {colaborador.map((colaborador) => {
+                                                            if (!isEditingMesa || colaborador.id !== mesa.colaboradorId) {
                                                                 // eslint-disable-next-line prettier/prettier
                                                                 return (
-                                                                    <option key={categoria.id} value={categoria.id}>
-                                                                        {categoria.nome}
+                                                                    <option key={colaborador.id} value={colaborador.id}>
+                                                                        {colaborador.nome}
                                                                     </option>
                                                                 );
                                                             }
-                                                        })} */}
+                                                        })}
                                                     </optgroup>
                                                 </select>
                                             </div>
@@ -144,11 +144,11 @@ function ModalMesa({ mesa, onClose, onSave, colaborador }) {
                                 </div>
 
                                 <div className="salvar">
-                                    <button className="botaoSalvarProduto">
+                                    <button type="submit" disabled={isSubmitting} className="botaoSalvarProduto">
                                         Salvar Alterações
                                     </button>
                                 </div>
-                            </forms>
+                            </form>
                         )}
                     </Formik>
                 </div>
