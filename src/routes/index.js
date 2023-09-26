@@ -4,6 +4,7 @@ import Salao from '../pages/salao';
 import CentralGarcom from '../pages/CentralGarcom';
 import Produtos from '../pages/produtos/produtos';
 import Colaboradores from '../pages/Colaboradores';
+import { Cozinha } from '../pages/cozinha';
 import { AuthContext, AuthProvicer } from '../contexts/auth';
 import { useContext } from 'react';
 import Mesas from '../pages/mesas';
@@ -63,6 +64,16 @@ export default function Rotas() {
           element={
             <Private>
               <Colaboradores />
+            </Private>
+          }
+        />
+
+        <Route
+          exact
+          path="/cozinha"
+          element={
+            <Private>
+              <Cozinha />
             </Private>
           }
         />

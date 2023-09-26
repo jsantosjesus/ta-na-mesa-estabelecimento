@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
 import { ModalMesa } from '../../componentes/mesa';
 import { apiClient } from '../../config/api';
+import { AuthContext } from '../../contexts/auth';
 function Mesas() {
-  // puxando atributos dos mesas
+  const { user } = useContext(AuthContext);
 
   const [mesas, setMesas] = useState([
     {
@@ -14,12 +15,10 @@ function Mesas() {
       colaboradorId: '1'
     }
   ]);
-  const estabelecimentoId = 'ac95ba93-1124-41cf-b1d1-5005b62686b6';
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlQGdtYWlsLmNvbSIsInNlbmhhIjoiJDJhJDEwJFVMR1QyelZsbkRLUGoyekZURm5PaU9DYThXd1RQa2VTYUhxTGJhaXl4UmhPdnhlbDlFZ3ZTIiwiaWF0IjoxNjk1NDk4OTgzLCJleHAiOjE3MDMyNzQ5ODN9.Jom7A-zLUO0EQkr4euRQPpC9jyTHdT7Nq5p_Cvb0EAg';
+  const estabelecimentoId = user.usuario.estabelecimentoId;
+  const token = user.token;
 
   const getMesas = async () => {
-    // setLoading(true);
     await apiClient
       .get(`/mesas/estabelecimento/${estabelecimentoId}`, {
         params: { limit: 30, offset: 0 },
@@ -34,17 +33,20 @@ function Mesas() {
       })
       .catch((error) => {
         console.log(error.data);
+        erro();
       });
   };
+
   useEffect(() => {
     getMesas();
   }, []);
 
   //array de cargos
   const colaborador = [
-    { id: '0', nome: 'Jadson', tipo: 'garcom' },
+    { id: '0', nome: 'Jadson', tipo: '' },
     { id: '1', nome: 'Natan', tipo: 'administrador' },
-    { id: '2', nome: 'Matheus', tipo: 'garcom' }
+    { id: '2', nome: 'Matheus', tipo: 'GARCOM' },
+    { id: user.usuario.id, nome: user.usuario.nome, tipo: user.usuario.tipo }
   ];
 
   const [isCreatingMesa, setIsCreatingMesa] = useState(false);
@@ -68,6 +70,11 @@ function Mesas() {
   function salvar() {
     toast.success('Salvo com sucesso');
     setMesaAtiva(null);
+    getMesas();
+  }
+
+  function erro() {
+    toast.error('Desculpe, algo deu errado');
   }
   // renderizando array de mesas
   return (
@@ -102,7 +109,7 @@ function Mesas() {
                   <p>{mesa.status}</p>
                   <p>
                     {colaborador.map((garcom) => {
-                      if (garcom.id === mesa.colaboradorId) {
+                      if (garcom.id === mesa.usuarioId) {
                         return <>{garcom.nome}</>;
                       }
                     })}
@@ -119,6 +126,9 @@ function Mesas() {
           colaborador={colaborador}
           onClose={handleCloseMesaModal}
           onSave={salvar}
+          token={token}
+          usuario={user.usuario}
+          erro={erro}
         />
       )}
       {isCreatingMesa && (
@@ -127,6 +137,9 @@ function Mesas() {
           colaborador={colaborador}
           onClose={handleCloseNewMesa}
           onSave={salvar}
+          token={token}
+          usuario={user.usuario}
+          erro={erro}
         />
       )}
     </div>

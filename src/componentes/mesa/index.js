@@ -1,17 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { apiClient } from '../../config/api';
 
 
-function ModalMesa({ mesa, onClose, onSave, colaborador }) {
+function ModalMesa({ mesa, onClose, onSave, colaborador, token, usuario, erro }) {
     const isEditingMesa = !!mesa;
 
     const status = ['LIVRE', 'OCUPADA', 'INATIVA'];
 
     const mesaSchema = Yup.object().shape({
         numero: Yup.string()
-            .required('Campo obrigatorio'),
-        garcom: Yup.string()
             .required('Campo obrigatorio')
     });
 
@@ -31,17 +30,62 @@ function ModalMesa({ mesa, onClose, onSave, colaborador }) {
                                 ? {
                                     numero: mesa.numero,
                                     status: mesa.status,
-                                    garcom: mesa.colaboradorId
+                                    usuarioId: mesa.colaboradorId
                                 }
-                                : {}
+                                : {
+                                    status: 'LIVRE'
+                                }
                         }
                         validationSchema={mesaSchema}
-                        onSubmit={(values, { setSubmitting }) => {
-                            setTimeout(() => {
-                                console.log(JSON.stringify(values, null, 2));
-                                onSave();
-                                setSubmitting(false);
-                            }, 400);
+                        onSubmit={async (values, { setSubmitting }) => {
+                            isEditingMesa ?
+                                (
+                                    await apiClient.put(`/mesas/estabelecimento/${mesa.id}`, values, {
+                                        headers: {
+                                            'ngrok-skip-browser-warning': true,
+                                            Authorization: `Bearer ${token}`
+                                        }
+                                    })
+                                        .then((response) => {
+                                            setTimeout(() => {
+                                                console.log(JSON.stringify(values, null, 2));
+                                                console.log(response.data);
+                                                onSave();
+                                                onClose();
+                                                setSubmitting(false);
+                                            }, 400);
+                                        }
+                                        )
+                                        .catch((error) => {
+                                            console.log(error);
+                                            onClose();
+                                            erro();
+                                        })
+                                )
+                                :
+                                (
+                                    await apiClient.post(`/mesas/estabelecimento/${usuario.estabelecimentoId}`, values, {
+                                        headers: {
+                                            'ngrok-skip-browser-warning': true,
+                                            Authorization: `Bearer ${token}`
+                                        }
+                                    })
+                                        .then((response) => {
+                                            setTimeout(() => {
+                                                console.log(JSON.stringify(values, null, 2));
+                                                console.log(response.data);
+                                                onSave();
+                                                onClose();
+                                                setSubmitting(false);
+                                            }, 400);
+                                        }
+                                        )
+                                        .catch((error) => {
+                                            console.log(error);
+                                            onClose();
+                                            erro();
+                                        })
+                                )
                         }}>
                         {({
                             errors,
@@ -108,15 +152,15 @@ function ModalMesa({ mesa, onClose, onSave, colaborador }) {
                                                 <p>Garçom</p>
                                                 <select
                                                     // eslint-disable-next-line react/no-unknown-property
-                                                    name="garcom"
+                                                    name="usuarioId"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    value={values.garcom}>
+                                                    value={values.usuarioId}>
                                                     <optgroup label="Selecione:">
                                                         {isEditingMesa &&
                                                             colaborador.map((colaborador) => {
-                                                                if (colaborador.tipo !== 'garcom') {
-                                                                    if (colaborador.id === mesa.colaboradorId) {
+                                                                if (colaborador.tipo === 'GARCOM') {
+                                                                    if (colaborador.id === mesa.usuarioId) {
                                                                         // eslint-disable-next-line prettier/prettier
                                                                         return (
                                                                             <option key={colaborador.id} value={colaborador.id}>
@@ -127,13 +171,15 @@ function ModalMesa({ mesa, onClose, onSave, colaborador }) {
                                                                 }
                                                             })}
                                                         {colaborador.map((colaborador) => {
-                                                            if (!isEditingMesa || colaborador.id !== mesa.colaboradorId) {
-                                                                // eslint-disable-next-line prettier/prettier
-                                                                return (
-                                                                    <option key={colaborador.id} value={colaborador.id}>
-                                                                        {colaborador.nome}
-                                                                    </option>
-                                                                );
+                                                            if (colaborador.tipo === 'GARCOM') {
+                                                                if (!isEditingMesa || colaborador.id !== mesa.usuarioId) {
+                                                                    // eslint-disable-next-line prettier/prettier
+                                                                    return (
+                                                                        <option key={colaborador.id} value={colaborador.id}>
+                                                                            {colaborador.nome}
+                                                                        </option>
+                                                                    );
+                                                                }
                                                             }
                                                         })}
                                                     </optgroup>

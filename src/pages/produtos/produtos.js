@@ -15,7 +15,7 @@ function Produtos() {
   const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const { user } = useContext(AuthContext);
-  const estabelecimentoId = '8fb6e710-07c7-4c41-a7ab-2ad9bdf1cd7d';
+  const estabelecimentoId = user.usuario.estabelecimentoId;
   const [loading, setLoading] = useState(false);
 
   //buscando categorias em conexão com a API

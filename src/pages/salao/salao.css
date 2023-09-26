@@ -162,8 +162,8 @@ body{
     background-color: #3520bd;
 }
 
-#indisponivel {
-    background-color: #818181;
+#INATIVA {
+    background-color: gray;
 }
 
 #OCUPADA {

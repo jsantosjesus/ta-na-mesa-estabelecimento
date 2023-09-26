@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './salao.css';
 import Header from '../../componentes/Header';
 import { apiClient } from '../../config/api';
 import NestedModal from '../../componentes/mesasSalao';
+import { AuthContext } from '../../contexts/auth';
 
 function Salao() {
   // puxando atributos das mesas
-
-  const estabelecimentoId = 'ac95ba93-1124-41cf-b1d1-5005b62686b6';
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlQGdtYWlsLmNvbSIsInNlbmhhIjoiJDJhJDEwJFVMR1QyelZsbkRLUGoyekZURm5PaU9DYThXd1RQa2VTYUhxTGJhaXl4UmhPdnhlbDlFZ3ZTIiwiaWF0IjoxNjk1NDk4OTgzLCJleHAiOjE3MDMyNzQ5ODN9.Jom7A-zLUO0EQkr4euRQPpC9jyTHdT7Nq5p_Cvb0EAg';
+  const { user } = useContext(AuthContext);
+  const estabelecimentoId = user.usuario.estabelecimentoId;
+  const token = user.token;
 
   const [mesas, setMesas] = useState([]);
 
