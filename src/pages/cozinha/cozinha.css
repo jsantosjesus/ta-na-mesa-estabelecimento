@@ -1,0 +1,20 @@
+.bodyCozinha{
+    display: flex;
+    margin-top: 20vh;
+}
+
+.statusPedido{
+    width: 32%;
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+    text-align: center;
+    border: solid 1px #818181;
+    border-radius: 5px;
+    min-height: 75vh;
+}
+
+.bodyCozinha div h4{
+    background-color: #ff881f;
+    color: white;
+    padding: 10px 0 10px 0;
+}

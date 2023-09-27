@@ -1,19 +1,22 @@
 import React from 'react';
 import Header from '../../componentes/Header';
+import './cozinha.css';
+import CustomizedAccordions from '../../componentes/pedidosCozinha';
 
 export const Cozinha = () => {
   return (
     <>
       <Header />
       <div className="bodyCozinha">
-        <div>
-          <h3>Aguardando aprovação</h3>
+        <div className='statusPedido'>
+          <h4>Aguardando aprovação</h4>
+          <CustomizedAccordions />
         </div>
-        <div>
-          <h3>Fila</h3>
+        <div className='statusPedido'>
+          <h4>Fila</h4>
         </div>
-        <div>
-          <h3>Preparando</h3>
+        <div className='statusPedido'>
+          <h4>Preparando</h4>
         </div>
       </div>
     </>
