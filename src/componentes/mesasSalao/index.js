@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Button from '@mui/material/Button';
+import Conta from '../contaSalao';
 
 const style = {
   position: 'absolute',
@@ -17,34 +17,6 @@ const style = {
   pb: 3
 };
 
-function ChildModal({ mesa }) {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <React.Fragment>
-      <Button onClick={handleOpen}>Ver {mesa.status === 'LIVRE' && 'última '}conta</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="child-modal-title"
-        aria-describedby="child-modal-description">
-        <Box sx={{ ...style, width: 200 }}>
-          <h2 id="child-modal-title">Text in a child modal</h2>
-          <p id="child-modal-description">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-          </p>
-          <Button onClick={handleClose}>Close Child Modal</Button>
-        </Box>
-      </Modal>
-    </React.Fragment>
-  );
-}
 export default function NestedModal({ mesa, close = () => {} }) {
   return (
     <div>
@@ -56,7 +28,7 @@ export default function NestedModal({ mesa, close = () => {} }) {
         <Box sx={{ ...style, width: 400 }}>
           <h2 id="parent-modal-title">Mesa {`${mesa.numero} (${mesa.status})`}</h2>
           <p id="parent-modal-description">{mesa.status === 'LIVRE' ? 'Última c' : 'C'}onta: R$</p>
-          <ChildModal mesa={mesa} />
+          <Conta mesa={mesa} />
         </Box>
       </Modal>
     </div>

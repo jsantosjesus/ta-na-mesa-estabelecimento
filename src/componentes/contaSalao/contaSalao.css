@@ -1,0 +1,29 @@
+@media print {
+    #contaContent p{
+        visibility: visible;
+    }
+
+    body * {
+        visibility: hidden;
+      }
+    .titleContaContent {
+    text-align: center;
+  }
+
+  .totalContaContent {
+    text-align: end;
+  }
+}
+
+@page{
+    size: auto;
+    margin: 0mm 0mm 10mm 0mm;
+  }
+
+  .titleContaContent {
+    text-align: center;
+  }
+
+  .totalContaContent {
+    text-align: end;
+  }

@@ -30,7 +30,7 @@ body{
 }
 
 
-/* poupup das mesas */
+/* poupup das mesas
 
 .toogle{
     position: fixed;
@@ -108,7 +108,7 @@ body{
     cursor: pointer;
 }
 
-/* conta */
+    
 
 .contaImprimir{
     position: absolute;
@@ -133,7 +133,7 @@ body{
     text-align: center;
     justify-content: center;
     padding-bottom: 20px;
-}
+} */
 
 
 
@@ -177,25 +177,4 @@ body{
 #close {
     display: none;
 }
-
-/* imprimir conta */
-
-@media print {
-    body * {
-      visibility: hidden;
-    }
-    .printable-modal,
-    .printable-modal * {
-      visibility: visible;
-    }
-    .printable-modal {
-      position: absolute;
-      left: 0;
-      top: 0;
-    }
-
-    button{
-        display: none;
-    }
-  }
   
