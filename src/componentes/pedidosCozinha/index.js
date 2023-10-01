@@ -35,7 +35,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)'
 }));
 
-export default function CustomizedAccordions() {
+export default function CustomizedAccordions(pedido) {
   const [expanded, setExpanded] = React.useState('panel1');
 
   const handleChange = (panel) => (event, newExpanded) => {
@@ -46,7 +46,7 @@ export default function CustomizedAccordions() {
     <div>
       <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography>Pedido 46 (Mesa 20)</Typography>
+          <Typography>Pedido {pedido.id} (Mesa 20)</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
