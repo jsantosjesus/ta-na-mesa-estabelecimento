@@ -10,6 +10,7 @@ export const Container = styled.div`
   cursor: pointer;
   border-radius: 10px;
   margin: 0 15px 20px;
+  underline: none;
 
   > svg {
     margin: 0 20px;
@@ -18,5 +19,6 @@ export const Container = styled.div`
   &:hover {
     opacity: 0.7;
     text-decoration: none;
+    underline: none;
   }
 `;

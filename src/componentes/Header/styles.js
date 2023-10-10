@@ -5,6 +5,7 @@ export const Container = styled.div`
   display: flex;
   background-color: #ff881f;
   box-shadow: 0 0 20px 3px;
+  underline: none;
 
   > svg {
     position: fixed;
@@ -14,5 +15,6 @@ export const Container = styled.div`
     margin-top: 32px;
     margin-left: 32px;
     cursor: pointer;
+    underline: none;
   }
 `;

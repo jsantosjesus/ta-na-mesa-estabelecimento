@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { apiClient } from '../../config/api';
 
 
+
 function ModalCategoria({ categoria, onClose, onSave, token, usuario, erro }) {
     const isEditingCategoria = !!categoria;
 
