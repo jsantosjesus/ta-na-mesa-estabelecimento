@@ -1,13 +1,37 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './Login.css';
 import logomarcaEmpresa from '../../assets/logomarca.png';
 import { Formik } from 'formik';
-import { apiClient } from '../../config/api';
+// import { apiClient } from '../../config/api';
 import { AuthContext } from '../../contexts/auth';
-
+import { firebaseConfig } from '../../firebase';
+import firebase from 'firebase';
 function Login() {
   const [messageErro, setMessageErro] = useState();
   const { login } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+  }, [])
+
+
+
+  const loginFirebase = () => {
+    // firebase.auth().signInWithEmailAndPassword('jadsoonbol@gmail.com', '123Senh@')
+    //   .then((userCredential) => {
+    //     // Signed in 
+    //     const user = userCredential;
+    //     console.log(user);
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //   });
+    console.log('firebase: ' + firebaseConfig.apiKey)
+  }
 
   return (
     <div className="login">
@@ -24,18 +48,19 @@ function Login() {
               }
               return errors;
             }}
-            onSubmit={async (values, { setSubmitting }) => {
-              apiClient
-                .post(`/auth/login`, values, {
-                  headers: {
-                    'ngrok-skip-browser-warning': true
-                  }
-                })
+            onSubmit={(values, { setSubmitting }) => {
+              // apiClient
+              //   .post(`/auth/login`, values, {
+              //     headers: {
+              //       'ngrok-skip-browser-warning': true
+              //     }
+              //   })
+              firebase.auth().signInWithEmailAndPassword(values.email, values.senha)
                 .then((response) => {
                   console.log(response.mensage);
                   setSubmitting(false);
                   setMessageErro('');
-                  login(values.email, values.senha, response.data);
+                  login(values.email, values.senha, response.user);
                 })
                 .catch(function (error) {
                   if (error.response) {
@@ -93,6 +118,7 @@ function Login() {
             )}
           </Formik>
         </div>
+        <button onClick={loginFirebase}>teste</button>
       </div>
       <div className="footer">
         <img className="logoarcafooter" width="200px" src={logomarcaEmpresa} alt="Logo" />

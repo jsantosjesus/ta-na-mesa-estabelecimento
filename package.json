@@ -17,7 +17,7 @@
     "axios": "^1.4.0",
     "axios-jsonp": "^1.0.4",
     "bootstrap": "^5.2.3",
-    "firebase": "^8.8.1",
+    "firebase": "^8.10.1",
     "formik": "^2.2.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
