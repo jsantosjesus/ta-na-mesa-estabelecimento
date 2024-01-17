@@ -2,13 +2,14 @@ import Login from '../pages/login';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Salao from '../pages/salao';
 import CentralGarcom from '../pages/CentralGarcom';
-import Produtos from '../pages/produtos/produtos';
+// import Produtos from '../pages/produtos/produtos';
 import Colaboradores from '../pages/Colaboradores';
 import Categorias from '../pages/categorias';
 import { Cozinha } from '../pages/cozinha';
 import { AuthContext, AuthProvicer } from '../contexts/auth';
 import { useContext } from 'react';
 import Mesas from '../pages/mesas';
+import PaginaTeste from '../pages/produtos/teste';
 
 export default function Rotas() {
   const Private = ({ children }) => {
@@ -54,7 +55,8 @@ export default function Rotas() {
           path="/"
           element={
             <Private>
-              <Produtos />
+              {/* <Produtos /> */}
+              <PaginaTeste />
             </Private>
           }
         />
