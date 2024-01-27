@@ -1,15 +1,29 @@
-import pizzaImagem from '../../../assets/Pizza de Calabresa.jpg';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { apiClient } from '../../../config/api';
+import CircularProgress from '@mui/material/CircularProgress';
+import firebase from 'firebase';
 
-function ModalProduto({ produto, onClose, categorias, onSave, user }) {
+function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const isEditingProduto = !!produto;
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hYW5AZ21haWwuY29tIiwic2VuaGEiOiIkMmEkMTAkOXdsN1NiMXVHaTRiTjVxTmNDZ3FidTR2cEJ4WE95Y3Z2Nm1keWpBNzIzSy5BOW9OTEdYYXEiLCJpYXQiOjE2OTQ5MDYwNDUsImV4cCI6MTcwMjY4MjA0NX0.WLF6inxtRFbBUKcaZ9lBKL7zmmANQdpvDQC9Hmwpxl8';
-  const [imagemProduto, setImagemProduto] = useState(pizzaImagem);
+  const [imagemProduto, setImagemProduto] = useState();
   const [imgPreview, setImgPreview] = useState('');
+  const [imagemUrl, setImagemUrl] = useState();
+  const [file, setFile] = useState();
+  //useState para controlar categoria escolhida
+  const [idCategoriaEscolhida, setIdCategoriaEscolhida] = useState();
+  const [nomeCategoriaEscolhida, setNomeCategoriaEscolhida] = useState();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    categorias.map((categoria) => {
+      if (categoria.id == idCategoriaEscolhida) {
+        setNomeCategoriaEscolhida(categoria.nome);
+      }
+    })
+  }, [idCategoriaEscolhida]);
+
+  //validando dados antes de enviar
   const ProdutoSchema = Yup.object().shape({
     nome: Yup.string()
       .min(5, 'Muito pequeno!')
@@ -22,12 +36,13 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
     descricao: Yup.string()
       .min(5, 'Muito pequeno!')
       .max(1000, 'Muito grande!')
-      .required('Campo obrigatorio'),
-    categoria: Yup.string().required('Campo obrigatorio')
+      .required('Campo obrigatorio')
   });
 
+  //função para alterar imagem
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]
+    setFile(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -38,10 +53,168 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
     }
   };
 
+  const editarProduto = async (values) => {
+    setLoading(true);
+    if (imgPreview) {
+      const storage = firebase.storage();
+      const storageRef = storage.ref();
+      const uploadTask = storageRef.child(`estabelecimentos/${user.estabelecimentoId}/produtos/${values.nome}`).put(file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Progress
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          // Error
+          console.error(error.message);
+          onError();
+        },
+        () => {
+          // Completed successfully
+          uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
+            console.log('File available at', downloadURL);
+            setImagemUrl(downloadURL);
+            await firebase
+              .firestore()
+              .collection('produto')
+              .doc(produto.id)
+              .update(
+                {
+                  nome: values.nome,
+                  valor: values.preco,
+                  estoque: values.estoque,
+                  descricao: values.descricao,
+                  categoria: {
+                    id: idCategoriaEscolhida,
+                    nome: nomeCategoriaEscolhida
+                  },
+                  imagem: downloadURL
+                }
+              ).then(() => {
+                onSave();
+              }
+              ).catch((error) => {
+                onError();
+                console.log(error.data);
+              })
+          });
+        }
+      );
+    } else {
+      await firebase
+        .firestore()
+        .collection('produto')
+        .doc(produto.id)
+        .update(
+          {
+            nome: values.nome,
+            valor: values.preco,
+            estoque: values.estoque,
+            descricao: values.descricao,
+            categoria: {
+              id: idCategoriaEscolhida,
+              nome: nomeCategoriaEscolhida
+            }
+          }
+        ).then(() => {
+          onSave();
+        }
+        ).catch((error) => {
+          onError();
+          console.log(error.data);
+        })
+    }
+    setLoading(false);
+  }
+
+  const cadastrarProduto = async (values) => {
+    setLoading(true);
+    //enviando imagem
+    if (imgPreview) {
+      const storage = firebase.storage();
+      const storageRef = storage.ref();
+      const uploadTask = storageRef.child(`estabelecimentos/${user.estabelecimentoId}/produtos/${values.nome}`).put(file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Progress
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(`Upload is ${progress}% done`);
+        },
+        (error) => {
+          // Error
+          console.error(error.message);
+          onError();
+        },
+        () => {
+          // Completed successfully
+          uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
+            console.log('File available at', downloadURL);
+            setImagemUrl(downloadURL);
+            await firebase
+              .firestore()
+              .collection('produto')
+              .add(
+                {
+                  nome: values.nome,
+                  valor: values.preco,
+                  estoque: values.estoque,
+                  descricao: values.descricao,
+                  categoria: {
+                    id: idCategoriaEscolhida,
+                    nome: nomeCategoriaEscolhida
+                  },
+                  estabelecimento_id: user.estabelecimentoId,
+                  imagem: downloadURL
+                }
+              ).then(() => {
+                onSave();
+              }
+              ).catch((error) => {
+                onError();
+                console.log(error.data);
+              })
+          });
+        }
+      );
+    } else {
+      await firebase
+        .firestore()
+        .collection('produto')
+        .add(
+          {
+            nome: values.nome,
+            valor: values.preco,
+            estoque: values.estoque,
+            descricao: values.descricao,
+            categoria: {
+              id: idCategoriaEscolhida,
+              nome: nomeCategoriaEscolhida
+            },
+            estabelecimento_id: user.estabelecimentoId,
+            imagem: 'https://firebasestorage.googleapis.com/v0/b/ta-na-mesa-89fec.appspot.com/o/produtos%2Fta-na-mesa-logomarca.png?alt=media&token=268b70c7-9aa5-4a17-806a-68172f14b666'
+          }
+        ).then(() => {
+          onSave();
+        }
+        ).catch((error) => {
+          onError();
+          console.log(error.data);
+        })
+    }
+    setLoading(false);
+  }
+  //useEffect para mudar a imagem quando o produto escolhido for alterado
   useEffect(() => {
-    produto ? setImagemProduto(produto.imagem.url) : setImagemProduto(pizzaImagem);
-    console.log(user.token);
+    produto ? setImagemProduto(produto.imagem) : setImagemProduto('https://firebasestorage.googleapis.com/v0/b/ta-na-mesa-89fec.appspot.com/o/produtos%2Fta-na-mesa-logomarca.png?alt=media&token=268b70c7-9aa5-4a17-806a-68172f14b666');
+    produto ? setIdCategoriaEscolhida(produto.categoria.id) : setIdCategoriaEscolhida(null);
+    setNomeCategoriaEscolhida(null);
   }, [produto]);
+
 
   return (
     <div className="modalTransparent">
@@ -57,38 +230,22 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
             initialValues={
               isEditingProduto
                 ? {
-                    nome: produto.nome,
-                    preco: produto.preco,
-                    estoque: produto.estoque,
-                    categoria: produto.categoriaId,
-                    descricao: produto.descricao
-                  }
+                  nome: produto.nome,
+                  preco: produto.valor,
+                  estoque: produto.estoque,
+                  categoria: produto.categoria,
+                  descricao: produto.descricao
+                }
                 : {}
             }
             validationSchema={ProdutoSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-              if (imgPreview) {
-                values.imagem = imgPreview.data;
+            onSubmit={(values, { setSubmitting }) => {
+              if (isEditingProduto) {
+                editarProduto(values);
+              } else if (!isEditingProduto) {
+                cadastrarProduto(values);
               }
-              {
-                isEditingProduto &&
-                  (
-                    await apiClient.put(`/produtos/${produto.id}`, values, {
-                      headers: {
-                        'ngrok-skip-browser-warning': true,
-                        Authorization: `Bearer ${token}`
-                      }
-                    })
-                  )
-                    .then((response) => console.log(response.mensage))
-                    .catch((error) => console.log(error.data));
-                setTimeout(() => {
-                  console.log(JSON.stringify(values, null, 2));
-                  console.log(imgPreview);
-                  onSave();
-                  setSubmitting(false);
-                }, 400);
-              }
+              setSubmitting(false);
             }}>
             {({
               errors,
@@ -98,15 +255,16 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
               handleBlur,
               handleSubmit,
               isSubmitting
-              /* and other goodies */
             }) => (
               <form onSubmit={handleSubmit}>
                 <div className="corpoProduto1">
                   <div className="imagemProduto">
                     {imgPreview ? (
                       <img src={imgPreview} alt="imagem do produto" width="70%" />
-                    ) : (
+                    ) : imagemProduto ? (
                       <img src={imagemProduto} alt="imagem do produto" width="70%" />
+                    ) : (
+                      <><CircularProgress /></>
                     )}
                     <input
                       type="file"
@@ -161,36 +319,30 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
                         <p>Categoria</p>
                         <select
                           name="categoria"
-                          onChange={handleChange}
+                          onChange={(e) => setIdCategoriaEscolhida(e.target.value)}
                           onBlur={handleBlur}
-                          value={values.categoria}>
+                          value={idCategoriaEscolhida}>
                           <optgroup label="Selecione:">
-                            {isEditingProduto &&
-                              categorias.map((categoria) => {
-                                if (categoria.id === produto.categoriaId) {
-                                  // eslint-disable-next-line prettier/prettier
+                            {!isEditingProduto ?
+                              (<>
+                                {!idCategoriaEscolhida && <option>Selecione</option>}
+                                {categorias.map((categoria) => {
                                   return (
-                                    <option key={categoria.id} value={categoria.id}>
-                                      {categoria.nome}
-                                    </option>
-                                  );
-                                }
-                              })}
-                            {categorias.map((categoria) => {
-                              if (!isEditingProduto || categoria.id !== produto.categoriaId) {
-                                // eslint-disable-next-line prettier/prettier
-                                return (
-                                  <option key={categoria.id} value={categoria.id}>
-                                    {categoria.nome}
-                                  </option>
-                                );
-                              }
-                            })}
+                                    <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                                  )
+                                })}</>) : (<>
+                                  <option key={values.categoria.id} value={values.categoria.id}>{values.categoria.nome}</option>
+                                  {categorias.map((categoria) => {
+                                    if (categoria.id != values.categoria.id) {
+                                      return (
+                                        <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                                      )
+                                    }
+                                  })}
+                                </>)}
                           </optgroup>
                         </select>
                       </div>
-
-                      <p className="adicionarCategoria">Adicionar categoria</p>
                     </div>
                   </div>
                 </div>
@@ -207,9 +359,13 @@ function ModalProduto({ produto, onClose, categorias, onSave, user }) {
                   ) : null}
                 </div>
                 <div className="salvar">
-                  <button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
-                    Salvar Alterações
-                  </button>
+                  {values.nome && idCategoriaEscolhida && values.estoque && values.preco && values.descricao ?
+                    (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
+                      Salvar Alterações
+                    </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (
+                      <button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'not-allowed' }}>Salvar Alterações</button>
+                    )
+                  }
                 </div>
               </form>
             )}

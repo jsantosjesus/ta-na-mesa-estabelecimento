@@ -5,53 +5,95 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
 import { ModalProduto } from '../../componentes/produtos/modal-produto';
-import { apiClient } from '../../config/api';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { AuthContext } from '../../contexts/auth';
+import firebase from 'firebase';
+
 
 function Produtos() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const { user } = useContext(AuthContext);
-  const estabelecimentoId = user.usuario.estabelecimentoId;
+  // const estabelecimentoId = user.usuario.estabelecimentoId;
   const [loading, setLoading] = useState(false);
 
-  //buscando categorias em conexão com a API
   const [categorias, setCategorias] = useState([]);
-
-  const getCategorias = async () => {
-    const result = await apiClient.get(`/categorias/estabelecimento/${estabelecimentoId}`, {
-      params: { limit: 30, offset: 0 },
-      headers: {
-        'ngrok-skip-browser-warning': true
-      }
-    });
-    console.log(result);
-    setCategorias(result.data);
-  };
-
   const [produtos, setProdutos] = useState([]);
 
-  const getProdutos = async () => {
-    setLoading(true);
-    const result = await apiClient.get(`/produtos/estabelecimento/${estabelecimentoId}`, {
-      params: { limit: 30, offset: 0 },
-      headers: {
-        'ngrok-skip-browser-warning': true
-      }
-    });
-    setProdutos(result.data);
-    setFilteredData(result.data);
-    console.log(produtos);
-    setLoading(false);
+  const getCategoriasFirebase = async () => {
+    await firebase
+      .firestore()
+      .collection('categoria')
+      .where('estabelecimento_id', '==', user.estabelecimentoId)
+      .get()
+      .then((result) => {
+        setCategorias(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      })
+      .catch((error) => {
+        console.error('Erro ao obter documento: ', error);
+      });
   };
-
   useEffect(() => {
-    getCategorias();
-    getProdutos();
+    getCategoriasFirebase();
   }, []);
+
+  //listando produtos
+
+  const getProdutosFirebase = async () => {
+    setLoading(true);
+    if (categoriaFiltro == '' && searchTerm == '') {
+
+      //consulta de todos os produtos
+
+      await firebase
+        .firestore()
+        .collection('produto')
+        .where('estabelecimento_id', '==', user.estabelecimentoId)
+        .get()
+        .then((result) => {
+          setProdutos(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Erro ao obter documento: ', error);
+        });
+    } else if (categoriaFiltro != '' && searchTerm == '') {
+
+      //consulta filtrando por categoria
+      
+      await firebase
+        .firestore()
+        .collection('produto')
+        .where('categoria.id', '==', categoriaFiltro)
+        .where('estabelecimento_id', '==', user.estabelecimentoId)
+        .get()
+        .then((result) => {
+          setProdutos(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Erro ao obter documento: ', error);
+        });
+    }
+    // else{
+    //   await firebase
+    //     .firestore()
+    //     .collection('produto')
+    //     .where('nome','>=', searchTerm.toLocaleLowerCase())
+    //     .where('nome','<=', searchTerm.toLocaleLowerCase() + '\uf8ff')
+    //     .where('estabelecimento_id', '==', user.estabelecimentoId)
+    //     .get()
+    //     .then((result) => {
+    //       setProdutos(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    //       setLoading(false);
+    //     })
+    //     .catch((error) => {
+    //       console.error('Erro ao obter documento: ', error);
+    //     });
+    // }
+  }
 
   // const handleSelectChange = (event) => {
   //     setCategoriaFiltro(event.target.value);
@@ -59,49 +101,21 @@ function Produtos() {
   // };
 
   useEffect(() => {
-    getProdutos();
-    filterDataByCategoria();
+    getProdutosFirebase();
   }, [categoriaFiltro]);
 
   const handleSalvarProduto = () => {
     toast.success('Salvo com sucesso');
     setProdutoAtivo(null);
+    setIsCreatingProduto(false);
+    getProdutosFirebase();
   };
 
-  const filterDataByCategoria = async () => {
-    setLoading(true);
-    const result = await apiClient.get(`/produtos/categoria/${categoriaFiltro}`, {
-      params: { limit: 30, offset: 0 },
-      headers: {
-        'ngrok-skip-browser-warning': true
-      }
-    });
-    setFilteredData(result.data);
-    setLoading(false);
+  const handleErrorSalvarProduto = () => {
+    toast.error('Erro ao salvar produto');
+    setProdutoAtivo(null);
+    setIsCreatingProduto(false);
   };
-
-  const filterData = () => {
-    let results = produtos;
-
-    if (searchTerm === '' && categoriaFiltro == '') {
-      results = produtos;
-    }
-    if (searchTerm !== '') {
-      results = produtos.filter((object) =>
-        object.nome.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (searchTerm === '' && categoriaFiltro !== '') {
-      results = produtos.filter((object) => object.categoria == categoriaFiltro);
-    }
-
-    setFilteredData(results);
-  };
-
-  useEffect(() => {
-    filterData();
-  }, [searchTerm]);
 
   //  useState para funções de abrir e fechar poupup do produto
 
@@ -121,7 +135,6 @@ function Produtos() {
   const [isCreatingProduto, setIsCreatingProduto] = useState(false);
 
   const handleOpenNewProduto = () => setIsCreatingProduto(true);
-  const handleCloseNewProduto = () => setIsCreatingProduto(false);
 
   // renderizando array de produtos
 
@@ -181,18 +194,14 @@ function Produtos() {
                 <CircularProgress />
               </Box>
             ) : (
-              filteredData.map((produto) => {
+              produtos.map((produto) => {
                 return (
-                  <div key={produto.id}>
+                  <div key={produto.uid}>
                     <div className="produto" onClick={() => handleClickProduto(produto)}>
                       <p>{produto.nome}</p>
-                      <p>R$ {produto.preco.toFixed(2).replace('.', ',')}</p>
+                      <p>R$ {produto.valor.toFixed(2).replace('.', ',')}</p>
                       <p>
-                        {categorias.map((categoria) => {
-                          if (categoria.id === produto.categoriaId) {
-                            return <>{categoria.nome}</>;
-                          }
-                        })}
+                        {produto.categoria.nome}
                       </p>
                       <p>{produto.estoque}</p>
                     </div>
@@ -202,9 +211,6 @@ function Produtos() {
             )}
           </div>
         </div>
-        {/* <div className="adicionarCategoria">
-                <button >Adicionar Categoria</button>
-                </div> */}
       </div>
 
       {produtoAtivo !== null && (
@@ -214,14 +220,17 @@ function Produtos() {
           user={user}
           onClose={handleCloseProdutoModal}
           onSave={handleSalvarProduto}
+          onError={handleErrorSalvarProduto}
         />
       )}
       {isCreatingProduto && (
         <ModalProduto
           categorias={categorias}
           user={user}
-          onClose={handleCloseNewProduto}
+          onClose={handleCloseProdutoModal}
           onSave={handleSalvarProduto}
+          produto={null}
+          onError={handleErrorSalvarProduto}
         />
       )}
     </div>

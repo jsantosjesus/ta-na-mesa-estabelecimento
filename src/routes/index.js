@@ -2,7 +2,7 @@ import Login from '../pages/login';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Salao from '../pages/salao';
 import CentralGarcom from '../pages/CentralGarcom';
-// import Produtos from '../pages/produtos/produtos';
+import Produtos from '../pages/produtos/produtos';
 import Colaboradores from '../pages/Colaboradores';
 import Categorias from '../pages/categorias';
 import { Cozinha } from '../pages/cozinha';
@@ -46,6 +46,16 @@ export default function Rotas() {
           element={
             <Private>
               <Mesas />
+            </Private>
+          }
+        />
+
+        <Route
+          exact
+          path="/produtos"
+          element={
+            <Private>
+              <Produtos />
             </Private>
           }
         />

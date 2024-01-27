@@ -28,7 +28,7 @@ const Header = () => {
                     <img className='logoarcafooter' width='100px' src={logomarcaEmpresa} alt="Logo" />   
                 </div>
                 <div className="divUser">
-                    <p>Olá {user.usuario.nome}</p><p onClick={handleLogout} className='logout'>Sair</p>
+                    <p>Olá {user.nome}</p><p onClick={handleLogout} className='logout'>Sair</p>
                 </div>
     </Container>
   )
