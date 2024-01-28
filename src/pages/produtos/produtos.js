@@ -13,7 +13,7 @@ import firebase from 'firebase';
 
 function Produtos() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
+  // const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const { user } = useContext(AuthContext);
   // const estabelecimentoId = user.usuario.estabelecimentoId;

@@ -1,12 +1,22 @@
 /* eslint-disable prettier/prettier */
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import firebase from 'firebase';
 
 
-function Modalcolaborador({ colaborador, onClose, cargos, onSave, 
-    // selectedValue, abrirMesasGarcom 
-}) {
+function Modalcolaborador({ colaborador, onClose, onSave, onError }) {
     const isEditingcolaborador = !!colaborador;
+
+    const cargos = [{
+        valor: 'garcom',
+        nome: 'Garçom'
+    },
+    {
+        valor: 'cozinha',
+        nome: 'Cozinha'
+    }
+
+    ]
 
     const colaboradorSchema = Yup.object().shape({
         nome: Yup.string()
@@ -29,6 +39,26 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave,
         cargo: Yup.string()
             .required('Campo obrigatorio')
     });
+
+
+    const editarColaborador = async (values) => {
+        await firebase
+            .firestore()
+            .collection('usuario')
+            .doc(colaborador.id)
+            .update(
+                {
+                    nome: values.nome,
+                    cargo: values.cargo
+                }
+            ).then(() => {
+                onSave();
+            }
+            ).catch((error) => {
+                onError();
+                console.log(error.data);
+            })
+    }
 
     return (
         <div className="modalTransparent">
@@ -53,6 +83,9 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave,
                         }
                         validationSchema={colaboradorSchema}
                         onSubmit={(values, { setSubmitting }) => {
+                            if (isEditingcolaborador) {
+                                editarColaborador(values);
+                            }
                             setTimeout(() => {
                                 console.log(JSON.stringify(values, null, 2));
                                 onSave();
@@ -85,50 +118,53 @@ function Modalcolaborador({ colaborador, onClose, cargos, onSave,
                                             ) : null}
                                         </div>
 
-                                        <div className="nome">
-                                            <p>Email</p>
-                                            <input
-                                                type="name"
-                                                name="email"
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={values.email}></input>
-                                            {errors.email && touched.email ? (
-                                                <div className="errorInput">{errors.email}</div>
-                                            ) : null}
-                                        </div>
-                                        <div className="nome">
-                                            <p>Senha</p>
-                                            <input
-                                                type="password"
-                                                name="senha"
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={values.senha}></input>
-                                            {errors.senha && touched.senha ? (
-                                                <div className="errorInput">{errors.senha}</div>
-                                            ) : null}
-                                        </div>
+                                        {!isEditingcolaborador ?
+                                            (<><div className="nome">
+                                                <p>Email</p>
+                                                <input
+                                                    type="name"
+                                                    name="email"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    value={values.email}></input>
+                                                {errors.email && touched.email ? (
+                                                    <div className="errorInput">{errors.email}</div>
+                                                ) : null}
+                                            </div>
+                                                <div className="nome">
+                                                    <p>Senha</p>
+                                                    <input
+                                                        type="password"
+                                                        name="senha"
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.senha}></input>
+                                                    {errors.senha && touched.senha ? (
+                                                        <div className="errorInput">{errors.senha}</div>
+                                                    ) : null}
+                                                </div></>) : (<></>)}
 
                                         <div className="categoriaEadicionar">
                                             <div>
-                                                <p>Cargo</p>
-                                                <select
-                                                    // eslint-disable-next-line react/no-unknown-property
-                                                    name="cargo"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    value={values.cargo}>
-                                                    <optgroup label="Selecione:">
-                                                        {isEditingcolaborador && <option>{colaborador.tipo}</option>}
-                                                        {cargos.map((cargo) => {
-                                                            if (isEditingcolaborador || cargo.nome !== colaborador.tipo) {
-                                                                // eslint-disable-next-line react/jsx-key
-                                                                return <option value={cargo.nome}>{cargo.nome}</option>;
-                                                            }
-                                                        })}
-                                                    </optgroup>
-                                                </select>
+                                                {isEditingcolaborador && colaborador.cargo !== 'administrador' ? (<><p>Cargo</p>
+                                                    <select
+                                                        // eslint-disable-next-line react/no-unknown-property
+                                                        name="cargo"
+                                                        onChange={handleChange}
+                                                        onBlur={handleBlur}
+                                                        value={values.cargo}>
+                                                        <optgroup label="Selecione:">
+                                                            {isEditingcolaborador && <option value={colaborador.cargo} key={colaborador.cargo} >{colaborador.cargo}</option>}
+                                                            {cargos.map((cargo) => {
+                                                                if (isEditingcolaborador && cargo.valor !== colaborador.cargo) {
+                                                                    // eslint-disable-next-line react/jsx-key
+                                                                    return <option key={cargo.valor} value={cargo.valor}>{cargo.nome}</option>;
+                                                                } else if (!isEditingcolaborador) {
+                                                                    return <option key={cargo.valor} value={cargo.valor}>{cargo.nome}</option>
+                                                                }
+                                                            })}
+                                                        </optgroup>
+                                                    </select></>) : (<></>)}
                                             </div>
                                         </div>
                                     </div>

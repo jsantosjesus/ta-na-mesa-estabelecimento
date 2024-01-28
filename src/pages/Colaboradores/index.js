@@ -1,106 +1,108 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './colaboradores.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
 import { Modalcolaborador } from '../../componentes/colaboradores/modal-colaboarador';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import { AuthContext } from '../../contexts/auth';
+import firebase from 'firebase';
+
 
 function Colaboradores() {
-  // puxando atributos dos colaboradores
-
-  const [colaborador] = useState([
-    {
-      id: 0,
-      nome: 'Jadson',
-      email: 'jadson@teste',
-      senha: '123456',
-      tipo: 'Garçom'
-    },
-    {
-      id: 1,
-      nome: 'Natan',
-      email: 'natan@teste',
-      senha: '123456',
-      tipo: 'Garçom',
-      mesas: ['4', '5', '6', '7']
-    },
-    {
-      id: 2,
-      nome: 'Ilmar',
-      email: 'ilmar@teste',
-      senha: '123456',
-      tipo: 'Cozinha',
-      mesas: []
-    },
-    {
-      id: 0,
-      nome: 'Christiano',
-      email: 'christiano@teste',
-      senha: '123456',
-      tipo: 'Administrador',
-      mesas: []
-    }
-  ]);
-
-  //array de cargos
-  const cargos = [
-    { id: 0, nome: 'Administrador' },
-    { id: 1, nome: 'Garçom' },
-    { id: 2, nome: 'Cozinha' }
-  ];
-
-  // pesquisando e filtrando colaboradores
-
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
-  const [cargoFiltro, setcargoFiltro] = useState('');
+  const [cargoFiltro, setCargoFiltro] = useState('');
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [colaboradores, setColaboradores] = useState([]);
 
-  const filterData = () => {
-    let results = colaborador;
 
-    if (searchTerm === '' && cargoFiltro == '') {
-      results = colaborador;
+  //listando colaboradores
+
+  const getColaboradoresFirebase = async () => {
+    setLoading(true);
+    if (cargoFiltro == '' && searchTerm == '') {
+
+      //consulta de todos os produtos
+
+      await firebase
+        .firestore()
+        .collection('usuario')
+        .where('estabelecimento_id', '==', user.estabelecimentoId)
+        .get()
+        .then((result) => {
+          setColaboradores(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Erro ao obter documento: ', error);
+        });
+    } else if (cargoFiltro != '' && searchTerm == '') {
+
+      //consulta filtrando por categoria
+      
+      await firebase
+        .firestore()
+        .collection('usuario')
+        .where('cargo', '==', cargoFiltro)
+        .where('estabelecimento_id', '==', user.estabelecimentoId)
+        .get()
+        .then((result) => {
+          setColaboradores(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Erro ao obter documento: ', error);
+        });
     }
-    if (searchTerm !== '') {
-      results = colaborador.filter((colaborador) =>
-        colaborador.nome.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+    // else{
+    //   await firebase
+    //     .firestore()
+    //     .collection('usuario')
+    //     .where('nome','>=', searchTerm.toLocaleLowerCase())
+    //     .where('nome','<=', searchTerm.toLocaleLowerCase() + '\uf8ff')
+    //     .where('estabelecimento_id', '==', user.estabelecimentoId)
+    //     .get()
+    //     .then((result) => {
+    //       setProdutos(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    //       setLoading(false);
+    //     })
+    //     .catch((error) => {
+    //       console.error('Erro ao obter documento: ', error);
+    //     });
+    // }
+  }
 
-    if (searchTerm === '' && cargoFiltro !== '') {
-      results = colaborador.filter((colaborador) => colaborador.tipo == cargoFiltro);
-    }
+  // const handleSelectChange = (event) => {
+  //     setCategoriaFiltro(event.target.value);
 
-    setFilteredData(results);
-  };
-
-  //useeffect para pesquisa
+  // };
 
   useEffect(() => {
-    filterData();
-  }, [searchTerm]);
-
-  //useeffect para filtro
-
-  useEffect(() => {
-    filterData();
+    getColaboradoresFirebase();
   }, [cargoFiltro]);
 
-  //MODAL
-  //abrindo novo colaborador
+  const handleSalvarColaborador = () => {
+    toast.success('Salvo com sucesso');
+    setColaboradorAtivo(null);
+    setIsCreatingColaborador(false);
+    getColaboradoresFirebase();
+  };
 
-  const [isCreatingColaborador, setIsCreatingColaborador] = useState(false);
+  const handleErrorSalvarColaborador = () => {
+    toast.error('Erro ao salvar produto');
+    setColaboradorAtivo(null);
+    setIsCreatingColaborador(false);
+  };
 
-  const handleOpenNewColaborador = () => setIsCreatingColaborador(true);
-  const handleCloseNewColaborador = () => setIsCreatingColaborador(false);
+  //  useState para funções de abrir e fechar poupup do produto
 
-  //abrrindo colaborador existente para editar
   const [colaboradorAtivo, setColaboradorAtivo] = useState(null);
 
-  const handleOpenColaborador = (colaborador) => {
+  const handleClickColaborador = (colaborador) => {
     setColaboradorAtivo(colaborador);
-    // isCreatingColaborador && setselectValueCargo(colaborador.tipo);
   };
 
   const handleCloseColaboradorModal = () => {
@@ -108,48 +110,13 @@ function Colaboradores() {
     setIsCreatingColaborador(false);
   };
 
-  //MESAS
-  // abrir mesas de garçom
+  // abrir criar novo produto
 
-  // const [mesasGarcom, setMesasGarcom] = useState('close');
+  const [isCreatingColaborador, setIsCreatingColaborador] = useState(false);
 
-  // const abrirMesasGarcom = () => {
-  //   setMesasGarcom('open');
-  //   trocarParaNewTable();
-  // };
+  const handleOpenNewColaborador = () => setIsCreatingColaborador(true);
 
-  // // fechar mesas de garçom
-
-  // const fecharMesasGarcom = () => {
-  //   setMesasGarcom('close');
-  // };
-
-  //trocando mesas
-
-  // function trocarParaNewTable() {
-  //   const newTable = table.map((element) => element);
-  //   setTable(newTable);
-  // }
-
-  //CARGO
-  //pegando valor do select de cargo para abrir mesas
-
-  // const [selectValueCargo, setselectValueCargo] = useState('');
-
-  // function handleChange(event) {
-  //   setselectValueCargo(event.target.value);
-  // }
-
-  //  useState para funções de abrir e fechar poupup da colaborador
-
-  //salvando alterações
-
-  function salvar() {
-    toast.success('Salvo com sucesso');
-    setColaboradorAtivo(null);
-  }
-
-  // renderizando array de colaboradores
+  // renderizando array de produtos
 
   return (
     <div>
@@ -161,27 +128,23 @@ function Colaboradores() {
               <FontAwesomeIcon icon={faFilter} />
             </p>
             <div>
-              <select value={cargoFiltro} onChange={(e) => setcargoFiltro(e.target.value)}>
+              <select value={cargoFiltro} onChange={(e) => setCargoFiltro(e.target.value)}>
                 <option value="">Todos</option>
-                {cargos.map((cargo) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <option value={cargo.nome}>{cargo.nome}</option>
-                ))}
+                <option value="garcom">Garçom</option>
+                <option value="cozinha">Cozinha</option>
+                <option value="administrador">Administrador</option>
               </select>
             </div>
           </div>
           <div className="pesquisa">
-            <input
-              type="text"
-              placeholder="Pesquisar"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}></input>
+            <input type="text"
+              placeholder="Pesquisar"></input>
           </div>
           <div className="botaoProduto">
             <button onClick={handleOpenNewColaborador}>Adicionar Colaborador</button>
           </div>
           <div className="botaoProdutoResponsive">
-            <button>+</button>
+            <button onClick={handleOpenNewColaborador}>+</button>
           </div>
         </div>
 
@@ -197,34 +160,40 @@ function Colaboradores() {
               <b>Cargo</b>
             </p>
           </div>
-          <div className="tabelaProdutos">
-            {filteredData.map((colaborador) => (
-              <div key={colaborador.id}>
-                <div className="produto" onClick={() => handleOpenColaborador(colaborador)}>
-                  <p>{colaborador.nome}</p>
-                  <p>{colaborador.email}</p>
-                  <p>{colaborador.tipo}</p>
+          {loading ? (
+            <Box sx={{ display: 'grid', placeItems: 'center' }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <div className="tabelaProdutos">
+              {colaboradores.map((colaborador) => (
+                <div key={colaborador.id}>
+                  <div className="produto" onClick={() => handleClickColaborador(colaborador)}>
+                    <p>{colaborador.nome}</p>
+                    <p>{colaborador.email}</p>
+                    <p>{colaborador.cargo}</p>
+                  </div>
+                  {/* <Popup object={object} /> */}
                 </div>
-                {/* <Popup object={object} /> */}
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       {colaboradorAtivo !== null && (
         <Modalcolaborador
           colaborador={colaboradorAtivo}
-          cargos={cargos}
           onClose={handleCloseColaboradorModal}
-          onSave={salvar}
+          onSave={handleSalvarColaborador}
+          onError={handleErrorSalvarColaborador}
         />
       )}
       {isCreatingColaborador && (
         <Modalcolaborador
           colaborador={null}
-          cargos={cargos}
-          onClose={handleCloseNewColaborador}
-          onSave={salvar}
+          onClose={handleCloseColaboradorModal}
+          onSave={handleSalvarColaborador}
+          onError={handleErrorSalvarColaborador}
         />
       )}
     </div>
