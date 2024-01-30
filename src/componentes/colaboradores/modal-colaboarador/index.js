@@ -2,10 +2,12 @@
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
+import { useState } from 'react';
 
 
-function Modalcolaborador({ colaborador, onClose, onSave, onError }) {
+function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
     const isEditingcolaborador = !!colaborador;
+    const [loading, setLoading] = useState(false);
 
     const cargos = [{
         valor: 'garcom',
@@ -39,6 +41,35 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError }) {
         cargo: Yup.string()
             .required('Campo obrigatorio')
     });
+
+    const cadastrarColaborador = async (values) => {
+        await firebase.auth().createUserWithEmailAndPassword(values.email, values.senha)
+  .then( async (userCredential) => {
+    // Signed in 
+    var usuario = userCredential.user;
+    console.log(usuario);
+    await firebase
+              .firestore()
+              .collection('usuario')
+              .add(
+                {
+                  nome: values.nome,
+                  email: values.email,
+                  cargo: values.cargo,
+                  estabelecimento_id: user.estabelecimentoId
+                }
+              ).then(() => {
+                onSave();
+              }
+              ).catch((error) => {
+                onError();
+                console.log(error.data);
+              })
+  })
+  .catch((error) => {
+    console.log(`ERRO ${error.code}: ${error.mesage}`)
+  });
+    }
 
 
     const editarColaborador = async (values) => {
@@ -76,20 +107,22 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError }) {
                                 ? {
                                     nome: colaborador.nome,
                                     email: colaborador.email,
-                                    senha: colaborador.senha,
                                     cargo: colaborador.cargo
                                 }
                                 : {}
                         }
-                        validationSchema={colaboradorSchema}
+                        validationSchema={!isEditingcolaborador && colaboradorSchema}
                         onSubmit={(values, { setSubmitting }) => {
+                            setLoading(true);
                             if (isEditingcolaborador) {
                                 editarColaborador(values);
+                            } else {
+                                cadastrarColaborador(values);
                             }
                             setTimeout(() => {
                                 console.log(JSON.stringify(values, null, 2));
-                                onSave();
                                 setSubmitting(false);
+                                setLoading(false);
                             }, 400);
                         }}>
                         {({
@@ -145,8 +178,8 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError }) {
                                                 </div></>) : (<></>)}
 
                                         <div className="categoriaEadicionar">
-                                            <div>
-                                                {isEditingcolaborador && colaborador.cargo !== 'administrador' ? (<><p>Cargo</p>
+                                            {isEditingcolaborador ? (<div>
+                                                {colaborador.cargo !== 'administrador' ? (<><p>Cargo</p>
                                                     <select
                                                         // eslint-disable-next-line react/no-unknown-property
                                                         name="cargo"
@@ -165,15 +198,20 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError }) {
                                                             })}
                                                         </optgroup>
                                                     </select></>) : (<></>)}
-                                            </div>
+                                                    {isEditingcolaborador && colaborador.cargo == 'garcom' && values.cargo != 'garcom' && (
+                                                        <p style={{color: 'red'}}>Se esse colaborador estiver vinculado à uma mesa, altere em mesas!</p>
+                                                    )}
+                                            </div>) : (<></>)}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="salvar">
-                                    <button type="submit" disabled={isSubmitting} className="botaoSalvarProduto">
+                                    {!loading ? <button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
                                         Salvar Alterações
-                                    </button>
+                                    </button> : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}
+
+
                                 </div>
                             </form>
                         )}

@@ -186,6 +186,7 @@ function Colaboradores() {
           onClose={handleCloseColaboradorModal}
           onSave={handleSalvarColaborador}
           onError={handleErrorSalvarColaborador}
+          user={user}
         />
       )}
       {isCreatingColaborador && (
@@ -194,6 +195,7 @@ function Colaboradores() {
           onClose={handleCloseColaboradorModal}
           onSave={handleSalvarColaborador}
           onError={handleErrorSalvarColaborador}
+          user={user}
         />
       )}
     </div>
