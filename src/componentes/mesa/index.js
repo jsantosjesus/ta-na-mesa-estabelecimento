@@ -4,10 +4,18 @@ import * as Yup from 'yup';
 import { apiClient } from '../../config/api';
 
 
-function ModalMesa({ mesa, onClose, onSave, colaborador, token, usuario, erro }) {
+function ModalMesa({ mesa, onClose, onSave, garcons, erro }) {
     const isEditingMesa = !!mesa;
 
     const status = ['LIVRE', 'OCUPADA', 'INATIVA'];
+
+    const editarMesaFirebase = () => {
+
+    }
+
+    const cadastrarMesaFirebase = () => {
+
+    }
 
     const mesaSchema = Yup.object().shape({
         numero: Yup.string()
@@ -30,7 +38,7 @@ function ModalMesa({ mesa, onClose, onSave, colaborador, token, usuario, erro })
                                 ? {
                                     numero: mesa.numero,
                                     status: mesa.status,
-                                    usuarioId: mesa.colaboradorId
+                                    garcomId: mesa.garcom_id
                                 }
                                 : {
                                     status: 'LIVRE'
@@ -40,51 +48,11 @@ function ModalMesa({ mesa, onClose, onSave, colaborador, token, usuario, erro })
                         onSubmit={async (values, { setSubmitting }) => {
                             isEditingMesa ?
                                 (
-                                    await apiClient.put(`/mesas/estabelecimento/${mesa.id}`, values, {
-                                        headers: {
-                                            'ngrok-skip-browser-warning': true,
-                                            Authorization: `Bearer ${token}`
-                                        }
-                                    })
-                                        .then((response) => {
-                                            setTimeout(() => {
-                                                console.log(JSON.stringify(values, null, 2));
-                                                console.log(response.data);
-                                                onSave();
-                                                onClose();
-                                                setSubmitting(false);
-                                            }, 400);
-                                        }
-                                        )
-                                        .catch((error) => {
-                                            console.log(error);
-                                            onClose();
-                                            erro();
-                                        })
+                                    editarMesaFirebase()
                                 )
                                 :
                                 (
-                                    await apiClient.post(`/mesas/estabelecimento/${usuario.estabelecimentoId}`, values, {
-                                        headers: {
-                                            'ngrok-skip-browser-warning': true,
-                                            Authorization: `Bearer ${token}`
-                                        }
-                                    })
-                                        .then((response) => {
-                                            setTimeout(() => {
-                                                console.log(JSON.stringify(values, null, 2));
-                                                console.log(response.data);
-                                                onSave();
-                                                onClose();
-                                                setSubmitting(false);
-                                            }, 400);
-                                        }
-                                        )
-                                        .catch((error) => {
-                                            console.log(error);
-                                            onClose();
-                                            erro();
-                                        })
+                                    cadastrarMesaFirebase()
                                 )
                         }}>
                         {({
@@ -103,7 +71,7 @@ function ModalMesa({ mesa, onClose, onSave, colaborador, token, usuario, erro })
                                         <div className="nome">
                                             <p>Numero</p>
                                             <input
-                                                type="name"
+                                                type="number"
                                                 name="numero"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
@@ -152,35 +120,34 @@ function ModalMesa({ mesa, onClose, onSave, colaborador, token, usuario, erro })
                                                 <p>Garçom</p>
                                                 <select
                                                     // eslint-disable-next-line react/no-unknown-property
-                                                    name="usuarioId"
+                                                    name="garcomId"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    value={values.usuarioId}>
+                                                    value={values.garcomId}>
                                                     <optgroup label="Selecione:">
+                                                        {!values.garcomId && (<option>Selecione</option>)}
                                                         {isEditingMesa &&
-                                                            colaborador.map((colaborador) => {
-                                                                if (colaborador.tipo === 'GARCOM') {
-                                                                    if (colaborador.id === mesa.usuarioId) {
+                                                            garcons.map((garcom) => {
+                                                                    if (garcom.id === mesa.garcom_id) {
                                                                         // eslint-disable-next-line prettier/prettier
                                                                         return (
-                                                                            <option key={colaborador.id} value={colaborador.id}>
-                                                                                {colaborador.nome}
+                                                                            <option key={garcom.id} value={garcom.id}>
+                                                                                {garcom.nome}
                                                                             </option>
                                                                         );
                                                                     }
-                                                                }
                                                             })}
-                                                        {colaborador.map((colaborador) => {
-                                                            if (colaborador.tipo === 'GARCOM') {
-                                                                if (!isEditingMesa || colaborador.id !== mesa.usuarioId) {
+                                                        {garcons.map((garcom) => {
+
+                                                                if (!isEditingMesa || garcom.id !== mesa.garcom_id) {
                                                                     // eslint-disable-next-line prettier/prettier
                                                                     return (
-                                                                        <option key={colaborador.id} value={colaborador.id}>
-                                                                            {colaborador.nome}
+                                                                        <option key={garcom.id} value={garcom.id}>
+                                                                            {garcom.nome}
                                                                         </option>
                                                                     );
                                                                 }
-                                                            }
+                                                            
                                                         })}
                                                     </optgroup>
                                                 </select>

@@ -25,7 +25,7 @@ function Colaboradores() {
     setLoading(true);
     if (cargoFiltro == '' && searchTerm == '') {
 
-      //consulta de todos os produtos
+      //consulta de todos os colaboradores
 
       await firebase
         .firestore()
@@ -41,7 +41,7 @@ function Colaboradores() {
         });
     } else if (cargoFiltro != '' && searchTerm == '') {
 
-      //consulta filtrando por categoria
+      //consulta filtrando por cargo
       
       await firebase
         .firestore()

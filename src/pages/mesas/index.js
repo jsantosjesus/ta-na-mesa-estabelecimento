@@ -1,82 +1,91 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import '../../pages/produtos/produtos.css';
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
-import { ModalMesa } from '../../componentes/mesa';
-import { apiClient } from '../../config/api';
+import {ModalMesa} from '../../componentes/mesa/index'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import { AuthContext } from '../../contexts/auth';
+import firebase from 'firebase';
+
+
 function Mesas() {
   const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [mesas, setMesas] = useState();
+  const [garcons, setGarcons] = useState();
 
-  const [mesas, setMesas] = useState([
-    {
-      id: '1',
-      numero: '20',
-      status: 'INATIVA',
-      colaboradorId: '1'
-    }
-  ]);
-  const estabelecimentoId = user.usuario.estabelecimentoId;
-  const token = user.token;
-
-  const getMesas = async () => {
-    await apiClient
-      .get(`/mesas/estabelecimento/${estabelecimentoId}`, {
-        params: { limit: 30, offset: 0 },
-        headers: {
-          'ngrok-skip-browser-warning': true,
-          Authorization: `Bearer ${token}`
-        }
-      })
+  //puxando garçons
+  const getGarconsFirebase = async () => {
+    await firebase
+      .firestore()
+      .collection('usuario')
+      .where('estabelecimento_id', '==', user.estabelecimentoId)
+      .where('cargo', '==', 'garcom')
+      .get()
       .then((result) => {
-        setMesas(result.data);
-        console.log(result.data);
+        setGarcons(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       })
       .catch((error) => {
-        console.log(error.data);
-        erro();
+        console.error('Erro ao obter documento: ', error);
       });
   };
 
+  //listando mesas
+
+  const getMesasFirebase = async () => {
+    await firebase
+      .firestore()
+      .collection('mesa')
+      .where('estabelecimento_id', '==', user.estabelecimentoId)
+      .get()
+      .then((result) => {
+        setMesas(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Erro ao obter documento: ', error);
+      });
+  };
   useEffect(() => {
-    getMesas();
+    getMesasFirebase();
+    getGarconsFirebase();
   }, []);
 
-  //array de cargos
-  const colaborador = [
-    { id: '0', nome: 'Jadson', tipo: '' },
-    { id: '1', nome: 'Natan', tipo: 'administrador' },
-    { id: '2', nome: 'Matheus', tipo: 'GARCOM' },
-    { id: user.usuario.id, nome: user.usuario.nome, tipo: user.usuario.tipo }
-  ];
+  const handleSalvarMesa = () => {
+    toast.success('Salvo com sucesso');
+    setMesaAtiva(null);
+    setIsCreatingMesa(false);
+    getMesasFirebase();
+  };
 
-  const [isCreatingMesa, setIsCreatingMesa] = useState(false);
+  const handleErrorSalvarMesa= () => {
+    toast.error('Erro ao salvar produto');
+    setMesaAtiva(null);
+    setIsCreatingMesa(false);
+  };
 
-  const handleOpenNewMesa = () => setIsCreatingMesa(true);
-  const handleCloseNewMesa = () => setIsCreatingMesa(false);
+  //  useState para funções de abrir e fechar poupup da mesa
 
-  //abrrindo colaborador existente para editar
   const [mesaAtiva, setMesaAtiva] = useState(null);
 
-  const handleOpenMesa = (mesa) => {
+  const handleClickMesa = (mesa) => {
     setMesaAtiva(mesa);
-    // isCreatingColaborador && setselectValueCargo(colaborador.tipo);
   };
 
   const handleCloseMesaModal = () => {
     setMesaAtiva(null);
     setIsCreatingMesa(false);
   };
-  //salvando alterações
-  function salvar() {
-    toast.success('Salvo com sucesso');
-    setMesaAtiva(null);
-    getMesas();
-  }
 
-  function erro() {
-    toast.error('Desculpe, algo deu errado');
-  }
+  // abrir criar nova mesa
+
+  const [isCreatingMesa, setIsCreatingMesa] = useState(false);
+
+  const handleOpenNewMesa = () => setIsCreatingMesa(true);
+
   // renderizando array de mesas
+
   return (
     <div>
       <Header />
@@ -86,9 +95,10 @@ function Mesas() {
             <button onClick={handleOpenNewMesa}>Adicionar Mesa</button>
           </div>
           <div className="botaoProdutoResponsive">
-            <button onClick={handleOpenNewMesa}>Adicionar Mesa</button>
+            <button onClick={handleOpenNewMesa}>+</button>
           </div>
         </div>
+
         <div className="produtos">
           <div className="cabecalho">
             <p>
@@ -98,48 +108,50 @@ function Mesas() {
               <b>Status</b>
             </p>
             <p>
-              <b>Colaborador</b>
+              <b>Garçom</b>
             </p>
           </div>
           <div className="tabelaProdutos">
-            {mesas.map((mesa) => (
-              <div key={mesa.id}>
-                <div className="produto" onClick={() => handleOpenMesa(mesa)}>
-                  <p>Mesa {mesa.numero}</p>
-                  <p>{mesa.status}</p>
-                  <p>
-                    {colaborador.map((garcom) => {
-                      if (garcom.id === mesa.usuarioId) {
-                        return <>{garcom.nome}</>;
-                      }
-                    })}
-                  </p>
-                </div>
-              </div>
-            ))}
+            {loading ? (
+              <Box sx={{ display: 'grid', placeItems: 'center' }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              mesas.map((mesa) => {
+                return (
+                  <div key={mesa.id}>
+                    <div className="produto" onClick={() => handleClickMesa(mesa)}>
+                      <p>mesa {mesa.numero}</p>
+                      <p>{mesa.status}</p>
+                      {garcons.map((garcom) => {
+                        if(garcom.id == mesa.garcom_id){
+                            return <p key={garcom.id}>{garcom.nome}</p>
+                        }
+                      })}
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
       {mesaAtiva !== null && (
         <ModalMesa
           mesa={mesaAtiva}
-          colaborador={colaborador}
           onClose={handleCloseMesaModal}
-          onSave={salvar}
-          token={token}
-          usuario={user.usuario}
-          erro={erro}
+          onSave={handleSalvarMesa}
+          erro={handleErrorSalvarMesa}
+          garcons={garcons}
         />
       )}
       {isCreatingMesa && (
         <ModalMesa
           mesa={null}
-          colaborador={colaborador}
-          onClose={handleCloseNewMesa}
-          onSave={salvar}
-          token={token}
-          usuario={user.usuario}
-          erro={erro}
+          onClose={handleCloseMesaModal}
+          onSave={handleSalvarMesa}
+          erro={handleErrorSalvarMesa}
+          garcons={garcons}
         />
       )}
     </div>

@@ -44,31 +44,35 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
 
     const cadastrarColaborador = async (values) => {
         await firebase.auth().createUserWithEmailAndPassword(values.email, values.senha)
-  .then( async (userCredential) => {
-    // Signed in 
-    var usuario = userCredential.user;
-    console.log(usuario);
-    await firebase
-              .firestore()
-              .collection('usuario')
-              .add(
-                {
-                  nome: values.nome,
-                  email: values.email,
-                  cargo: values.cargo,
-                  estabelecimento_id: user.estabelecimentoId
-                }
-              ).then(() => {
-                onSave();
-              }
-              ).catch((error) => {
+            .then(async (userCredential) => {
+                // Signed in 
+                var usuario = userCredential.user;
+                console.log(usuario);
+                await firebase
+                    .firestore()
+                    .collection('usuario')
+                    .add(
+                        {
+                            nome: values.nome,
+                            email: values.email,
+                            cargo: values.cargo,
+                            estabelecimento_id: user.estabelecimentoId
+                        }
+                    ).then(() => {
+                        onSave();
+                        setLoading(false);
+                    }
+                    ).catch((error) => {
+                        onError();
+                        console.log(error.data);
+                        setLoading(false);
+                    })
+            })
+            .catch((error) => {
                 onError();
                 console.log(error.data);
-              })
-  })
-  .catch((error) => {
-    console.log(`ERRO ${error.code}: ${error.mesage}`)
-  });
+                setLoading(false);
+            });
     }
 
 
@@ -84,10 +88,12 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
                 }
             ).then(() => {
                 onSave();
+                setLoading(false);
             }
             ).catch((error) => {
                 onError();
                 console.log(error.data);
+                setLoading(false);
             })
     }
 
@@ -122,7 +128,6 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
                             setTimeout(() => {
                                 console.log(JSON.stringify(values, null, 2));
                                 setSubmitting(false);
-                                setLoading(false);
                             }, 400);
                         }}>
                         {({
@@ -198,10 +203,22 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
                                                             })}
                                                         </optgroup>
                                                     </select></>) : (<></>)}
-                                                    {isEditingcolaborador && colaborador.cargo == 'garcom' && values.cargo != 'garcom' && (
-                                                        <p style={{color: 'red'}}>Se esse colaborador estiver vinculado à uma mesa, altere em mesas!</p>
-                                                    )}
-                                            </div>) : (<></>)}
+                                                {isEditingcolaborador && colaborador.cargo == 'garcom' && values.cargo != 'garcom' && (
+                                                    <p style={{ color: 'red' }}>Se esse colaborador estiver vinculado à uma mesa, altere em mesas!</p>
+                                                )}
+                                            </div>) : (<div>
+                                                <p>cargo</p>
+                                                <select
+                                                    name="cargo"
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    value={values.cargo}>
+                                                    {!values.cargo && (<option>Selecione</option>)}
+                                                    {cargos.map((cargo) => {
+                                                        return <option key={cargo.valor} value={cargo.valor}>{cargo.nome}</option>
+                                                    })}
+                                                </select>
+                                            </div>)}
                                         </div>
                                     </div>
                                 </div>
