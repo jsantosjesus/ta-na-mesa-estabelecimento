@@ -8,6 +8,7 @@ import { useState } from 'react';
 function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
     const isEditingcolaborador = !!colaborador;
     const [loading, setLoading] = useState(false);
+    let mesaGarcom;
 
     const cargos = [{
         valor: 'garcom',
@@ -77,24 +78,63 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
 
 
     const editarColaborador = async (values) => {
-        await firebase
-            .firestore()
-            .collection('usuario')
-            .doc(colaborador.id)
-            .update(
-                {
-                    nome: values.nome,
-                    cargo: values.cargo
+        if (colaborador.cargo == 'garcom' && values.cargo != 'garcom') {
+            await firebase
+                .firestore()
+                .collection('mesa')
+                .where('estabelecimento_id', '==', user.estabelecimentoId)
+                .where('garcom_id', '==', colaborador.id)
+                .get()
+                .then(async (result) => {
+                    mesaGarcom = result.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+                    if (mesaGarcom.length == 0) {
+                        await firebase
+                            .firestore()
+                            .collection('usuario')
+                            .doc(colaborador.id)
+                            .update(
+                                {
+                                    nome: values.nome,
+                                    cargo: values.cargo
+                                }
+                            ).then(() => {
+                                onSave();
+                                setLoading(false);
+                            }
+                            ).catch((error) => {
+                                onError();
+                                console.log(error.data);
+                                setLoading(false);
+                            })
+                    } else{
+                        window.alert('Esse garçom está vinculado a uma ou mais mesas, por favor desvincule-o em mesas');
+                        setLoading(false);
+                    }
+                }).catch((error) => {
+                    onError();
+                    console.log(error);
+                    setLoading(false);
+                })
+        } else {
+            await firebase
+                .firestore()
+                .collection('usuario')
+                .doc(colaborador.id)
+                .update(
+                    {
+                        nome: values.nome,
+                        cargo: values.cargo
+                    }
+                ).then(() => {
+                    onSave();
+                    setLoading(false);
                 }
-            ).then(() => {
-                onSave();
-                setLoading(false);
-            }
-            ).catch((error) => {
-                onError();
-                console.log(error.data);
-                setLoading(false);
-            })
+                ).catch((error) => {
+                    onError();
+                    console.log(error.data);
+                    setLoading(false);
+                })
+        }
     }
 
     return (
@@ -126,7 +166,6 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
                                 cadastrarColaborador(values);
                             }
                             setTimeout(() => {
-                                console.log(JSON.stringify(values, null, 2));
                                 setSubmitting(false);
                             }, 400);
                         }}>

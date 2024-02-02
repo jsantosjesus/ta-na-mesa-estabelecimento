@@ -2,9 +2,11 @@ import React, { useState, useContext, useEffect } from 'react';
 import '../../pages/produtos/produtos.css';
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
-import {ModalMesa} from '../../componentes/mesa/index'
+import { ModalMesa } from '../../componentes/mesa/index'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../contexts/auth';
 import firebase from 'firebase';
 
@@ -14,6 +16,7 @@ function Mesas() {
   const [loading, setLoading] = useState(true);
   const [mesas, setMesas] = useState();
   const [garcons, setGarcons] = useState();
+  const [garcomFiltro, setGarcomFiltro] = useState('');
 
   //puxando garçons
   const getGarconsFirebase = async () => {
@@ -34,6 +37,7 @@ function Mesas() {
   //listando mesas
 
   const getMesasFirebase = async () => {
+    if(garcomFiltro == ''){
     await firebase
       .firestore()
       .collection('mesa')
@@ -46,11 +50,30 @@ function Mesas() {
       .catch((error) => {
         console.error('Erro ao obter documento: ', error);
       });
+    } else if(garcomFiltro != ''){
+      await firebase
+        .firestore()
+        .collection('mesa')
+        .where('garcom_id', '==', garcomFiltro)
+        .where('estabelecimento_id', '==', user.estabelecimentoId)
+        .get()
+        .then((result) => {
+          setMesas(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Erro ao obter documento: ', error);
+        });
+    }
   };
   useEffect(() => {
-    getMesasFirebase();
+    // getMesasFirebase();
     getGarconsFirebase();
   }, []);
+
+  useEffect(() => {
+    getMesasFirebase();
+  }, [garcomFiltro])
 
   const handleSalvarMesa = () => {
     toast.success('Salvo com sucesso');
@@ -59,7 +82,7 @@ function Mesas() {
     getMesasFirebase();
   };
 
-  const handleErrorSalvarMesa= () => {
+  const handleErrorSalvarMesa = () => {
     toast.error('Erro ao salvar produto');
     setMesaAtiva(null);
     setIsCreatingMesa(false);
@@ -91,6 +114,22 @@ function Mesas() {
       <Header />
       <div className="bodyProdutos">
         <div className="subHeader">
+          <div className="filtros">
+            <p>
+              <FontAwesomeIcon icon={faFilter} />
+            </p>
+            <div>
+              <select value={garcomFiltro} onChange={(e) => setGarcomFiltro(e.target.value)}>
+                <option value="">Todos</option>
+                {garcons && garcons.map((garcom) => (
+                  <option key={garcom.id} value={garcom.id}>
+                    {garcom.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="pesquisa"></div>
           <div className="botaoProduto">
             <button onClick={handleOpenNewMesa}>Adicionar Mesa</button>
           </div>
@@ -98,7 +137,6 @@ function Mesas() {
             <button onClick={handleOpenNewMesa}>+</button>
           </div>
         </div>
-
         <div className="produtos">
           <div className="cabecalho">
             <p>
@@ -123,9 +161,9 @@ function Mesas() {
                     <div className="produto" onClick={() => handleClickMesa(mesa)}>
                       <p>mesa {mesa.numero}</p>
                       <p>{mesa.status}</p>
-                      {garcons.map((garcom) => {
-                        if(garcom.id == mesa.garcom_id){
-                            return <p key={garcom.id}>{garcom.nome}</p>
+                      {garcons && garcons.map((garcom) => {
+                        if (garcom.id == mesa.garcom_id) {
+                          return <p key={garcom.id}>{garcom.nome}</p>
                         }
                       })}
                     </div>
@@ -143,6 +181,7 @@ function Mesas() {
           onSave={handleSalvarMesa}
           erro={handleErrorSalvarMesa}
           garcons={garcons}
+          user={user}
         />
       )}
       {isCreatingMesa && (
@@ -152,6 +191,7 @@ function Mesas() {
           onSave={handleSalvarMesa}
           erro={handleErrorSalvarMesa}
           garcons={garcons}
+          user={user}
         />
       )}
     </div>

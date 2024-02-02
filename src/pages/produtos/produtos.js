@@ -16,7 +16,6 @@ function Produtos() {
   // const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const { user } = useContext(AuthContext);
-  // const estabelecimentoId = user.usuario.estabelecimentoId;
   const [loading, setLoading] = useState(false);
 
   const [categorias, setCategorias] = useState([]);

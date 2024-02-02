@@ -1,24 +1,63 @@
 /* eslint-disable prettier/prettier */
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { apiClient } from '../../config/api';
+import firebase from 'firebase';
+import { useState } from 'react';
 
-
-function ModalMesa({ mesa, onClose, onSave, garcons, erro }) {
+function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
     const isEditingMesa = !!mesa;
+    const [loading, setLoading] = useState(false);
 
     const status = ['LIVRE', 'OCUPADA', 'INATIVA'];
 
-    const editarMesaFirebase = () => {
-
+    const editarMesaFirebase = async (values) => {
+        await firebase
+            .firestore()
+            .collection('mesa')
+            .doc(mesa.id)
+            .update(
+                {
+                    numero: values.numero,
+                    garcom_id: values.garcomId,
+                    status: values.status
+                }
+            ).then(() => {
+                onSave();
+                setLoading(false);
+            }
+            ).catch((error) => {
+                erro();
+                setLoading(false);
+                console.log(error.data);
+            })
     }
 
-    const cadastrarMesaFirebase = () => {
-
+    const cadastrarMesaFirebase = async (values) => {
+        await firebase
+            .firestore()
+            .collection('mesa')
+            .add(
+                {
+                    numero: values.numero,
+                    garcom_id: values.garcomId,
+                    status: values.status,
+                    estabelecimento_id: user.estabelecimentoId,
+                }
+            ).then(() => {
+                onSave();
+                setLoading(false);
+            }
+            ).catch((error) => {
+                erro();
+                setLoading(false);
+                console.log(error.data);
+            })
     }
 
     const mesaSchema = Yup.object().shape({
         numero: Yup.string()
+            .required('Campo obrigatorio'),
+        garcomId: Yup.string()
             .required('Campo obrigatorio')
     });
 
@@ -45,14 +84,15 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro }) {
                                 }
                         }
                         validationSchema={mesaSchema}
-                        onSubmit={async (values, { setSubmitting }) => {
+                        onSubmit={async (values) => {
+                            setLoading(true);
                             isEditingMesa ?
                                 (
-                                    editarMesaFirebase()
+                                    editarMesaFirebase(values)
                                 )
                                 :
                                 (
-                                    cadastrarMesaFirebase()
+                                    cadastrarMesaFirebase(values)
                                 )
                         }}>
                         {({
@@ -128,18 +168,7 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro }) {
                                                         {!values.garcomId && (<option>Selecione</option>)}
                                                         {isEditingMesa &&
                                                             garcons.map((garcom) => {
-                                                                    if (garcom.id === mesa.garcom_id) {
-                                                                        // eslint-disable-next-line prettier/prettier
-                                                                        return (
-                                                                            <option key={garcom.id} value={garcom.id}>
-                                                                                {garcom.nome}
-                                                                            </option>
-                                                                        );
-                                                                    }
-                                                            })}
-                                                        {garcons.map((garcom) => {
-
-                                                                if (!isEditingMesa || garcom.id !== mesa.garcom_id) {
+                                                                if (garcom.id === mesa.garcom_id) {
                                                                     // eslint-disable-next-line prettier/prettier
                                                                     return (
                                                                         <option key={garcom.id} value={garcom.id}>
@@ -147,19 +176,37 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro }) {
                                                                         </option>
                                                                     );
                                                                 }
-                                                            
+                                                            })}
+                                                        {garcons.map((garcom) => {
+
+                                                            if (!isEditingMesa || garcom.id !== mesa.garcom_id) {
+                                                                // eslint-disable-next-line prettier/prettier
+                                                                return (
+                                                                    <option key={garcom.id} value={garcom.id}>
+                                                                        {garcom.nome}
+                                                                    </option>
+                                                                );
+                                                            }
+
                                                         })}
                                                     </optgroup>
                                                 </select>
+                                                {errors.garcomId && touched.garcomId ? (
+                                                    <div className="errorInput">{errors.garcomId}</div>
+                                                ) : null}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="salvar">
-                                    <button type="submit" disabled={isSubmitting} className="botaoSalvarProduto">
-                                        Salvar Alterações
-                                    </button>
+                                    {values.numero && values.garcomId && values.status ?
+                                        (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
+                                            Salvar Alterações
+                                        </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (
+                                            <button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'not-allowed' }}>Salvar Alterações</button>
+                                        )
+                                    }
                                 </div>
                             </form>
                         )}

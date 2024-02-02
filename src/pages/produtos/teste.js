@@ -10,6 +10,7 @@ function PaginaTeste() {
       .firestore()
       .collection('produto')
       .where('estabelecimento_id', '==', user.estabelecimentoId)
+      // .where('garcom_id', '==', user.estabelecimentoId)
       .get()
       .then((result) => {
         setProdutos(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -42,10 +43,10 @@ function PaginaTeste() {
     return (
         <div>
             <h1>Pagina teste</h1>
-
+            {produtos.length != 0 && (<>produtos</>)}
             <div>
                 <h2>Dados da Coleção:</h2>
-                <button onClick={createProdutoFirebase}></button>
+                <button onClick={console.log(produtos)}></button>
                 {produtos.map((produto) => {
 
                     return (
