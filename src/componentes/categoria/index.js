@@ -1,11 +1,52 @@
+/* eslint-disable prettier/prettier */
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { apiClient } from '../../config/api';
+import firebase from 'firebase';
+import { useState } from 'react';
 
-
-
-function ModalCategoria({ categoria, onClose, onSave, token, usuario, erro }) {
+function ModalCategoria({ categoria, onClose, onSave, erro, user }) {
     const isEditingCategoria = !!categoria;
+    const [loading, setLoading] = useState(false);
+
+    const editarCategoriaFirebase = async (values) => {
+        await firebase
+            .firestore()
+            .collection('categoria')
+            .doc(categoria.id)
+            .update(
+                {
+                    nome: values.nome
+                }
+            ).then(() => {
+                onSave();
+                setLoading(false);
+            }
+            ).catch((error) => {
+                erro();
+                setLoading(false);
+                console.log(error.data);
+            })
+    }
+
+    const cadastrarCategoriaFirebase = async (values) => {
+        await firebase
+            .firestore()
+            .collection('categoria')
+            .add(
+                {
+                    nome: values.nome,
+                    estabelecimento_id: user.estabelecimentoId
+                }
+            ).then(() => {
+                onSave();
+                setLoading(false);
+            }
+            ).catch((error) => {
+                erro();
+                setLoading(false);
+                console.log(error.data);
+            })
+    }
 
     const categoriaSchema = Yup.object().shape({
         nome: Yup.string()
@@ -16,73 +57,29 @@ function ModalCategoria({ categoria, onClose, onSave, token, usuario, erro }) {
         <div className="modalTransparent">
             <div className="poupupcolaborador">
                 <div className="titlecolaborador">
-                    <h3>{isEditingCategoria ? 'Editar' : 'Criar'} Categoria</h3>
+                    <h3>{isEditingCategoria ? 'Editar' : 'Criar'} categoria</h3>
                     <button onClick={onClose}>X</button>
                     <hr />
                 </div>
-                <hr />
                 <div className="corpoProduto">
                     <Formik
                         initialValues={
                             isEditingCategoria
                                 ? {
-                                    nome: categoria.nome,
+                                    nome: categoria.nome
                                 }
-                                :
-                                {}
-
+                                : {}
                         }
                         validationSchema={categoriaSchema}
-                        onSubmit={async (values, { setSubmitting }) => {
+                        onSubmit={async (values) => {
+                            setLoading(true);
                             isEditingCategoria ?
                                 (
-                                    await apiClient.put(`/categorias/${categoria.id}`, values, {
-                                        headers: {
-                                            'ngrok-skip-browser-warning': true,
-                                            Authorization: `Bearer ${token}`
-                                        }
-                                    })
-                                        .then((response) => {
-                                            setTimeout(() => {
-                                                console.log(JSON.stringify(values, null, 2));
-                                                console.log(response.data);
-                                                onSave();
-                                                onClose();
-                                                setSubmitting(false);
-                                            }, 400);
-                                        }
-                                        )
-                                        .catch((error) => {
-                                            console.log(error);
-                                            console.log(JSON.stringify(values, null, 2));
-                                            onClose();
-                                            erro();
-                                            console.log(categoria.id);
-                                        })
+                                    editarCategoriaFirebase(values)
                                 )
                                 :
                                 (
-                                    await apiClient.post(`/categorias/estabelecimento/${usuario.estabelecimentoId}`, values, {
-                                        headers: {
-                                            'ngrok-skip-browser-warning': true,
-                                            Authorization: `Bearer ${token}`
-                                        }
-                                    })
-                                        .then((response) => {
-                                            setTimeout(() => {
-                                                console.log(JSON.stringify(values, null, 2));
-                                                console.log(response.data);
-                                                onSave();
-                                                onClose();
-                                                setSubmitting(false);
-                                            }, 400);
-                                        }
-                                        )
-                                        .catch((error) => {
-                                            console.log(error);
-                                            onClose();
-                                            erro();
-                                        })
+                                    cadastrarCategoriaFirebase(values)
                                 )
                         }}>
                         {({
@@ -101,7 +98,7 @@ function ModalCategoria({ categoria, onClose, onSave, token, usuario, erro }) {
                                         <div className="nome">
                                             <p>Nome</p>
                                             <input
-                                                type="name"
+                                                type="text"
                                                 name="nome"
                                                 onChange={handleChange}
                                                 onBlur={handleBlur}
@@ -112,10 +109,15 @@ function ModalCategoria({ categoria, onClose, onSave, token, usuario, erro }) {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="salvar">
-                                    <button type="submit" disabled={isSubmitting} className="botaoSalvarProduto">
-                                        Salvar Alterações
-                                    </button>
+                                    {values.nome ?
+                                        (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
+                                            Salvar Alterações
+                                        </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (
+                                            <button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'not-allowed' }}>Salvar Alterações</button>
+                                        )
+                                    }
                                 </div>
                             </form>
                         )}

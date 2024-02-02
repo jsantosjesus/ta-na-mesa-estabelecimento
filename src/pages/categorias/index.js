@@ -1,55 +1,58 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import '../../pages/produtos/produtos.css';
 import Header from '../../componentes/Header';
 import { toast } from 'react-toastify';
 import { ModalCategoria } from '../../componentes/categoria';
-import { apiClient } from '../../config/api';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import { AuthContext } from '../../contexts/auth';
+import firebase from 'firebase';
+
 
 function Categorias() {
   const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const [categorias, setCategorias] = useState();
 
-  const [categorias, setCategorias] = useState([
-    {
-      nome: 'Hamburguer'
-    }
-  ]);
-  const [search, setSearch] = useState();
-  const [searchResult, setSearchResult] = useState(categorias);
-  const estabelecimentoId = user.usuario.estabelecimentoId;
-  const token = user.token;
-
-  const getCategorias = async () => {
-    await apiClient
-      .get(`/categorias/estabelecimento/${estabelecimentoId}`, {
-        params: { limit: 30, offset: 0 },
-        headers: {
-          'ngrok-skip-browser-warning': true,
-          Authorization: `Bearer ${token}`
-        }
-      })
+  //puxando garçons
+  const getCategoriasFirebase = async () => {
+    await firebase
+      .firestore()
+      .collection('categoria')
+      .where('estabelecimento_id', '==', user.estabelecimentoId)
+      .get()
       .then((result) => {
-        setCategorias(result.data);
-        setSearchResult(result.data);
-        console.log(result.data);
+        setCategorias(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+        setLoading(false);
       })
       .catch((error) => {
-        console.log(error.data);
-        erro();
+        console.error('Erro ao obter documento: ', error);
       });
   };
 
   useEffect(() => {
-    getCategorias();
+    getCategoriasFirebase();
   }, []);
 
-  const [isCreatingCategoria, setIsCreatingCategoria] = useState(false);
-  const handleOpenNewCategoria = () => setIsCreatingCategoria(true);
-  const handleCloseNewCategoria = () => setIsCreatingCategoria(false);
+  
+  const handleSalvarCategoria = () => {
+    toast.success('Salvo com sucesso');
+    setCategoriaAtiva(null);
+    setIsCreatingCategoria(false);
+    getCategoriasFirebase();
+  };
 
-  //abrrindo colaborador existente para editar
+  const handleErrorSalvarCategoria = () => {
+    toast.error('Erro ao salvar categoria');
+    setCategoriaAtiva(null);
+    setIsCreatingCategoria(false);
+  };
+
+  //  useState para funções de abrir e fechar poupup da categoria
+
   const [categoriaAtiva, setCategoriaAtiva] = useState(null);
 
-  const handleOpenCategoria = (categoria) => {
+  const handleClickCategoria = (categoria) => {
     setCategoriaAtiva(categoria);
   };
 
@@ -57,51 +60,27 @@ function Categorias() {
     setCategoriaAtiva(null);
     setIsCreatingCategoria(false);
   };
-  //salvando alterações
-  function salvar() {
-    toast.success('Salvo com sucesso');
-    setCategoriaAtiva(null);
-    getCategorias();
-  }
 
-  function erro() {
-    toast.error('Desculpe, algo deu errado');
-  }
-  // function para pesquisa
-  function pesquisa() {
-    let result = categorias;
+  // abrir criar nova categoria
 
-    if (search) {
-      result = categorias.filter((categoria) =>
-        categoria.nome.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+  const [isCreatingCategoria, setIsCreatingCategoria] = useState(false);
 
-    setSearchResult(result);
-  }
+  const handleOpenNewCategoria = () => setIsCreatingCategoria(true);
 
-  useEffect(() => {
-    pesquisa();
-  }, [search]);
+  // renderizando array de mesas
 
-  // renderizando array de Categorias
   return (
     <div>
       <Header />
       <div className="bodyProdutos">
         <div className="subHeader">
-          <div className="pesquisa">
-            <input
-              type="text"
-              placeholder="Pesquisar"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}></input>
-          </div>
+          <div className="filtros"></div>
+          <div className="pesquisa"></div>
           <div className="botaoProduto">
             <button onClick={handleOpenNewCategoria}>Adicionar Categoria</button>
           </div>
           <div className="botaoProdutoResponsive">
-            <button onClick={handleOpenNewCategoria}>Adicionar Categoria</button>
+            <button onClick={handleOpenNewCategoria}>+</button>
           </div>
         </div>
         <div className="produtos">
@@ -111,13 +90,21 @@ function Categorias() {
             </p>
           </div>
           <div className="tabelaProdutos">
-            {searchResult.map((categoria) => (
-              <div key={categoria.id}>
-                <div className="produto" onClick={() => handleOpenCategoria(categoria)}>
-                  <p>{categoria.nome}</p>
-                </div>
-              </div>
-            ))}
+            {loading ? (
+              <Box sx={{ display: 'grid', placeItems: 'center' }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              categorias.map((categoria) => {
+                return (
+                  <div key={categoria.id}>
+                    <div className="produto" onClick={() => handleClickCategoria(categoria)}>
+                      <p>{categoria.nome}</p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
@@ -125,20 +112,18 @@ function Categorias() {
         <ModalCategoria
           categoria={categoriaAtiva}
           onClose={handleCloseCategoriaModal}
-          onSave={salvar}
-          token={token}
-          usuario={user.usuario}
-          erro={erro}
+          onSave={handleSalvarCategoria}
+          erro={handleErrorSalvarCategoria}
+          user={user}
         />
       )}
       {isCreatingCategoria && (
         <ModalCategoria
           categoria={null}
-          onClose={handleCloseNewCategoria}
-          onSave={salvar}
-          token={token}
-          usuario={user.usuario}
-          erro={erro}
+          onClose={handleCloseCategoriaModal}
+          onSave={handleSalvarCategoria}
+          erro={handleErrorSalvarCategoria}
+          user={user}
         />
       )}
     </div>
