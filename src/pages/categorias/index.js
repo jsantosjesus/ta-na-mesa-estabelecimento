@@ -35,12 +35,13 @@ function Categorias() {
   }, []);
 
   
-  const handleSalvarCategoria = () => {
-    toast.success('Salvo com sucesso');
+  const handleSalvarCategoria = (menssagem) => {
+    toast.success(menssagem);
     setCategoriaAtiva(null);
     setIsCreatingCategoria(false);
     getCategoriasFirebase();
   };
+
 
   const handleErrorSalvarCategoria = () => {
     toast.error('Erro ao salvar categoria');
@@ -67,7 +68,7 @@ function Categorias() {
 
   const handleOpenNewCategoria = () => setIsCreatingCategoria(true);
 
-  // renderizando array de mesas
+  // renderizando array de categorias
 
   return (
     <div>

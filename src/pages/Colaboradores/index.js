@@ -116,7 +116,7 @@ function Colaboradores() {
 
   const handleOpenNewColaborador = () => setIsCreatingColaborador(true);
 
-  // renderizando array de produtos
+  // renderizando array de colaboradores
 
   return (
     <div>

@@ -64,10 +64,9 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
     return (
         <div className="modalTransparent">
             <div className="poupupcolaborador">
-                <div className="titlecolaborador">
+                <div className="titleproduto">
                     <h3>{isEditingMesa ? 'Editar' : 'Criar'} mesa</h3>
                     <button onClick={onClose}>X</button>
-                    <hr />
                 </div>
                 <hr />
                 <div className="corpoProduto">

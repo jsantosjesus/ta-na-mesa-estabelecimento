@@ -3,10 +3,13 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function ModalCategoria({ categoria, onClose, onSave, erro, user }) {
     const isEditingCategoria = !!categoria;
     const [loading, setLoading] = useState(false);
+    const [decisaoExcluir, setDecisaoExcluir] = useState(false);
 
     const editarCategoriaFirebase = async (values) => {
         await firebase
@@ -18,7 +21,7 @@ function ModalCategoria({ categoria, onClose, onSave, erro, user }) {
                     nome: values.nome
                 }
             ).then(() => {
-                onSave();
+                onSave('Salvo com sucesso');
                 setLoading(false);
             }
             ).catch((error) => {
@@ -27,6 +30,7 @@ function ModalCategoria({ categoria, onClose, onSave, erro, user }) {
                 console.log(error.data);
             })
     }
+
 
     const cadastrarCategoriaFirebase = async (values) => {
         await firebase
@@ -38,13 +42,49 @@ function ModalCategoria({ categoria, onClose, onSave, erro, user }) {
                     estabelecimento_id: user.estabelecimentoId
                 }
             ).then(() => {
-                onSave();
+                onSave('Salvo com sucesso');
                 setLoading(false);
             }
             ).catch((error) => {
                 erro();
                 setLoading(false);
                 console.log(error.data);
+            })
+    }
+
+    const excluirCategoria = async () => {
+        await firebase
+            .firestore()
+            .collection('produto')
+            .where('estabelecimento_id', '==', user.estabelecimentoId)
+            .where('categoria.id', '==', categoria.id)
+            .get()
+            .then(async (result) => {
+                let produtoCategoria = result.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+                if (produtoCategoria.length == 0) {
+                    await firebase
+                        .firestore()
+                        .collection('categoria')
+                        .doc(categoria.id)
+                        .delete()
+                        .then(() => {
+                            onSave('Excluido com sucesso');
+                            setLoading(false);
+                            setDecisaoExcluir(false);
+                        }
+                        ).catch((error) => {
+                            erro();
+                            setLoading(false);
+                            console.log(error);
+                        })
+                } else {
+                    window.alert('Essa categoria não pode ser excluida pois existem produtos vinculados a ela');
+                    setLoading(false);
+                }
+            }).catch((error) => {
+                erro();
+                console.log(error);
+                setLoading(false);
             })
     }
 
@@ -56,11 +96,16 @@ function ModalCategoria({ categoria, onClose, onSave, erro, user }) {
     return (
         <div className="modalTransparent">
             <div className="poupupcolaborador">
-                <div className="titlecolaborador">
+                {isEditingCategoria && (<div className='excluir'>
+                    <button className='botaoExcluir' onClick={() => setDecisaoExcluir(true)}><FontAwesomeIcon icon={faTrash} /></button>
+                    {decisaoExcluir && (<><p>Excluir categoria?</p>
+                        <p className='excluirDecisao' onClick={excluirCategoria}>Sim</p><p className='excluirDecisao' onClick={() => setDecisaoExcluir(false)}>Não</p></>)}
+                </div>)}
+                <div className="titleproduto">
                     <h3>{isEditingCategoria ? 'Editar' : 'Criar'} categoria</h3>
                     <button onClick={onClose}>X</button>
-                    <hr />
                 </div>
+                <hr />
                 <div className="corpoProduto">
                     <Formik
                         initialValues={

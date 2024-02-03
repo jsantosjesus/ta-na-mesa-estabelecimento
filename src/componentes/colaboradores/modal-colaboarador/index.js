@@ -140,10 +140,9 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
     return (
         <div className="modalTransparent">
             <div className="poupupcolaborador">
-                <div className="titlecolaborador">
+                <div className="titleproduto">
                     <h3>{isEditingcolaborador ? 'Editar' : 'Criar'} colaborador</h3>
                     <button onClick={onClose}>X</button>
-                    <hr />
                 </div>
                 <hr />
                 <div className="corpoProduto">
