@@ -61,7 +61,7 @@ function Produtos() {
     } else if (categoriaFiltro != '' && searchTerm == '') {
 
       //consulta filtrando por categoria
-      
+
       await firebase
         .firestore()
         .collection('produto')
@@ -199,9 +199,13 @@ function Produtos() {
                     <div className="produto" onClick={() => handleClickProduto(produto)}>
                       <p>{produto.nome}</p>
                       <p>R$ {produto.valor.toFixed(2).replace('.', ',')}</p>
-                      <p>
-                        {produto.categoria.nome}
-                      </p>
+                      {categorias.map((categoria) => {
+                        if (categoria.id == produto.categoria_id) {
+                          return (<p>
+                            {categoria.nome}
+                          </p>)
+                        }
+                      })}
                       <p>{produto.estoque}</p>
                     </div>
                   </div>

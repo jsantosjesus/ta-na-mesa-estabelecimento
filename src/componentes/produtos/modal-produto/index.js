@@ -1,8 +1,11 @@
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import CircularProgress from '@mui/material/CircularProgress';
 import firebase from 'firebase';
+import taNaMesaLogomarca from '../../../assets/taNaMesaLogomarca.png';
+import { CircularProgress } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const isEditingProduto = !!produto;
@@ -10,18 +13,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const [imgPreview, setImgPreview] = useState('');
   const [imagemUrl, setImagemUrl] = useState();
   const [file, setFile] = useState();
-  //useState para controlar categoria escolhida
-  const [idCategoriaEscolhida, setIdCategoriaEscolhida] = useState();
-  const [nomeCategoriaEscolhida, setNomeCategoriaEscolhida] = useState();
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    categorias.map((categoria) => {
-      if (categoria.id == idCategoriaEscolhida) {
-        setNomeCategoriaEscolhida(categoria.nome);
-      }
-    })
-  }, [idCategoriaEscolhida]);
+  const [decisaoExcluir, setDecisaoExcluir] = useState(false);
 
   //validando dados antes de enviar
   const ProdutoSchema = Yup.object().shape({
@@ -56,9 +49,28 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const editarProduto = async (values) => {
     setLoading(true);
     if (imgPreview) {
+      // excluindo imagem antiga
+      if (produto.imagem) {
+        const startIndex = produto.imagem.indexOf("/o/") + 3; // Encontrando o índice do primeiro caractere após "/o/"
+        const endIndex = produto.imagem.indexOf("?"); // Encontrando o índice do caractere "?" que marca o final do caminho do arquivo
+        const caminho = produto.imagem.substring(startIndex, endIndex);
+        const caminhoDoArquivo = caminho.replace(/%2F/g, '/').replace(/%20/g, ' ');
+        const storageRef = firebase.storage().ref();
+        const arquivoRef = storageRef.child(caminhoDoArquivo);
+  
+        arquivoRef.delete()
+          .then(async () => {
+            console.log("Arquivo excluído com sucesso!");
+          })
+          .catch((error) => {
+            console.error("Erro ao excluir o arquivo:", error);
+            onError();
+          });
+      }
       const storage = firebase.storage();
       const storageRef = storage.ref();
-      const uploadTask = storageRef.child(`estabelecimentos/${user.estabelecimentoId}/produtos/${values.nome}`).put(file);
+      const nomeImagem = values.nome.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+      const uploadTask = storageRef.child(`estabelecimentos/${user.estabelecimentoId}/produtos/${nomeImagem}`).put(file);
 
       uploadTask.on(
         'state_changed',
@@ -87,10 +99,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   valor: values.preco,
                   estoque: values.estoque,
                   descricao: values.descricao,
-                  categoria: {
-                    id: idCategoriaEscolhida,
-                    nome: nomeCategoriaEscolhida
-                  },
+                  categoria_id: values.categoria,
                   imagem: downloadURL
                 }
               ).then(() => {
@@ -114,10 +123,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
             valor: values.preco,
             estoque: values.estoque,
             descricao: values.descricao,
-            categoria: {
-              id: idCategoriaEscolhida,
-              nome: nomeCategoriaEscolhida
-            }
+            categoria_id: values.categoria
           }
         ).then(() => {
           onSave();
@@ -136,7 +142,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
     if (imgPreview) {
       const storage = firebase.storage();
       const storageRef = storage.ref();
-      const uploadTask = storageRef.child(`estabelecimentos/${user.estabelecimentoId}/produtos/${values.nome}`).put(file);
+      const nomeImagem = values.nome.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+      const uploadTask = storageRef.child(`estabelecimentos/${user.estabelecimentoId}/produtos/${nomeImagem}`).put(file);
 
       uploadTask.on(
         'state_changed',
@@ -155,6 +162,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
           uploadTask.snapshot.ref.getDownloadURL().then(async (downloadURL) => {
             console.log('File available at', downloadURL);
             setImagemUrl(downloadURL);
+            console.log(nomeImagem)
             await firebase
               .firestore()
               .collection('produto')
@@ -164,10 +172,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   valor: values.preco,
                   estoque: values.estoque,
                   descricao: values.descricao,
-                  categoria: {
-                    id: idCategoriaEscolhida,
-                    nome: nomeCategoriaEscolhida
-                  },
+                  categoria_id: values.categoria,
                   estabelecimento_id: user.estabelecimentoId,
                   imagem: downloadURL
                 }
@@ -191,12 +196,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
             valor: values.preco,
             estoque: values.estoque,
             descricao: values.descricao,
-            categoria: {
-              id: idCategoriaEscolhida,
-              nome: nomeCategoriaEscolhida
-            },
+            categoria_id: values.categoria,
             estabelecimento_id: user.estabelecimentoId,
-            imagem: 'https://firebasestorage.googleapis.com/v0/b/ta-na-mesa-89fec.appspot.com/o/produtos%2Fta-na-mesa-logomarca.png?alt=media&token=268b70c7-9aa5-4a17-806a-68172f14b666'
           }
         ).then(() => {
           onSave();
@@ -210,15 +211,67 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   }
   //useEffect para mudar a imagem quando o produto escolhido for alterado
   useEffect(() => {
-    produto ? setImagemProduto(produto.imagem) : setImagemProduto('https://firebasestorage.googleapis.com/v0/b/ta-na-mesa-89fec.appspot.com/o/produtos%2Fta-na-mesa-logomarca.png?alt=media&token=268b70c7-9aa5-4a17-806a-68172f14b666');
-    produto ? setIdCategoriaEscolhida(produto.categoria.id) : setIdCategoriaEscolhida(null);
-    setNomeCategoriaEscolhida(null);
+    produto && produto.imagem ? setImagemProduto(produto.imagem) : setImagemProduto(taNaMesaLogomarca);
   }, [produto]);
 
+  const excluirProduto = async () => {
+    if (produto.imagem) {
+      const startIndex = produto.imagem.indexOf("/o/") + 3; // Encontrando o índice do primeiro caractere após "/o/"
+      const endIndex = produto.imagem.indexOf("?"); // Encontrando o índice do caractere "?" que marca o final do caminho do arquivo
+      const caminho = produto.imagem.substring(startIndex, endIndex);
+      const caminhoDoArquivo = caminho.replace(/%2F/g, '/').replace(/%20/g, ' ');
+      const storageRef = firebase.storage().ref();
+      const arquivoRef = storageRef.child(caminhoDoArquivo);
 
+      arquivoRef.delete()
+        .then(async () => {
+          console.log("Arquivo excluído com sucesso!");
+          await firebase
+            .firestore()
+            .collection('produto')
+            .doc(produto.id)
+            .delete()
+            .then(() => {
+              onSave('Excluido com sucesso');
+              setLoading(false);
+              setDecisaoExcluir(false);
+            }
+            ).catch((error) => {
+              onError();
+              setLoading(false);
+              console.log(error);
+            })
+        })
+        .catch((error) => {
+          console.error("Erro ao excluir o arquivo:", error);
+          onError();
+        });
+    } else {
+      await firebase
+        .firestore()
+        .collection('produto')
+        .doc(produto.id)
+        .delete()
+        .then(() => {
+          onSave('Excluido com sucesso');
+          setLoading(false);
+          setDecisaoExcluir(false);
+        }
+        ).catch((error) => {
+          onError();
+          setLoading(false);
+          console.log(error);
+        })
+    }
+  };
   return (
     <div className="modalTransparent">
       <div className="poupupproduto">
+        {isEditingProduto && (<div className='excluir'>
+          <button className='botaoExcluir' onClick={() => setDecisaoExcluir(true)}><FontAwesomeIcon icon={faTrash} /></button>
+          {decisaoExcluir && (<><p>Excluir produto?</p>
+            <p className='excluirDecisao' onClick={excluirProduto}>Sim</p><p className='excluirDecisao' onClick={() => setDecisaoExcluir(false)}>Não</p></>)}
+        </div>)}
         <div className="titleproduto">
           <h3>{isEditingProduto ? 'Editar' : 'Criar'} produto</h3>
           <button onClick={onClose}>X</button>
@@ -233,7 +286,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   nome: produto.nome,
                   preco: produto.valor,
                   estoque: produto.estoque,
-                  categoria: produto.categoria,
+                  categoria: produto.categoria_id,
                   descricao: produto.descricao
                 }
                 : {}
@@ -264,7 +317,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                     ) : imagemProduto ? (
                       <img src={imagemProduto} alt="imagem do produto" width="70%" />
                     ) : (
-                      <><CircularProgress /></>
+                      <CircularProgress />
                     )}
                     <input
                       type="file"
@@ -319,21 +372,25 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                         <p>Categoria</p>
                         <select
                           name="categoria"
-                          onChange={(e) => setIdCategoriaEscolhida(e.target.value)}
+                          onChange={handleChange}
                           onBlur={handleBlur}
-                          value={idCategoriaEscolhida}>
+                          value={values.categoria}>
                           <optgroup label="Selecione:">
                             {!isEditingProduto ?
                               (<>
-                                {!idCategoriaEscolhida && <option>Selecione</option>}
+                                {!values.categoria && <option>Selecione</option>}
                                 {categorias.map((categoria) => {
                                   return (
                                     <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
                                   )
                                 })}</>) : (<>
-                                  <option key={values.categoria.id} value={values.categoria.id}>{values.categoria.nome}</option>
                                   {categorias.map((categoria) => {
-                                    if (categoria.id != values.categoria.id) {
+                                    if (categoria.id == values.categoria) {
+                                      return (
+                                        <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                                      )
+                                    }
+                                    if (categoria.id !== values.categoria) {
                                       return (
                                         <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
                                       )
@@ -359,7 +416,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   ) : null}
                 </div>
                 <div className="salvar">
-                  {values.nome && idCategoriaEscolhida && values.estoque && values.preco && values.descricao ?
+                  {values.nome && values.categoria && values.estoque && values.preco && values.descricao ?
                     (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
                       Salvar Alterações
                     </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (

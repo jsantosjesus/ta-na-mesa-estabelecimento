@@ -57,7 +57,7 @@ function ModalCategoria({ categoria, onClose, onSave, erro, user }) {
             .firestore()
             .collection('produto')
             .where('estabelecimento_id', '==', user.estabelecimentoId)
-            .where('categoria.id', '==', categoria.id)
+            .where('categoria_id', '==', categoria.id)
             .get()
             .then(async (result) => {
                 let produtoCategoria = result.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
