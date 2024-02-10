@@ -65,7 +65,7 @@ function Produtos() {
       await firebase
         .firestore()
         .collection('produto')
-        .where('categoria.id', '==', categoriaFiltro)
+        .where('categoria_id', '==', categoriaFiltro)
         .where('estabelecimento_id', '==', user.estabelecimentoId)
         .get()
         .then((result) => {
@@ -168,7 +168,7 @@ function Produtos() {
             <button onClick={handleOpenNewProduto}>Adicionar Produto</button>
           </div>
           <div className="botaoProdutoResponsive">
-            <button>+</button>
+            <button onClick={handleOpenNewProduto}>+</button>
           </div>
         </div>
 

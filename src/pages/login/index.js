@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import './Login.css';
 import logomarcaEmpresa from '../../assets/logomarca.png';
 import { Formik } from 'formik';
-// import { apiClient } from '../../config/api';
 import { AuthContext } from '../../contexts/auth';
 import firebase from 'firebase';
 function Login() {
@@ -35,10 +34,10 @@ function Login() {
                 .auth()
                 .signInWithEmailAndPassword(values.email, values.senha)
                 .then((response) => {
-                  console.log(response.mensage);
+                  // console.log(response.user.uid);
                   setSubmitting(false);
                   setMessageErro('');
-                  login(values.email, values.senha, response.user);
+                  login(response.user.uid);
                 })
                 .catch(function (error) {
                   if (error.response) {

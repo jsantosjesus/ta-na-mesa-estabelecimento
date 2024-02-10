@@ -75,8 +75,8 @@ function Mesas() {
     getMesasFirebase();
   }, [garcomFiltro])
 
-  const handleSalvarMesa = () => {
-    toast.success('Salvo com sucesso');
+  const handleSalvarMesa = (menssagem) => {
+    toast.success(menssagem);
     setMesaAtiva(null);
     setIsCreatingMesa(false);
     getMesasFirebase();

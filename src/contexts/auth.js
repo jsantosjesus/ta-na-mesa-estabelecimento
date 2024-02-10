@@ -24,7 +24,7 @@ export const AuthProvicer = ({ children }) => {
           };
         });
 
-        console.log(usuarioFirestore);
+        // console.log(usuarioFirestore);
       })
       .catch((error) => {
         console.error('Erro ao obter documento: ', error);
@@ -43,11 +43,11 @@ export const AuthProvicer = ({ children }) => {
 
   const login = async (usuario) => {
     // console.log(usuario.uid);
-    await getUserFirebastore(usuario.uid);
+    await getUserFirebastore(usuario);
     // console.log('login', { email, password, usuario });
     localStorage.setItem('usuarioLogado', JSON.stringify(usuarioFirestore));
     setUser(usuarioFirestore);
-    console.log(user);
+    // console.log(user);
     navigate('/');
   };
 

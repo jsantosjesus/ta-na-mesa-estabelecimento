@@ -3,10 +3,13 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
     const isEditingMesa = !!mesa;
     const [loading, setLoading] = useState(false);
+    const [decisaoExcluir, setDecisaoExcluir] = useState(false);
 
     const status = ['LIVRE', 'OCUPADA', 'INATIVA'];
 
@@ -22,7 +25,7 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                     status: values.status
                 }
             ).then(() => {
-                onSave();
+                onSave('Mesa editada com sucesso');
                 setLoading(false);
             }
             ).catch((error) => {
@@ -44,7 +47,7 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                     estabelecimento_id: user.estabelecimentoId,
                 }
             ).then(() => {
-                onSave();
+                onSave('Mesa salva com sucesso');
                 setLoading(false);
             }
             ).catch((error) => {
@@ -52,6 +55,28 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                 setLoading(false);
                 console.log(error.data);
             })
+    }
+
+    const excluirMesa = async () => {
+        if(mesa.status !== "OCUPADA"){
+        await firebase
+            .firestore()
+            .collection('mesa')
+            .doc(mesa.id)
+            .delete()
+            .then(() => {
+                onSave('Excluida com sucesso');
+                setLoading(false);
+                setDecisaoExcluir(false);
+            }
+            ).catch((error) => {
+                erro();
+                setLoading(false);
+                console.log(error);
+            })
+        }else{
+            window.alert('Essa mesa está ocupada! Não pode ser excluída')
+        }
     }
 
     const mesaSchema = Yup.object().shape({
@@ -64,6 +89,13 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
     return (
         <div className="modalTransparent">
             <div className="poupupcolaborador">
+                {isEditingMesa && (<div className='excluir'>
+                    <button className='botaoExcluir' onClick={() => setDecisaoExcluir(true)}>
+                        <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                    {decisaoExcluir && (<><p>Excluir categoria?</p>
+                        <p className='excluirDecisao' onClick={excluirMesa}>Sim</p><p className='excluirDecisao' onClick={() => setDecisaoExcluir(false)}>Não</p></>)}
+                </div>)}
                 <div className="titleproduto">
                     <h3>{isEditingMesa ? 'Editar' : 'Criar'} mesa</h3>
                     <button onClick={onClose}>X</button>
