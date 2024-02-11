@@ -26,6 +26,17 @@
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.5);
   padding-top: 20px;
   padding-bottom: 5px;
+  text-align: center;
+}
+
+.esqueciSenha{
+  cursor: pointer;
+  text-align: center !important;
+  margin-left: 0 !important;
+}
+
+.esqueciSenha:hover{
+  text-decoration: underline;
 }
 
 @media (max-width: 750px){
