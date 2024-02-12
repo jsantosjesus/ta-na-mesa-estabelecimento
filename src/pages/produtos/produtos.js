@@ -177,14 +177,14 @@ function Produtos() {
             <p>
               <b>Nome</b>
             </p>
-            <p>
+            {/* <p>
               <b>Preço</b>
-            </p>
+            </p> */}
             <p>
               <b>Categoria</b>
             </p>
             <p>
-              <b>Estoque</b>
+              <b>Em estoque</b>
             </p>
           </div>
           <div className="tabelaProdutos">
@@ -198,15 +198,15 @@ function Produtos() {
                   <div key={produto.uid}>
                     <div className="produto" onClick={() => handleClickProduto(produto)}>
                       <p>{produto.nome}</p>
-                      <p>R$ {produto.valor.toFixed(2).replace('.', ',')}</p>
+                      {/* <p>R$ {produto.valor
+                      // .toFixed(2).replace('.', ',')
+                      }</p> */}
                       {categorias.map((categoria) => {
                         if (categoria.id == produto.categoria_id) {
-                          return (<p>
-                            {categoria.nome}
-                          </p>)
+                          return <p key={categoria.id}>{categoria.nome}</p>
                         }
                       })}
-                      <p>{produto.estoque}</p>
+                      {produto.em_estoque ? <p>Sim</p> : <p>Não</p>}
                     </div>
                   </div>
                 );

@@ -165,18 +165,17 @@ body{
   .poupupproduto{
     
         position: absolute;
-        top: 10%;
-        left: 10%;
+        top: 0;
+        left: 0;
         background-color: #efefef;
-        border: solid 1px #a6a6a6;
-        width: 80%;
-        border-radius: 20px;
+        width: 100%;
         padding: 20px;
   }
 
   .poupupproduto hr{
-    margin-top: 0;
+    margin-top: -10px;
   }
+
 
   .titleproduto{
     display: flex;
@@ -196,20 +195,34 @@ body{
     border: none;
   }
 
+  .atribuicoesVariacoes{
+    display: flex;
+  }
+
+  .atribuicoesVariacoes p{
+    margin-right: 20px;
+    cursor: pointer;
+  }
+
+  .selected{
+    color: #3520bd;
+    text-decoration: underline;
+  }
+
   .corpoProduto1{
     display: flex;
     width: 100%;
   }
 
   .imagemProduto{
-    width: 100%;
+    width: 50%;
     text-align: center;
     justify-content: center;
    
   }
 
   .imagemProduto img{
-    border-radius: 20px;
+    border-radius: 30%;
     /* margin-top: 10%; */
     height: auto;
     
@@ -257,23 +270,13 @@ body{
   }
 
   .descricao textarea{
-    width: 100%;
-    margin-top: 10px;
+    width: 80%;
   }
 
-  .categoriaEadicionar{
-    align-items: end;
+  .categoriaEDescricao{
+    display: block;
   }
 
-  .adicionarCategoria{
-    text-align: left;
-
-  }
-
-  .adicionarCategoria:hover{
-    text-decoration: underline;
-    cursor: pointer;
-  }
 
   .salvar{
     width: 100%;

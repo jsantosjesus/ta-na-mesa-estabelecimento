@@ -6,6 +6,7 @@ import taNaMesaLogomarca from '../../../assets/taNaMesaLogomarca.png';
 import { CircularProgress } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import Switch from '@mui/material/Switch';
 
 function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const isEditingProduto = !!produto;
@@ -15,6 +16,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
   const [decisaoExcluir, setDecisaoExcluir] = useState(false);
+  const [emEstoque, setEmEstoque] = useState(true);
+  const [atribuicoes, setAtribuicoes] = useState(true);
 
   //validando dados antes de enviar
   const ProdutoSchema = Yup.object().shape({
@@ -22,14 +25,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
       .min(5, 'Muito pequeno!')
       .max(100, 'Muito grande!')
       .required('Campo obrigatorio'),
-    preco: Yup.number().min(0, 'Preço não pode ser menor que zero').required('Campo obrigatorio'),
-    estoque: Yup.number()
-      .min(0, 'Estoque não pode ser menor que zero')
-      .required('Campo obrigatorio'),
-    descricao: Yup.string()
-      .min(5, 'Muito pequeno!')
-      .max(1000, 'Muito grande!')
-      .required('Campo obrigatorio')
+    preco: Yup.number().min(0, 'O preco não pode ser menor que zero').required('Defina um preço!')
+
   });
 
   //função para alterar imagem
@@ -57,7 +54,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
         const caminhoDoArquivo = caminho.replace(/%2F/g, '/').replace(/%20/g, ' ');
         const storageRef = firebase.storage().ref();
         const arquivoRef = storageRef.child(caminhoDoArquivo);
-  
+
         arquivoRef.delete()
           .then(async () => {
             console.log("Arquivo excluído com sucesso!");
@@ -96,8 +93,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
               .update(
                 {
                   nome: values.nome,
-                  valor: values.preco,
-                  estoque: values.estoque,
+                  preco: values.preco,
+                  em_estoque: emEstoque,
                   descricao: values.descricao,
                   categoria_id: values.categoria,
                   imagem: downloadURL
@@ -120,8 +117,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
         .update(
           {
             nome: values.nome,
-            valor: values.preco,
-            estoque: values.estoque,
+            preco: values.preco,
+            em_estoque: emEstoque,
             descricao: values.descricao,
             categoria_id: values.categoria
           }
@@ -169,8 +166,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
               .add(
                 {
                   nome: values.nome,
-                  valor: values.preco,
-                  estoque: values.estoque,
+                  preco: values.preco,
+                  em_estoque: emEstoque,
                   descricao: values.descricao,
                   categoria_id: values.categoria,
                   estabelecimento_id: user.estabelecimentoId,
@@ -193,8 +190,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
         .add(
           {
             nome: values.nome,
-            valor: values.preco,
-            estoque: values.estoque,
+            preco: values.preco,
+            em_estoque: emEstoque,
             descricao: values.descricao,
             categoria_id: values.categoria,
             estabelecimento_id: user.estabelecimentoId,
@@ -212,6 +209,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   //useEffect para mudar a imagem quando o produto escolhido for alterado
   useEffect(() => {
     produto && produto.imagem ? setImagemProduto(produto.imagem) : setImagemProduto(taNaMesaLogomarca);
+    produto ? setEmEstoque(produto.em_estoque) : setEmEstoque(true); 
   }, [produto]);
 
   const excluirProduto = async () => {
@@ -265,169 +263,173 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
     }
   };
   return (
-    <div className="modalTransparent">
-      <div className="poupupproduto">
-        {isEditingProduto && (<div className='excluir'>
-          <button className='botaoExcluir' onClick={() => setDecisaoExcluir(true)}><FontAwesomeIcon icon={faTrash} /></button>
-          {decisaoExcluir && (<><p>Excluir produto?</p>
-            <p className='excluirDecisao' onClick={excluirProduto}>Sim</p><p className='excluirDecisao' onClick={() => setDecisaoExcluir(false)}>Não</p></>)}
-        </div>)}
-        <div className="titleproduto">
-          <h3>{isEditingProduto ? 'Editar' : 'Criar'} produto</h3>
-          <button onClick={onClose}>X</button>
-          <hr />
-        </div>
+    <div className="poupupproduto" style={{minHeight: '100vh'}}>
+      {isEditingProduto && (<div className='excluir'>
+        <button className='botaoExcluir' onClick={() => setDecisaoExcluir(true)}><FontAwesomeIcon icon={faTrash} /></button>
+        {decisaoExcluir && (<><p>Excluir produto?</p>
+          <p className='excluirDecisao' onClick={excluirProduto}>Sim</p><p className='excluirDecisao' onClick={() => setDecisaoExcluir(false)}>Não</p></>)}
+      </div>)}
+      <div className="titleproduto">
+        <h3>{isEditingProduto ? 'Editar' : 'Criar'} produto</h3>
+        <button onClick={onClose}>X</button>
         <hr />
-        <div className="corpoProduto">
-          <Formik
-            initialValues={
-              isEditingProduto
-                ? {
-                  nome: produto.nome,
-                  preco: produto.valor,
-                  estoque: produto.estoque,
-                  categoria: produto.categoria_id,
-                  descricao: produto.descricao
-                }
-                : {}
-            }
-            validationSchema={ProdutoSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              if (isEditingProduto) {
-                editarProduto(values);
-              } else if (!isEditingProduto) {
-                cadastrarProduto(values);
+      </div>
+      <div className='atribuicoesVariacoes'>
+        {atribuicoes ? <p className='selected'>Atribuições</p> : <p onClick={() => setAtribuicoes(true)}>Atribuições</p>}
+        {!atribuicoes ? <p className='selected'>Variações</p> : <p onClick={() => setAtribuicoes(false)}>Variações</p>}
+      </div>
+      <hr />
+      <div className="corpoProduto">
+        {atribuicoes ? (<Formik
+          initialValues={
+            isEditingProduto
+              ? {
+                nome: produto.nome,
+                preco: produto.preco,
+                categoria: produto.categoria_id,
+                descricao: produto.descricao
               }
-              setSubmitting(false);
-            }}>
-            {({
-              errors,
-              values,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <div className="corpoProduto1">
-                  <div className="imagemProduto">
-                    {imgPreview ? (
-                      <img src={imgPreview} alt="imagem do produto" width="70%" />
-                    ) : imagemProduto ? (
-                      <img src={imagemProduto} alt="imagem do produto" width="70%" />
-                    ) : (
-                      <CircularProgress />
-                    )}
-                    <input
-                      type="file"
-                      name="imagem"
-                      onChange={handleImageChange}
-                      value={values.imagem}></input>
-                  </div>
+              : {}
+          }
+          validationSchema={ProdutoSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            if (isEditingProduto) {
+              editarProduto(values);
+            } else if (!isEditingProduto) {
+              cadastrarProduto(values);
+            }
+            setSubmitting(false);
+          }}>
+          {({
+            errors,
+            values,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <div className="corpoProduto1">
+                <div className="imagemProduto">
+                  {imgPreview ? (
+                    <img src={imgPreview} alt="imagem do produto" width="70%" />
+                  ) : imagemProduto ? (
+                    <img src={imagemProduto} alt="imagem do produto" width="70%" />
+                  ) : (
+                    <CircularProgress />
+                  )}
+                  <input
+                    type="file"
+                    name="imagem"
+                    onChange={handleImageChange}
+                    value={values.imagem}></input>
+                </div>
 
-                  <div className="aoLadoDaImagem">
-                    <div className="nome">
-                      <p>Nome</p>
+                <div className="aoLadoDaImagem">
+                  <div className="nome">
+                    <p>Nome</p>
+                    <input
+                      type="name"
+                      name="nome"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.nome}></input>
+                    {errors.nome && touched.nome ? (
+                      <div className="errorInput">{errors.nome}</div>
+                    ) : null}
+                  </div>
+                  <div className="estoqueEpreco">
+                    <div>
+                      <p>Preço</p>
                       <input
-                        type="name"
-                        name="nome"
+                        type="number"
+                        name="preco"
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        value={values.nome}></input>
-                      {errors.nome && touched.nome ? (
-                        <div className="errorInput">{errors.nome}</div>
-                      ) : null}
-                    </div>
-                    <div className="estoqueEpreco">
-                      <div>
-                        <p>Preço</p>
-                        <input
-                          type="number"
-                          name="preco"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.preco}
-                        />
+                        value={values.preco}
+                      />
                         {errors.preco && touched.preco ? (
                           <div className="errorInput">{errors.preco}</div>
                         ) : null}
-                      </div>
-                      <div className="estoque">
-                        <p>Estoque</p>
-                        <input
-                          type="number"
-                          name="estoque"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.estoque}
-                        />
-                        {errors.estoque && touched.estoque ? (
-                          <div className="errorInput">{errors.estoque}</div>
-                        ) : null}
-                      </div>
                     </div>
-                    <div className="categoriaEadicionar">
-                      <div>
-                        <p>Categoria</p>
-                        <select
-                          name="categoria"
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={values.categoria}>
-                          <optgroup label="Selecione:">
-                            {!isEditingProduto ?
-                              (<>
-                                {!values.categoria && <option>Selecione</option>}
+                    <div className="estoque">
+                      <p>Estoque</p>
+                      {/* <input
+                        type="number"
+                        name="estoque"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.estoque}
+                      />
+                      {errors.estoque && touched.estoque ? (
+                        <div className="errorInput">{errors.estoque}</div>
+                      ) : null} */}
+                      <Switch
+                        checked={emEstoque}
+                        onChange={((e) => setEmEstoque(e.target.checked))}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    </div>
+                  </div>
+                  <div className="categoriaEDescricao">
+                    <div>
+                      <p>Categoria</p>
+                      <select
+                        name="categoria"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.categoria}>
+                        <optgroup label="Selecione:">
+                          {!isEditingProduto ?
+                            (<>
+                              {!values.categoria && <option>Selecione</option>}
+                              {categorias.map((categoria) => {
+                                return (
+                                  <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                                )
+                              })}</>) : (<>
                                 {categorias.map((categoria) => {
-                                  return (
-                                    <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
-                                  )
-                                })}</>) : (<>
-                                  {categorias.map((categoria) => {
-                                    if (categoria.id == values.categoria) {
-                                      return (
-                                        <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
-                                      )
-                                    }
-                                    if (categoria.id !== values.categoria) {
-                                      return (
-                                        <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
-                                      )
-                                    }
-                                  })}
-                                </>)}
-                          </optgroup>
-                        </select>
-                      </div>
+                                  if (categoria.id == values.categoria) {
+                                    return (
+                                      <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                                    )
+                                  }
+                                  if (categoria.id !== values.categoria) {
+                                    return (
+                                      <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                                    )
+                                  }
+                                })}
+                              </>)}
+                        </optgroup>
+                      </select>
+                    </div>
+                    <div className='descricao'>
+                      <p>Descrição</p>
+                      <textarea
+                        type="text"
+                        name="descricao"
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.descricao}
+                      />
                     </div>
                   </div>
                 </div>
-                <div className="descricao">
-                  <textarea
-                    type="text"
-                    name="descricao"
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.descricao}
-                  />
-                  {errors.descricao && touched.descricao ? (
-                    <div className="errorInput">{errors.descricao}</div>
-                  ) : null}
-                </div>
-                <div className="salvar">
-                  {values.nome && values.categoria && values.estoque && values.preco && values.descricao ?
-                    (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
-                      Salvar Alterações
-                    </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (
-                      <button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'not-allowed' }}>Salvar Alterações</button>
-                    )
-                  }
-                </div>
-              </form>
-            )}
-          </Formik>
-        </div>
+              </div>
+              <div className="salvar">
+                {!errors.nome && values.categoria && !errors.preco ?
+                  (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
+                    Salvar Alterações
+                  </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (
+                    <button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'not-allowed' }}>Salvar Alterações</button>
+                  )
+                }
+              </div>
+            </form>
+          )}
+        </Formik>): (<></>)}
       </div>
     </div>
   );
