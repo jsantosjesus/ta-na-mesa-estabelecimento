@@ -7,8 +7,12 @@ import { Opcoes } from './opcoes';
 
 export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
     
-    const [novaOpcao, setNovaOpcao] = useState(false);
+    const [novaOpcao, setNovaOpcao] = useState(false);  
     const [opcoes, setOpcoes] = useState([]);
+
+    const abrirNovaOpcao = () => {
+        setNovaOpcao(true);
+    }
 
     useEffect(() => {
         if(variacao){
@@ -59,7 +63,13 @@ export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
             }
             // validationSchema={mesaSchema}
             onSubmit={async (values) => {
-                handleSubmit(values.numero)
+                let objeto = {
+                    nome: values.nome,
+                    minimo: values.minimo,
+                    maximo: values.maximo,
+                    opcoes: opcoes
+                }
+                handleSubmit(objeto)
             }}>
             {({
                 errors,
@@ -108,7 +118,7 @@ export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
                         </div>
                         <p>opções:</p>
                         <div>
-                            <button onClick={() => setNovaOpcao(true)}>Adicionar opção</button>
+                            <button type="button" onClick={abrirNovaOpcao}>Adicionar opção</button>
                             {novaOpcao && <Opcoes handleExcluir={excluirNovaOpcao} handleSalvar={salvarNovaOpcao}/>}
                             {opcoes && opcoes.map((opcao, index) => {
                                 return (<Opcoes key={index} opcao={opcao} index={index} handleSalvar={salvarOpcao} handleExcluir={excluirOpcao}/>)

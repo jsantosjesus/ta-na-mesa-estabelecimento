@@ -59,12 +59,12 @@ export const Opcoes = ({ opcao, handleSalvar, handleExcluir, index }) => {
                 <>{nomeOpcao !== opcao.nome ||
                     adicionalOpcao !== opcao.valor_adicional ||
                     estoqueOpcao !== opcao.em_estoque ?
-                    <button onClick={salvarOpcao}>Salvar</button> : null}</> :
+                    <button type="button" onClick={salvarOpcao}>Salvar</button> : null}</> :
                 <>{nomeOpcao && adicionalOpcao &&
-                    <button onClick={salvarNovaOpcao}>Salvar</button>}
+                    <button type='button' onClick={salvarNovaOpcao}>Salvar</button>}
                 </>
             }
-            <button onClick={opcao ? excluirOpcao : handleExcluir}>Excluir</button>
+            <button type="button" onClick={opcao ? excluirOpcao : handleExcluir}>Excluir</button>
         </div>
     );
 };
