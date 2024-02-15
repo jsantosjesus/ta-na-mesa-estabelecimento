@@ -7,6 +7,7 @@ import { CircularProgress } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Switch from '@mui/material/Switch';
+import Variacoes from '../variacoes'
 
 function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const isEditingProduto = !!produto;
@@ -18,6 +19,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const [decisaoExcluir, setDecisaoExcluir] = useState(false);
   const [emEstoque, setEmEstoque] = useState(true);
   const [atribuicoes, setAtribuicoes] = useState(true);
+  const [vari, setVari] = useState();
 
   //validando dados antes de enviar
   const ProdutoSchema = Yup.object().shape({
@@ -28,6 +30,11 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
     preco: Yup.number().min(0, 'O preco não pode ser menor que zero').required('Defina um preço!')
 
   });
+
+  // const submitVariacoes = (values) => {
+  //   setVari(values);
+  //   console.log(values)
+  // }
 
   //função para alterar imagem
   const handleImageChange = (e) => {
@@ -429,7 +436,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
               </div>
             </form>
           )}
-        </Formik>): (<></>)}
+        </Formik>): (<>{produto && produto.variacoes ? <Variacoes  variacoes= {produto.variacoes} /> : <Variacoes />}</>)}
       </div>
     </div>
   );
