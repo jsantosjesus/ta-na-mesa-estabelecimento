@@ -291,8 +291,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
         {!atribuicoes ? <p className='selected'>Variações</p> : <p onClick={() => setAtribuicoes(false)}>Variações</p>}
       </div>
       <hr />
-      <div className="corpoProduto">
-        {atribuicoes ? (<Formik
+      <div style={!atribuicoes ? {display: 'none'} : {display: 'block'}} className="corpoProduto">
+        <Formik
           initialValues={
             isEditingProduto
               ? {
@@ -441,8 +441,9 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
               </div>
             </form>
           )}
-        </Formik>) : (<>{variacoesProduto ? <Variacoes variacoes={variacoesProduto} handleSubmit={(vari) => setVariacoesProduto(vari)} /> : <Variacoes handleSubmit={(vari) => setVariacoesProduto(vari)} />}</>)}
+        </Formik> 
       </div>
+      {!atribuicoes && <>{variacoesProduto ? <Variacoes variacoes={variacoesProduto} handleSubmit={(vari) => setVariacoesProduto(vari)} /> : <Variacoes handleSubmit={(vari) => setVariacoesProduto(vari)} />}</>}
     </div>
   );
 }
