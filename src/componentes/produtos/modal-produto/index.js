@@ -19,7 +19,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   const [decisaoExcluir, setDecisaoExcluir] = useState(false);
   const [emEstoque, setEmEstoque] = useState(true);
   const [atribuicoes, setAtribuicoes] = useState(true);
-  const [vari, setVari] = useState();
+  const [variacoesProduto, setVariacoesProduto] = useState();
 
   //validando dados antes de enviar
   const ProdutoSchema = Yup.object().shape({
@@ -27,7 +27,11 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
       .min(5, 'Muito pequeno!')
       .max(100, 'Muito grande!')
       .required('Campo obrigatorio'),
-    preco: Yup.number().min(0, 'O preco não pode ser menor que zero').required('Defina um preço!')
+    preco: Yup.number().min(0, 'O preco não pode ser menor que zero').required('Defina um preço!'),
+    descricao: Yup.string()
+    .min(5, 'Descrição muito pequena')
+    .max(200, 'Descrição muito grande')
+    .required('Campo obrigatorio')
 
   });
 
@@ -104,7 +108,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   em_estoque: emEstoque,
                   descricao: values.descricao,
                   categoria_id: values.categoria,
-                  imagem: downloadURL
+                  imagem: downloadURL,
+                  variacoes: variacoesProduto
                 }
               ).then(() => {
                 onSave();
@@ -127,7 +132,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
             preco: values.preco,
             em_estoque: emEstoque,
             descricao: values.descricao,
-            categoria_id: values.categoria
+            categoria_id: values.categoria,
+            variacoes: variacoesProduto
           }
         ).then(() => {
           onSave();
@@ -178,7 +184,8 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   descricao: values.descricao,
                   categoria_id: values.categoria,
                   estabelecimento_id: user.estabelecimentoId,
-                  imagem: downloadURL
+                  imagem: downloadURL,
+                  variacoes: variacoesProduto
                 }
               ).then(() => {
                 onSave();
@@ -202,6 +209,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
             descricao: values.descricao,
             categoria_id: values.categoria,
             estabelecimento_id: user.estabelecimentoId,
+            variacoes: variacoesProduto
           }
         ).then(() => {
           onSave();
@@ -217,6 +225,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   useEffect(() => {
     produto && produto.imagem ? setImagemProduto(produto.imagem) : setImagemProduto(taNaMesaLogomarca);
     produto ? setEmEstoque(produto.em_estoque) : setEmEstoque(true); 
+    produto && produto.variacoes && setVariacoesProduto(produto.variacoes)
   }, [produto]);
 
   const excluirProduto = async () => {
@@ -269,6 +278,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
         })
     }
   };
+
   return (
     <div className="poupupproduto" style={{minHeight: '100vh'}}>
       {isEditingProduto && (<div className='excluir'>
@@ -421,12 +431,15 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                         onBlur={handleBlur}
                         value={values.descricao}
                       />
+                      {errors.descricao && touched.descricao ? (
+                      <div className="errorInput">{errors.descricao}</div>
+                    ) : null}
                     </div>
                   </div>
                 </div>
               </div>
               <div className="salvar">
-                {!errors.nome && values.categoria && !errors.preco ?
+                {!errors.nome && values.categoria && !errors.preco && !errors.descricao ?
                   (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
                     Salvar Alterações
                   </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (
@@ -436,7 +449,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
               </div>
             </form>
           )}
-        </Formik>): (<>{produto && produto.variacoes ? <Variacoes  variacoes= {produto.variacoes} /> : <Variacoes />}</>)}
+        </Formik>): (<>{variacoesProduto ? <Variacoes  variacoes= {variacoesProduto} handleSubmit={(vari) => setVariacoesProduto(vari)}/> : <Variacoes handleSubmit={(vari) => setVariacoesProduto(vari)} />}</>)}
       </div>
     </div>
   );

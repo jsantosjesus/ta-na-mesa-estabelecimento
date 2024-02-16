@@ -1,21 +1,31 @@
-import { Switch } from '@mui/material';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Opcoes } from './opcoes';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 
-export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
-    
-    const [novaOpcao, setNovaOpcao] = useState(false);  
+export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
+
+    const [novaOpcao, setNovaOpcao] = useState(false);
     const [opcoes, setOpcoes] = useState([]);
+
+    //validando antes de salvar
+    const ProdutoSchema = Yup.object().shape({
+        nome: Yup.string()
+            .min(5, 'Muito pequeno!')
+            .max(100, 'Muito grande!')
+            .required('Campo obrigatorio'),
+        minimo: Yup.number().min(0, 'A escolha mínima não pode ser menor que zero').required('Defina uma escolha mínima!'),
+        minimo: Yup.number().min(0, 'A escolha máxima não pode ser menor que zero').required('Defina uma escolha máxima!')
+    });
 
     const abrirNovaOpcao = () => {
         setNovaOpcao(true);
     }
 
     useEffect(() => {
-        if(variacao){
+        if (variacao) {
             setOpcoes(variacao.opcoes)
             console.log(opcoes);
         }
@@ -34,10 +44,10 @@ export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
 
     const salvarOpcao = (opcao, index) => {
         const newData = [...opcoes];
-    
-    newData[index] = { ...newData[index], nome: opcao.nome, valor_adicional: opcao.valor_adicional, em_estoque: opcao.em_estoque };
-    
-    setOpcoes(newData);
+
+        newData[index] = { ...newData[index], nome: opcao.nome, valor_adicional: opcao.valor_adicional, em_estoque: opcao.em_estoque };
+
+        setOpcoes(newData);
     };
 
     const excluirOpcao = (index) => {
@@ -61,7 +71,7 @@ export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
                     :
                     {}
             }
-            // validationSchema={mesaSchema}
+            validationSchema={ProdutoSchema}
             onSubmit={async (values) => {
                 let objeto = {
                     nome: values.nome,
@@ -69,7 +79,12 @@ export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
                     maximo: values.maximo,
                     opcoes: opcoes
                 }
-                handleSubmit(objeto)
+                if (!variacao) {
+                    handleSubmit(objeto)
+                } else {
+                    handleSubmit(objeto, index)
+                }
+
             }}>
             {({
                 errors,
@@ -119,18 +134,33 @@ export const CadastrarVariacao = ({ handleSubmit, variacao }) => {
                         <p>opções:</p>
                         <div>
                             <button type="button" onClick={abrirNovaOpcao}>Adicionar opção</button>
-                            {novaOpcao && <Opcoes handleExcluir={excluirNovaOpcao} handleSalvar={salvarNovaOpcao}/>}
+                            {novaOpcao && <Opcoes handleExcluir={excluirNovaOpcao} handleSalvar={salvarNovaOpcao} />}
                             {opcoes && opcoes.map((opcao, index) => {
-                                return (<Opcoes key={index} opcao={opcao} index={index} handleSalvar={salvarOpcao} handleExcluir={excluirOpcao}/>)
+                                return (<Opcoes key={index} opcao={opcao} index={index} handleSalvar={salvarOpcao} handleExcluir={excluirOpcao} />)
                             })}
                         </div>
 
 
                     </div>
                     <div className="salvar">
-                        <button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
-                            Salvar Variação
-                        </button>
+                        {variacao
+                            && variacao.nome == values.nome
+                            && variacao.minimo == values.minimo
+                            && variacao.maximo == values.maximo
+                            && variacao.opcoes == opcoes
+                            ? <p className="botaoSalvarProduto" style={{backgroundColor: 'green'}}><DoneAllIcon />Salvo</p>
+                            :
+                            <>{!errors.nome
+                                && values.maximo >= values.minimo
+                                && !errors.maximo && !errors.minimo
+                                && opcoes.length >= 1
+                                ? <button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
+                                    Salvar Variação
+                                </button>
+                                :
+                                <button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'not-allowed' }}>
+                                    Salvar Variação
+                                </button>}</>}
                     </div>
                 </form>
             )}

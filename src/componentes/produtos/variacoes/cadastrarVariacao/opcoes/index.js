@@ -1,5 +1,6 @@
 import { Switch } from "@mui/material";
 import React, { useEffect, useState } from "react"
+import TextField from '@mui/material/TextField';
 
 export const Opcoes = ({ opcao, handleSalvar, handleExcluir, index }) => {
     const [nomeOpcao, setNomeOpcao] = useState(opcao ? opcao.nome : '');
@@ -38,9 +39,10 @@ export const Opcoes = ({ opcao, handleSalvar, handleExcluir, index }) => {
 
     return (
         <div>
-            <input
+            <TextField
                 type='text'
                 name='nome'
+                label='Nome'
                 onChange={(e) => setNomeOpcao(e.target.value)}
                 value={nomeOpcao}
             />
