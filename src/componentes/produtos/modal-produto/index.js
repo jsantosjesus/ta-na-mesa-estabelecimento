@@ -27,12 +27,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
       .min(5, 'Muito pequeno!')
       .max(100, 'Muito grande!')
       .required('Campo obrigatorio'),
-    preco: Yup.number().min(0, 'O preco não pode ser menor que zero').required('Defina um preço!'),
-    descricao: Yup.string()
-    .min(5, 'Descrição muito pequena')
-    .max(200, 'Descrição muito grande')
-    .required('Campo obrigatorio')
-
+    preco: Yup.number().min(0, 'O preco não pode ser menor que zero').required('Defina um preço!')
   });
 
   // const submitVariacoes = (values) => {
@@ -106,10 +101,10 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   nome: values.nome,
                   preco: values.preco,
                   em_estoque: emEstoque,
-                  descricao: values.descricao,
                   categoria_id: values.categoria,
                   imagem: downloadURL,
-                  variacoes: variacoesProduto
+                  ...(values.descricao && { descricao: values.descricao }),
+                  ...(variacoesProduto && variacoesProduto.length > 0 && { variacoes: variacoesProduto })
                 }
               ).then(() => {
                 onSave();
@@ -131,9 +126,9 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
             nome: values.nome,
             preco: values.preco,
             em_estoque: emEstoque,
-            descricao: values.descricao,
             categoria_id: values.categoria,
-            variacoes: variacoesProduto
+            ...(values.descricao && { descricao: values.descricao }),
+            ...(variacoesProduto && variacoesProduto.length > 0 && { variacoes: variacoesProduto })
           }
         ).then(() => {
           onSave();
@@ -181,11 +176,11 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                   nome: values.nome,
                   preco: values.preco,
                   em_estoque: emEstoque,
-                  descricao: values.descricao,
                   categoria_id: values.categoria,
                   estabelecimento_id: user.estabelecimentoId,
                   imagem: downloadURL,
-                  variacoes: variacoesProduto
+                  ...(values.descricao && { descricao: values.descricao }),
+                  ...(variacoesProduto && variacoesProduto.length > 0 && { variacoes: variacoesProduto })
                 }
               ).then(() => {
                 onSave();
@@ -206,10 +201,10 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
             nome: values.nome,
             preco: values.preco,
             em_estoque: emEstoque,
-            descricao: values.descricao,
             categoria_id: values.categoria,
             estabelecimento_id: user.estabelecimentoId,
-            variacoes: variacoesProduto
+            ...(values.descricao && { descricao: values.descricao }),
+            ...(variacoesProduto && variacoesProduto.length > 0 && { variacoes: variacoesProduto })
           }
         ).then(() => {
           onSave();
@@ -224,7 +219,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   //useEffect para mudar a imagem quando o produto escolhido for alterado
   useEffect(() => {
     produto && produto.imagem ? setImagemProduto(produto.imagem) : setImagemProduto(taNaMesaLogomarca);
-    produto ? setEmEstoque(produto.em_estoque) : setEmEstoque(true); 
+    produto ? setEmEstoque(produto.em_estoque) : setEmEstoque(true);
     produto && produto.variacoes && setVariacoesProduto(produto.variacoes)
   }, [produto]);
 
@@ -280,7 +275,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
   };
 
   return (
-    <div className="poupupproduto" style={{minHeight: '100vh'}}>
+    <div className="poupupproduto" style={{ minHeight: '100vh' }}>
       {isEditingProduto && (<div className='excluir'>
         <button className='botaoExcluir' onClick={() => setDecisaoExcluir(true)}><FontAwesomeIcon icon={faTrash} /></button>
         {decisaoExcluir && (<><p>Excluir produto?</p>
@@ -366,9 +361,9 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                         onBlur={handleBlur}
                         value={values.preco}
                       />
-                        {errors.preco && touched.preco ? (
-                          <div className="errorInput">{errors.preco}</div>
-                        ) : null}
+                      {errors.preco && touched.preco ? (
+                        <div className="errorInput">{errors.preco}</div>
+                      ) : null}
                     </div>
                     <div className="estoque">
                       <p>Estoque</p>
@@ -431,15 +426,12 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
                         onBlur={handleBlur}
                         value={values.descricao}
                       />
-                      {errors.descricao && touched.descricao ? (
-                      <div className="errorInput">{errors.descricao}</div>
-                    ) : null}
                     </div>
                   </div>
                 </div>
               </div>
               <div className="salvar">
-                {!errors.nome && values.categoria && !errors.preco && !errors.descricao ?
+                {!errors.nome && values.categoria && !errors.preco ?
                   (<>{!loading ? (<button className="botaoSalvarProduto" type="submit" disabled={isSubmitting}>
                     Salvar Alterações
                   </button>) : (<button className="botaoSalvarProduto" style={{ opacity: '0.4', cursor: 'wait' }}>Salvando...</button>)}</>) : (
@@ -449,7 +441,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
               </div>
             </form>
           )}
-        </Formik>): (<>{variacoesProduto ? <Variacoes  variacoes= {variacoesProduto} handleSubmit={(vari) => setVariacoesProduto(vari)}/> : <Variacoes handleSubmit={(vari) => setVariacoesProduto(vari)} />}</>)}
+        </Formik>) : (<>{variacoesProduto ? <Variacoes variacoes={variacoesProduto} handleSubmit={(vari) => setVariacoesProduto(vari)} /> : <Variacoes handleSubmit={(vari) => setVariacoesProduto(vari)} />}</>)}
       </div>
     </div>
   );
