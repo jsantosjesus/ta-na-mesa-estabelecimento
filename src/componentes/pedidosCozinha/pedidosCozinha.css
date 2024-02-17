@@ -1,5 +1,8 @@
 .pedidoProduto{
     text-align: left;
+    border: solid 1px black;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .totalPedido{
