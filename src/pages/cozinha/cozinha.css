@@ -1,10 +1,43 @@
-.bodyCozinha{
-    display: flex;
+.cozinha{
     margin-top: 20vh;
 }
 
+.prontosEcancelados{
+    display: flex;
+    width: 100vw;
+    margin-bottom: 5px;
+}
+
+/* .prontosEcancelados .prontos, .prontosEcancelados .cancelados{
+    width: 50vw;
+} */
+
+.divPoupupFechadoProntosEcancelados{
+    border: solid 1px;
+    border-radius: 5px;
+    display: flex;
+    cursor: pointer;
+}
+
+.divPoupupFechadoProntosEcancelados p{
+    padding: 10px 5px;
+    margin-bottom: 0;
+}
+
+.cancelados{
+    margin-left: 10px;
+}
+
+.prontos{
+    margin-left: 50px;
+}
+
+.bodyCozinha{
+    display: flex;
+}
+
 .statusPedido{
-    width: 32%;
+    width: 32vw;
     margin-left: 0.5%;
     margin-right: 0.5%;
     text-align: center;
@@ -13,7 +46,7 @@
     min-height: 75vh;
 }
 
-.bodyCozinha div h4{
+.statusPedido h4{
     background-color: #ff881f;
     color: white;
     padding: 10px 0 10px 0;
