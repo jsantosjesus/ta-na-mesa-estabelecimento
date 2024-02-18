@@ -1,7 +1,8 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Conta from '../contaSalao';
+import firebase from 'firebase';
 
 const style = {
   position: 'absolute',
@@ -17,7 +18,27 @@ const style = {
   pb: 3
 };
 
-export default function NestedModal({ mesa, close = () => {} }) {
+export default function MesaModal({ mesa, close = () => { } }) {
+  const [conta, setConta] = useState();
+
+  useEffect(() => {
+
+    // Define a função de escuta
+    const getContaFirebase = firebase.firestore()
+      .collection('conta')
+      .where('mesa_id', '==', mesa.id)
+      .orderBy('dataAberta', 'desc')
+      .limit(1)
+      .onSnapshot(snapshot => {
+        snapshot.forEach(doc => {
+          setConta(doc.data());
+        });
+      })
+
+    // Retorna a função de limpeza para interromper a escuta quando o componente for desmontado
+    return () => getContaFirebase();
+  }, []);
+
   return (
     <div>
       <Modal
@@ -27,8 +48,7 @@ export default function NestedModal({ mesa, close = () => {} }) {
         aria-describedby="parent-modal-description">
         <Box sx={{ ...style, width: 400 }}>
           <h2 id="parent-modal-title">Mesa {`${mesa.numero} (${mesa.status})`}</h2>
-          <p id="parent-modal-description">{mesa.status === 'LIVRE' ? 'Última c' : 'C'}onta: R$</p>
-          <Conta mesa={mesa} />
+          <Conta conta={conta} />
         </Box>
       </Modal>
     </div>

@@ -30,7 +30,7 @@ export const Cozinha = () => {
     endOfDay.setHours(23, 59, 59, 999);
 
     // Define a função de escuta
-    const unsubscribe = firebase.firestore()
+    const getPedidosFirebase = firebase.firestore()
       .collection('pedido')
       .where('estabelecimento_id', '==', user.estabelecimentoId)
       .where('dataPedido', '>=', startOfDay)
@@ -58,7 +58,7 @@ export const Cozinha = () => {
       });
 
     // Retorna a função de limpeza para interromper a escuta quando o componente for desmontado
-    return () => unsubscribe();
+    return () => getPedidosFirebase();
   }, []);
 
 

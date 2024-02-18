@@ -17,7 +17,7 @@ const style = {
   px: 4,
   pb: 3
 };
-export default function Conta({ mesa }) {
+export default function Conta({ conta }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -36,7 +36,7 @@ export default function Conta({ mesa }) {
 
   return (
     <React.Fragment>
-      <Button onClick={handleOpen}>Ver {mesa.status === 'LIVRE' && 'última '}conta</Button>
+      {conta && <Button onClick={handleOpen}>Ver {conta.dataPaga && 'última '}conta</Button>}
       <Modal
         open={open}
         onClose={handleClose}
