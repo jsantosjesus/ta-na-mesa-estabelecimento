@@ -6,9 +6,9 @@ import bell from '../../assets/bell.wav'
 export const PedidosCozinha = ({ pedido }) => {
 
   const alterarStatus = async(pedido) => {
-    let horaReal;
+    let agora;
     if(pedido.status == 'producao'){
-      horaReal = new Date();
+      agora = new Date();
     }
     await firebase
               .firestore()
@@ -18,7 +18,7 @@ export const PedidosCozinha = ({ pedido }) => {
                 {...(pedido.status == 'aguardando' && { status: 'fila' }),
                 ...(pedido.status == 'fila' && { status: 'producao' }),
                 ...(pedido.status == 'producao' && { status: 'pronto' }),
-                ...(pedido.status == 'producao' && { dataPronto: horaReal }), 
+                ...(pedido.status == 'producao' && { dataPronto: agora }), 
               }
               ).then(() => {
               }

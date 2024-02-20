@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Conta from '../contaSalao';
@@ -31,7 +31,7 @@ export default function MesaModal({ mesa, close = () => { } }) {
       .limit(1)
       .onSnapshot(snapshot => {
         snapshot.forEach(doc => {
-          setConta(doc.data());
+          setConta({ id: doc.id, ...doc.data() });
         });
       })
 
@@ -48,7 +48,13 @@ export default function MesaModal({ mesa, close = () => { } }) {
         aria-describedby="parent-modal-description">
         <Box sx={{ ...style, width: 400 }}>
           <h2 id="parent-modal-title">Mesa {`${mesa.numero} (${mesa.status})`}</h2>
-          <Conta conta={conta} />
+          {conta ?
+            <>{!conta.dataPaga ? <p>Conta em Aberto</p>
+              :
+              <p>Conta paga</p>}</>
+            :
+            <p>Essa mesa ainda não possui nenhuma conta</p>}
+          {conta && <Conta conta={conta} />}
         </Box>
       </Modal>
     </div>

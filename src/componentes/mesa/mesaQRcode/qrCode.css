@@ -1,0 +1,18 @@
+@media print {
+    #imprimirQR{
+        visibility: visible;
+    }
+
+    
+
+    body * {
+        visibility: hidden;
+      }
+
+}
+
+@page{
+    size: auto;
+  }
+
+

@@ -5,11 +5,15 @@ import firebase from 'firebase';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
+import QRCode from 'react-qr-code';
+import MesaQR from './mesaQRcode';
 
 function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
     const isEditingMesa = !!mesa;
     const [loading, setLoading] = useState(false);
     const [decisaoExcluir, setDecisaoExcluir] = useState(false);
+    const [openMesaQR, setOpenMesaQR] = useState(false);
 
     const status = ['LIVRE', 'OCUPADA', 'INATIVA'];
 
@@ -58,25 +62,29 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
     }
 
     const excluirMesa = async () => {
-        if(mesa.status !== "OCUPADA"){
-        await firebase
-            .firestore()
-            .collection('mesa')
-            .doc(mesa.id)
-            .delete()
-            .then(() => {
-                onSave('Excluida com sucesso');
-                setLoading(false);
-                setDecisaoExcluir(false);
-            }
-            ).catch((error) => {
-                erro();
-                setLoading(false);
-                console.log(error);
-            })
-        }else{
+        if (mesa.status !== "OCUPADA") {
+            await firebase
+                .firestore()
+                .collection('mesa')
+                .doc(mesa.id)
+                .delete()
+                .then(() => {
+                    onSave('Excluida com sucesso');
+                    setLoading(false);
+                    setDecisaoExcluir(false);
+                }
+                ).catch((error) => {
+                    erro();
+                    setLoading(false);
+                    console.log(error);
+                })
+        } else {
             window.alert('Essa mesa está ocupada! Não pode ser excluída')
         }
+    }
+
+    const gerarQRcode = () => {
+        setOpenMesaQR(true);
     }
 
     const mesaSchema = Yup.object().shape({
@@ -95,7 +103,12 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                     </button>
                     {decisaoExcluir && (<><p>Excluir categoria?</p>
                         <p className='excluirDecisao' onClick={excluirMesa}>Sim</p><p className='excluirDecisao' onClick={() => setDecisaoExcluir(false)}>Não</p></>)}
+                    <button 
+                    className='botaoExcluir' style={{ color: 'black', marginLeft: '5px' }} onClick={gerarQRcode}>
+                        <QrCode2Icon />
+                    </button>
                 </div>)}
+
                 <div className="titleproduto">
                     <h3>{isEditingMesa ? 'Editar' : 'Criar'} mesa</h3>
                     <button onClick={onClose}>X</button>
@@ -244,6 +257,7 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                     </Formik>
                 </div>
             </div>
+            <MesaQR open={openMesaQR} fechar={() => setOpenMesaQR(false)}/>
         </div>
     );
 }
