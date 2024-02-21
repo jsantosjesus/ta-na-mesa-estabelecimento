@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../contexts/auth';
 import firebase from 'firebase';
+import MesaQR from '../../componentes/mesa/mesaQRcode';
 
 
 function Mesas() {
@@ -17,6 +18,8 @@ function Mesas() {
   const [mesas, setMesas] = useState();
   const [garcons, setGarcons] = useState();
   const [garcomFiltro, setGarcomFiltro] = useState('');
+  const [idNovaMesa, setIdNovaMesa] = useState();
+  const [openMesaQR, setOpenMesaQR] = useState(false);
 
   //puxando garçons
   const getGarconsFirebase = async () => {
@@ -37,20 +40,20 @@ function Mesas() {
   //listando mesas
 
   const getMesasFirebase = async () => {
-    if(garcomFiltro == ''){
-    await firebase
-      .firestore()
-      .collection('mesa')
-      .where('estabelecimento_id', '==', user.estabelecimentoId)
-      .get()
-      .then((result) => {
-        setMesas(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Erro ao obter documento: ', error);
-      });
-    } else if(garcomFiltro != ''){
+    if (garcomFiltro == '') {
+      await firebase
+        .firestore()
+        .collection('mesa')
+        .where('estabelecimento_id', '==', user.estabelecimentoId)
+        .get()
+        .then((result) => {
+          setMesas(result.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Erro ao obter documento: ', error);
+        });
+    } else if (garcomFiltro != '') {
       await firebase
         .firestore()
         .collection('mesa')
@@ -67,7 +70,6 @@ function Mesas() {
     }
   };
   useEffect(() => {
-    // getMesasFirebase();
     getGarconsFirebase();
   }, []);
 
@@ -106,6 +108,11 @@ function Mesas() {
   const [isCreatingMesa, setIsCreatingMesa] = useState(false);
 
   const handleOpenNewMesa = () => setIsCreatingMesa(true);
+
+  const passarIdNovaMesa = (id) => {
+    setIdNovaMesa(id);
+    setOpenMesaQR(true);
+  }
 
   // renderizando array de mesas
 
@@ -192,8 +199,11 @@ function Mesas() {
           erro={handleErrorSalvarMesa}
           garcons={garcons}
           user={user}
+          passarIdNovaMesa={passarIdNovaMesa}
         />
       )}
+
+      <MesaQR open={openMesaQR} fechar={() => setOpenMesaQR(false)} mesa_id={idNovaMesa} />
     </div>
   );
 }

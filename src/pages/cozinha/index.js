@@ -84,7 +84,7 @@ export const Cozinha = () => {
                         style={{ backgroundColor: '#3520bd', color: 'white' }}
                         aria-controls={pedido}
                         id={pedido}>
-                        <b>Pedido: {pedido.codigo}</b>
+                        <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
                       </AccordionSummary>
                       <AccordionDetails>
                         <PedidosCozinha pedido={pedido} />
@@ -110,7 +110,7 @@ export const Cozinha = () => {
                         style={{ backgroundColor: '#3520bd', color: 'white' }}
                         aria-controls={pedido}
                         id={pedido}>
-                        <b>Pedido: {pedido.codigo}</b>
+                        <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
                       </AccordionSummary>
                       <AccordionDetails>
                         <PedidosCozinha pedido={pedido} />
@@ -131,7 +131,7 @@ export const Cozinha = () => {
                       style={{ backgroundColor: '#3520bd', color: 'white' }}
                       aria-controls={pedido}
                       id={pedido}>
-                      <b>Pedido: {pedido.codigo}</b>
+                      <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
                     </AccordionSummary>
                     <AccordionDetails>
                       <PedidosCozinha pedido={pedido} />
@@ -168,7 +168,7 @@ export const Cozinha = () => {
                       style={{ backgroundColor: '#3520bd', color: 'white' }}
                       aria-controls={pedido}
                       id={pedido}>
-                      <b>Pedido: {pedido.codigo}</b>
+                      <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
                     </AccordionSummary>
                     <AccordionDetails>
                       <PedidosCozinha pedido={pedido} />

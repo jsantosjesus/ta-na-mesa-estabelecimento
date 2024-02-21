@@ -10,7 +10,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 500,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -18,7 +18,7 @@ const style = {
     textAlign: 'center'
 };
 
-export default function MesaQR({ open, fechar, estabelecimento_id, mesa_id }) {
+export default function MesaQR({ open, fechar, mesa_id }) {
 
     const print = () => {
         var conteudo = document.getElementById('imprimirQR').innerHTML,
@@ -37,10 +37,15 @@ export default function MesaQR({ open, fechar, estabelecimento_id, mesa_id }) {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <div id='imprimirQR'>
-                <QRCode
-                    value={`https://ta-na-mesa.vercel.app/`}
-                /></div>
+                <div id='imprimirQR' style={{ textAlign: 'center' }}>
+                    <QRCode
+                        value={`https://ta-na-mesa.vercel.app/:${mesa_id}`}
+                        size={400}
+                    />
+                    <Typography variant="body1" gutterBottom>
+                        Escaneie o QR Code e faça seu pedido
+                    </Typography>
+                </div>
                 <Button onClick={print}>imprimir</Button>
 
             </Box>

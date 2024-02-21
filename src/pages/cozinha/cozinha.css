@@ -4,7 +4,8 @@
 
 .prontosEcancelados{
     display: flex;
-    width: 100vw;
+    justify-content: space-between;
+    width: 95vw;
     margin-bottom: 5px;
 }
 
@@ -28,9 +29,9 @@
     margin-left: 10px;
 }
 
-.prontos{
+/* .prontos{
     margin-left: 50px;
-}
+} */
 
 .bodyCozinha{
     display: flex;

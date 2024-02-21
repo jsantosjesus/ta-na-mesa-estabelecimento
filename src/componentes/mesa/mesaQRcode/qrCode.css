@@ -1,18 +1,13 @@
 @media print {
-    #imprimirQR{
+    #imprimirQR {
         visibility: visible;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
-
-    
 
     body * {
         visibility: hidden;
-      }
-
+    }
 }
-
-@page{
-    size: auto;
-  }
-
-

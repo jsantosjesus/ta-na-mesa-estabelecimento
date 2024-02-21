@@ -9,7 +9,7 @@ import QrCode2Icon from '@mui/icons-material/QrCode2';
 import QRCode from 'react-qr-code';
 import MesaQR from './mesaQRcode';
 
-function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
+function ModalMesa({ mesa, onClose, onSave, garcons, erro, user, passarIdNovaMesa }) {
     const isEditingMesa = !!mesa;
     const [loading, setLoading] = useState(false);
     const [decisaoExcluir, setDecisaoExcluir] = useState(false);
@@ -18,25 +18,84 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
     const status = ['LIVRE', 'OCUPADA', 'INATIVA'];
 
     const editarMesaFirebase = async (values) => {
-        await firebase
-            .firestore()
-            .collection('mesa')
-            .doc(mesa.id)
-            .update(
-                {
-                    numero: values.numero,
-                    garcom_id: values.garcomId,
-                    status: values.status
+
+        //Se a mesa estiver com uma conta em aberto, o status dela não pode ser alterado
+        if (mesa.status == 'OCUPADA' && values.status != 'OCUPADA') {
+            // aqui o front chama a ultima conta relacionada a essa mesa
+            let conta;
+            await firebase
+                .firestore()
+                .collection('conta')
+                .where('mesa_id', '==', mesa.id)
+                .orderBy('dataAberta', 'desc')
+                .limit(1)
+                .get()
+                .then( async (result) => {
+                    result.docs.map((doc) => conta = doc.data());
+                    
+                    //se a conta não tiver um atributo chamado dataPaga, isso quer dizer que a conta ainda não foi paga 
+                    if (conta && !conta.dataPaga) {
+
+                        //então o sistema irá emitir um alert
+                        setLoading(false);
+                        alert('Essa mesa não pode ter o status alterado porquê tem uma conta em aberto');
+                        
+                    }
+                    // Se estiver paga 
+                    else {
+                        // então o sistema irá deixar que a alteração seja feita 
+                        await firebase
+                            .firestore()
+                            .collection('mesa')
+                            .doc(mesa.id)
+                            .update(
+                                {
+                                    numero: values.numero,
+                                    garcom_id: values.garcomId,
+                                    status: values.status
+                                }
+                            ).then(() => {
+                                onSave('Mesa editada com sucesso');
+                                setLoading(false);
+                            }
+                            ).catch((error) => {
+                                erro();
+                                setLoading(false);
+                                console.log(error.data);
+                            })
+                        }
+
+                })
+                // caso dê erro na chamada da conta
+                .catch((error) => {
+                    console.log(error);
+                    erro();
+                })
+
+        }
+
+        // Se a mesa não estiver com o status de ocupada, ela será alterada normalmente
+        else {
+            await firebase
+                .firestore()
+                .collection('mesa')
+                .doc(mesa.id)
+                .update(
+                    {
+                        numero: values.numero,
+                        garcom_id: values.garcomId,
+                        status: values.status
+                    }
+                ).then(() => {
+                    onSave('Mesa editada com sucesso');
+                    setLoading(false);
                 }
-            ).then(() => {
-                onSave('Mesa editada com sucesso');
-                setLoading(false);
-            }
-            ).catch((error) => {
-                erro();
-                setLoading(false);
-                console.log(error.data);
-            })
+                ).catch((error) => {
+                    erro();
+                    setLoading(false);
+                    console.log(error.data);
+                })
+        }
     }
 
     const cadastrarMesaFirebase = async (values) => {
@@ -50,9 +109,11 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                     status: values.status,
                     estabelecimento_id: user.estabelecimentoId,
                 }
-            ).then(() => {
+            ).then((data) => {
+                passarIdNovaMesa(data.id);
                 onSave('Mesa salva com sucesso');
                 setLoading(false);
+
             }
             ).catch((error) => {
                 erro();
@@ -103,8 +164,8 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                     </button>
                     {decisaoExcluir && (<><p>Excluir categoria?</p>
                         <p className='excluirDecisao' onClick={excluirMesa}>Sim</p><p className='excluirDecisao' onClick={() => setDecisaoExcluir(false)}>Não</p></>)}
-                    <button 
-                    className='botaoExcluir' style={{ color: 'black', marginLeft: '5px' }} onClick={gerarQRcode}>
+                    <button
+                        className='botaoExcluir' style={{ color: 'black', marginLeft: '5px' }} onClick={gerarQRcode}>
                         <QrCode2Icon />
                     </button>
                 </div>)}
@@ -257,7 +318,7 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user }) {
                     </Formik>
                 </div>
             </div>
-            <MesaQR open={openMesaQR} fechar={() => setOpenMesaQR(false)}/>
+            {mesa && <MesaQR open={openMesaQR} fechar={() => setOpenMesaQR(false)} mesa_id={mesa.id} />}
         </div>
     );
 }
