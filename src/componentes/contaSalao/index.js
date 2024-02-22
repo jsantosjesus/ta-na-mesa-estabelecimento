@@ -18,7 +18,7 @@ const style = {
   px: 4,
   pb: 3
 };
-export default function Conta({ conta }) {
+export default function Conta({ conta, mesaId }) {
   const [open, setOpen] = useState(false);
   const [pedidos, setPedidos] = useState();
   const [totalConta, setTotalConta] = useState(0);
@@ -55,9 +55,21 @@ export default function Conta({ conta }) {
       .collection('conta')
       .doc(conta.id)
       .update(
-        { dataPaga: agora}
-      ).then(() => {
-        setConfirmarPagarConta(false);
+        { dataPaga: agora }
+      ).then(async () => {
+        await firebase
+          .firestore()
+          .collection('mesa')
+          .doc(mesaId)
+          .update(
+            { status: 'LIVRE' }
+          )
+          .then(() => {
+            setConfirmarPagarConta(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          })
       }
       ).catch((error) => {
         console.log(error);
@@ -98,7 +110,7 @@ export default function Conta({ conta }) {
             <p id="child-modal-description" className="titleContaContent">
               Conta {conta.codigo}
             </p>
-            
+
             <p id="child-modal-description" className="titleContaContent">
               --------------------------
             </p>

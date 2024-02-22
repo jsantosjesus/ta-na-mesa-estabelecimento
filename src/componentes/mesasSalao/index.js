@@ -54,7 +54,7 @@ export default function MesaModal({ mesa, close = () => { } }) {
               <p>Conta paga</p>}</>
             :
             <p>Essa mesa ainda não possui nenhuma conta</p>}
-          {conta && <Conta conta={conta} />}
+          {conta && <Conta conta={conta} mesaId={mesa.id} />}
         </Box>
       </Modal>
     </div>

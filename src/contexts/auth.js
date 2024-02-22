@@ -20,7 +20,8 @@ export const AuthProvicer = ({ children }) => {
             id: uid,
             nome: dadosDoUsuario.nome,
             estabelecimentoId: dadosDoUsuario.estabelecimento_id,
-            tipo: dadosDoUsuario.tipo
+            tipo: dadosDoUsuario.tipo,
+            ...(dadosDoUsuario.adm && { adm: dadosDoUsuario.adm })
           };
         });
 

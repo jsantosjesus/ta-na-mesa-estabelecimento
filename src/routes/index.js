@@ -9,11 +9,12 @@ import { Cozinha } from '../pages/cozinha';
 import { AuthContext, AuthProvicer } from '../contexts/auth';
 import { useContext } from 'react';
 import Mesas from '../pages/mesas';
-import PaginaTeste from '../pages/produtos/teste';
 
 export default function Rotas() {
-  const Private = ({ children }) => {
-    const { authenticated, loading } = useContext(AuthContext);
+
+
+  const Private = ({ children, admin }) => {
+    const { authenticated, loading, user } = useContext(AuthContext);
 
     if (loading) {
       return <div>Carregando...</div>;
@@ -21,6 +22,10 @@ export default function Rotas() {
 
     if (!authenticated) {
       return <Navigate to="/login" />;
+    }
+
+    if(admin && !user.adm){
+      return <Navigate to="/" />;
     }
 
     return children;
@@ -65,8 +70,7 @@ export default function Rotas() {
           path="/"
           element={
             <Private>
-              {/* <Produtos /> */}
-              <PaginaTeste />
+              <Cozinha />
             </Private>
           }
         />
@@ -75,7 +79,7 @@ export default function Rotas() {
           exact
           path="/colaboradores"
           element={
-            <Private>
+            <Private admin={true}>
               <Colaboradores />
             </Private>
           }
