@@ -1,0 +1,9 @@
+#inputsVariacao p{
+    margin-bottom: 1px;
+    margin-top: 5px;
+}
+
+#inputsVariacao input{
+    height: 34px;
+    padding-left: 2px;
+}

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   background-color: #ff881f;
-  position: fixed;
+  position: absolute;
   height: 100%;
   top: 0px;
   left: 0px;
@@ -35,4 +35,8 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   margin-top: 100px;
+
+  > a {
+    text-decoration: none;
+  }
 `;

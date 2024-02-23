@@ -22,7 +22,7 @@ const Header = () => {
     <Container className="menubar">
         <div className='divHamburguer'>
       <FaBars className='hamburguer' onClick={showSiderbar} />
-      {sidebar && <Sidebar active={setSidebar} />}
+      {sidebar && <Sidebar active={setSidebar} user={user} />}
       </div>
       <div className="divLogo">
                     <img className='logoarcafooter' width='100px' src={logomarcaEmpresa} alt="Logo" />   

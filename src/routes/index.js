@@ -1,7 +1,6 @@
 import Login from '../pages/login';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Salao from '../pages/salao';
-import CentralGarcom from '../pages/CentralGarcom';
 import Produtos from '../pages/produtos/produtos';
 import Colaboradores from '../pages/Colaboradores';
 import Categorias from '../pages/categorias';
@@ -9,22 +8,27 @@ import { Cozinha } from '../pages/cozinha';
 import { AuthContext, AuthProvicer } from '../contexts/auth';
 import { useContext } from 'react';
 import Mesas from '../pages/mesas';
+import { Configuracoes } from '../pages/configuracoes';
 
 export default function Rotas() {
 
 
-  const Private = ({ children, admin }) => {
+  const Private = ({ children, admin, login }) => {
     const { authenticated, loading, user } = useContext(AuthContext);
 
     if (loading) {
       return <div>Carregando...</div>;
     }
 
-    if (!authenticated) {
+    if (!login && !authenticated) {
       return <Navigate to="/login" />;
     }
 
-    if(admin && !user.adm){
+    if (login && authenticated) {
+      return <Navigate to="/" />;
+    }
+
+    if (admin && !user.adm) {
       return <Navigate to="/" />;
     }
 
@@ -33,7 +37,16 @@ export default function Rotas() {
   return (
     <AuthProvicer>
       <Routes>
-        <Route exact path="/login" element={<Login />} />
+
+        <Route
+          exact
+          path="/login"
+          element={
+            <Private login={true}>
+              <Login />
+            </Private>
+          } />
+
 
         <Route
           exact
@@ -107,10 +120,10 @@ export default function Rotas() {
 
         <Route
           exact
-          path="/central"
+          path="/configuracoes"
           element={
-            <Private>
-              <CentralGarcom />
+            <Private admin={true}>
+              <Configuracoes />
             </Private>
           }
         />

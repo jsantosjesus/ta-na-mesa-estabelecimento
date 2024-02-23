@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Accordion from '@mui/material/Accordion';
-// import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -32,6 +31,15 @@ export default function Variacoes({ variacoes, handleSubmit }) {
     handleSubmit(newData);
     }
 
+    const excluirVariacao = (index) => {
+        const newData = [...vari];
+
+        newData.splice(index, 1);
+
+        setVari(newData);
+        handleSubmit(newData);
+    }
+
     return (
         <div>
             <button style={{marginBottom: '20px'}} className="botaoSalvarProduto" onClick={() => setAcordionCadastro(true)}>Cadastrar nova Variação</button>
@@ -55,11 +63,10 @@ export default function Variacoes({ variacoes, handleSubmit }) {
                             aria-controls={variacao}
                             id={variacao}
                         >
-                            <b>{variacao.nome}</b>
+                            <b>{variacao.nome}</b><button onClick={() => excluirVariacao(index)} style={{marginLeft: '30px'}}>Excluir</button>
                         </AccordionSummary>
                         <AccordionDetails>
                             <CadastrarVariacao variacao={variacao} index={index} handleSubmit={salvarVariacao} />
-                            <button onClick={() => console.log(vari)}></button>
                         </AccordionDetails>
                         {/* <AccordionActions>
                             <Button>Salvar</Button>

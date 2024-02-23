@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { Opcoes } from './opcoes';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import '../../variacao.css'
 
 
 export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
@@ -27,7 +28,6 @@ export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
     useEffect(() => {
         if (variacao) {
             setOpcoes(variacao.opcoes)
-            console.log(opcoes);
         }
     }, [variacao]);
 
@@ -39,7 +39,6 @@ export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
 
     const excluirNovaOpcao = () => {
         setNovaOpcao(false);
-        console.log(opcoes);
     };
 
     const salvarOpcao = (opcao, index) => {
@@ -97,9 +96,9 @@ export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
                 /* and other goodies */
             }) => (
                 <form onSubmit={handleSubmit}>
-                    <div className="inputs">
+                    <div className="inputs" id="inputsVariacao">
                         <div className="nome">
-                            <p>Nome</p>
+                            <p><b>Nome</b></p>
                             <input
                                 type="text"
                                 name="nome"
@@ -111,7 +110,7 @@ export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
                             ) : null} */}
                         </div>
                         <div className="nome">
-                            <p>Escolha Mínima</p>
+                            <p><b>Escolha Mínima</b></p>
                             <input
                                 type="number"
                                 name="minimo"
@@ -123,7 +122,7 @@ export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
                             ) : null} */}
                         </div>
                         <div className="nome">
-                            <p>Escolha Máxima</p>
+                            <p><b>Escolha Máxima</b></p>
                             <input
                                 type="number"
                                 name="maximo"
@@ -131,7 +130,7 @@ export const CadastrarVariacao = ({ handleSubmit, variacao, index }) => {
                                 onBlur={handleBlur}
                                 value={values.maximo}></input>
                         </div>
-                        <p>opções:</p>
+                        <p><b>opções:</b></p>
                         <div>
                             <button type="button" onClick={abrirNovaOpcao}>Adicionar opção</button>
                             {novaOpcao && <Opcoes handleExcluir={excluirNovaOpcao} handleSalvar={salvarNovaOpcao} />}
