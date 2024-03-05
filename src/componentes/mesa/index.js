@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
@@ -6,7 +5,6 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import QrCode2Icon from '@mui/icons-material/QrCode2';
-import QRCode from 'react-qr-code';
 import MesaQR from './mesaQRcode';
 
 function ModalMesa({ mesa, onClose, onSave, garcons, erro, user, passarIdNovaMesa }) {
@@ -238,7 +236,6 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user, passarIdNovaMes
                                                     {isEditingMesa &&
                                                         status.map((status) => {
                                                             if (status === mesa.status) {
-                                                                // eslint-disable-next-line prettier/prettier
                                                                 return (
                                                                     <option key={status} value={status}>
                                                                         {status}
@@ -248,7 +245,6 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user, passarIdNovaMes
                                                         })}
                                                     {status.map((status) => {
                                                         if (!isEditingMesa || status !== mesa.status) {
-                                                            // eslint-disable-next-line prettier/prettier
                                                             return (
                                                                 <option key={status} value={status}>
                                                                     {status}
@@ -264,7 +260,6 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user, passarIdNovaMes
                                             <div>
                                                 <p>Garçom</p>
                                                 <select
-                                                    // eslint-disable-next-line react/no-unknown-property
                                                     name="garcomId"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
@@ -274,7 +269,6 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user, passarIdNovaMes
                                                         {isEditingMesa &&
                                                             garcons.map((garcom) => {
                                                                 if (garcom.id === mesa.garcom_id) {
-                                                                    // eslint-disable-next-line prettier/prettier
                                                                     return (
                                                                         <option key={garcom.id} value={garcom.id}>
                                                                             {garcom.nome}
@@ -285,7 +279,6 @@ function ModalMesa({ mesa, onClose, onSave, garcons, erro, user, passarIdNovaMes
                                                         {garcons.map((garcom) => {
 
                                                             if (!isEditingMesa || garcom.id !== mesa.garcom_id) {
-                                                                // eslint-disable-next-line prettier/prettier
                                                                 return (
                                                                     <option key={garcom.id} value={garcom.id}>
                                                                         {garcom.nome}

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import firebase from 'firebase';
