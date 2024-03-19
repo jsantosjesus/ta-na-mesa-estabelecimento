@@ -48,7 +48,7 @@ export const PedidosCozinha = ({ pedido }) => {
         return (
           <div className="pedidoProduto" key={index}>
             <p style={{ marginBottom: '1px' }}><b>{`${produto.quantidade} - ${produto.nome}`}</b></p>
-            <p style={{ fontSize: '12px', marginBottom: '1px' }}><b>variações:</b> {produto.variacoes.map((variacao) => `${variacao}; `)}</p>
+            {produto.variacoes && <p style={{ fontSize: '12px', marginBottom: '1px' }}><b>variações:</b> {produto.variacoes.map((variacao) => `${variacao}; `)}</p>}
             {produto.observacao && <p style={{ fontSize: '12px' }}><b>Observação: </b>{produto.observacao}</p>}
             <p className='totalPedido' style={{ fontSize: '12px' }} ><b>R$ {produto.preco.toFixed(2).replace('.', ',')}</b></p>
           </div>

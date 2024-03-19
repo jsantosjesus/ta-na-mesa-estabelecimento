@@ -119,7 +119,7 @@ export default function Conta({ conta, mesaId }) {
                 <>
                   {pedido.produtos.map((produto) => {
                     return (
-                      <p id="child-modal-description">{produto.quantidade} - {produto.nome} - ({pedido.usuario.nome}) - R${produto.preco.toFixed(2).replace('.', ',')} = R${(produto.preco * produto.quantidade).toFixed(2).replace('.', ',')}</p>
+                      <p id="child-modal-description">{produto.quantidade} - {produto.nome} - ({pedido.usuario}) - R${produto.preco.toFixed(2).replace('.', ',')} = R${(produto.preco * produto.quantidade).toFixed(2).replace('.', ',')}</p>
                     )
                   })}
                 </>

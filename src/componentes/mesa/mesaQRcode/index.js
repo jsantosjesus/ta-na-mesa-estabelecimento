@@ -39,7 +39,7 @@ export default function MesaQR({ open, fechar, mesa_id }) {
             <Box sx={style}>
                 <div id='imprimirQR' style={{ textAlign: 'center' }}>
                     <QRCode
-                        value={`https://ta-na-mesa.vercel.app/:${mesa_id}`}
+                        value={`https://ta-na-mesa.vercel.app/${mesa_id}`}
                         size={400}
                     />
                     <Typography variant="body1" gutterBottom>
