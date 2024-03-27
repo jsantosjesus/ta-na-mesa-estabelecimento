@@ -62,7 +62,9 @@ export default function Conta({ conta, mesaId }) {
           .collection('mesa')
           .doc(mesaId)
           .update(
-            { status: 'LIVRE' }
+            { status: 'LIVRE',
+              contaAtiva: false
+          }
           )
           .then(() => {
             setConfirmarPagarConta(false);
