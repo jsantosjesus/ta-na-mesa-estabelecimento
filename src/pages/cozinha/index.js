@@ -13,28 +13,28 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 export const Cozinha = () => {
+
+  const [divAtivarSom, setDivAtivarSom] = useState(true);
+
   const [pedidos, setPedidos] = useState();
+
   const { user } = useContext(AuthContext);
+
   const [cancelados, setCancelados] = useState(false);
   const [totalCancelados, setTotalCancelados] = useState();
+
   const [prontos, setProntos] = useState(false);
   const [totalProntos, setTotalProntos] = useState();
   useEffect(() => {
 
-    // Obtém o timestamp do início do dia
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
+    const hoje = new Date();
+    const ontem = new Date(hoje);
+    ontem.setDate(hoje.getDate() - 1);
 
-    // Obtém o timestamp do final do dia
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-
-    // Define a função de escuta
     const getPedidosFirebase = firebase.firestore()
       .collection('pedido')
       .where('estabelecimento_id', '==', user.estabelecimentoId)
-      .where('dataPedido', '>=', startOfDay)
-      .where('dataPedido', '<=', endOfDay)
+      .where('dataPedido', '>=', ontem)
       .onSnapshot(snapshot => {
         const newData = [];
         let totalCancelados = 0;
@@ -179,6 +179,10 @@ export const Cozinha = () => {
             </div>
           </div>
         </div>
+        {divAtivarSom && <div className='divAtivarSomCozinha'>
+          <h4>Clique na tela para ativar o som de notificação ao receber os pedidos</h4>
+          <button onClick={() => setDivAtivarSom(false)}>OK!</button>
+        </div>}
       </>
       );
 };

@@ -46,27 +46,24 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
         await firebase.auth().createUserWithEmailAndPassword(values.email, values.senha)
             .then(async (userCredential) => {
                 // Signed in 
-                var usuario = userCredential.user;
-                console.log(usuario);
-                await firebase
-                    .firestore()
-                    .collection('usuario')
-                    .add(
-                        {
-                            nome: values.nome,
-                            email: values.email,
-                            cargo: values.cargo,
-                            estabelecimento_id: user.estabelecimentoId
-                        }
-                    ).then(() => {
+                var usuario = userCredential.user.uid;
+                const docRef = firebase.firestore().collection('usuario').doc(usuario);
+
+                docRef.set({
+                    nome: values.nome,
+                    email: values.email,
+                    cargo: values.cargo,
+                    estabelecimento_id: user.estabelecimentoId
+                })
+                    .then(() => {
                         onSave();
                         setLoading(false);
-                    }
-                    ).catch((error) => {
-                        onError();
-                        console.log(error.data);
-                        setLoading(false);
                     })
+                    .catch((error) => {
+                        onError();
+                        console.error('Erro ao salvar documento:', error);
+                        setLoading(false);
+                    });
             })
             .catch((error) => {
                 onError();
@@ -105,7 +102,7 @@ function Modalcolaborador({ colaborador, onClose, onSave, onError, user }) {
                                 console.log(error.data);
                                 setLoading(false);
                             })
-                    } else{
+                    } else {
                         window.alert('Esse garçom está vinculado a uma ou mais mesas, por favor desvincule-o em mesas');
                         setLoading(false);
                     }

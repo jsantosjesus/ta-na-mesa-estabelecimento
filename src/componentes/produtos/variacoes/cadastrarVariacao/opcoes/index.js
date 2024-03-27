@@ -17,7 +17,7 @@ export const Opcoes = ({ opcao, handleSalvar, handleExcluir, index }) => {
     const salvarOpcao = () => {
         const objectOpcao = {
             nome: nomeOpcao,
-            valor_adicional: parseFloat(adicionalOpcao),
+            valor_adicional: parseFloat(+adicionalOpcao),
             em_estoque: estoqueOpcao
         };
         handleSalvar(objectOpcao, index);
@@ -30,7 +30,7 @@ export const Opcoes = ({ opcao, handleSalvar, handleExcluir, index }) => {
     const salvarNovaOpcao = () => {
         const objectOpcao = {
             nome: nomeOpcao,
-            ...(adicionalOpcao && {valor_adicional: adicionalOpcao}),
+            ...(adicionalOpcao && {valor_adicional: parseFloat(+adicionalOpcao)}),
             em_estoque: estoqueOpcao
         };
         handleSalvar(objectOpcao);

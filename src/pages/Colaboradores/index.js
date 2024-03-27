@@ -12,7 +12,7 @@ import firebase from 'firebase';
 
 
 function Colaboradores() {
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
   const [cargoFiltro, setCargoFiltro] = useState('');
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,9 @@ function Colaboradores() {
 
   const getColaboradoresFirebase = async () => {
     setLoading(true);
-    if (cargoFiltro == '' && searchTerm == '') {
+    if (cargoFiltro == '' 
+    // && searchTerm == ''
+    ) {
 
       //consulta de todos os colaboradores
 
@@ -39,7 +41,9 @@ function Colaboradores() {
         .catch((error) => {
           console.error('Erro ao obter documento: ', error);
         });
-    } else if (cargoFiltro != '' && searchTerm == '') {
+    } else if (cargoFiltro != '' 
+    // && searchTerm == ''
+    ) {
 
       //consulta filtrando por cargo
       
@@ -137,8 +141,8 @@ function Colaboradores() {
             </div>
           </div>
           <div className="pesquisa">
-            <input type="text"
-              placeholder="Pesquisar"></input>
+            {/* <input type="text"
+              placeholder="Pesquisar"></input> */}
           </div>
           <div className="botaoProduto">
             <button onClick={handleOpenNewColaborador}>Adicionar Colaborador</button>

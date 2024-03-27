@@ -30,6 +30,7 @@ function FormLogin() {
                         setLoading(false)
                         setSubmitting(false);
                         setMessageErro('');
+                        console.log(response.user.uid);
                         login(response.user.uid);
                     })
                     .catch(function (error) {

@@ -12,7 +12,7 @@ import firebase from 'firebase';
 
 
 function Produtos() {
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState('');
   // const [filteredData, setFilteredData] = useState([]);
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const { user } = useContext(AuthContext);
@@ -42,7 +42,9 @@ function Produtos() {
 
   const getProdutosFirebase = async () => {
     setLoading(true);
-    if (categoriaFiltro == '' && searchTerm == '') {
+    if (categoriaFiltro == '' 
+    // && searchTerm == ''
+    ) {
 
       //consulta de todos os produtos
 
@@ -58,7 +60,9 @@ function Produtos() {
         .catch((error) => {
           console.error('Erro ao obter documento: ', error);
         });
-    } else if (categoriaFiltro != '' && searchTerm == '') {
+    } else if (categoriaFiltro != '' 
+    // && searchTerm == ''
+    ) {
 
       //consulta filtrando por categoria
 
@@ -158,11 +162,11 @@ function Produtos() {
             </div>
           </div>
           <div className="pesquisa">
-            <input
+            {/* <input
               type="text"
               placeholder="Pesquisar"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}></input>
+              onChange={(e) => setSearchTerm(e.target.value)}></input> */}
           </div>
           <div className="botaoProduto">
             <button onClick={handleOpenNewProduto}>Adicionar Produto</button>
