@@ -34,9 +34,10 @@ export default function Conta({ conta, mesaId }) {
         const newData = [];
         let totalConta = 0;
         snapshot.forEach(doc => {
-
-          newData.push({ id: doc.id, ...doc.data() });
-          totalConta += doc.data().total
+          if (doc.data().status !== 'cancelado') {
+            newData.push({ id: doc.id, ...doc.data() });
+            totalConta += doc.data().total
+          }
         });
         // Atualiza o estado com os dados mais recentes
         setPedidos(newData);
@@ -62,9 +63,10 @@ export default function Conta({ conta, mesaId }) {
           .collection('mesa')
           .doc(mesaId)
           .update(
-            { status: 'LIVRE',
+            {
+              status: 'LIVRE',
               contaAtiva: false
-          }
+            }
           )
           .then(() => {
             setConfirmarPagarConta(false);
