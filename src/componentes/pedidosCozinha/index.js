@@ -5,6 +5,25 @@ import bell from '../../assets/bell.wav'
 
 export const PedidosCozinha = ({ pedido }) => {
 
+  const sendMessage = (title, body, token) => {
+    fetch('https://ta-na-mesa-api-qb85.onrender.com/message', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify({
+        title: `PEDIDO ${title}!`,
+        body: `O pedido da mesa ${pedido.mesa.numero} está ${body}!`,
+        deviceToken: token
+      }),
+    })
+      .then(response => console.log('Resposta:', response))
+      .catch(error => console.error('Erro ao enviar notificação:', error));
+  };
+
+
   const alterarStatus = async (pedido) => {
     let agora;
     if (pedido.status == 'producao') {
@@ -22,26 +41,34 @@ export const PedidosCozinha = ({ pedido }) => {
           ...(pedido.status == 'producao' && { dataPronto: agora }),
         }
       ).then(async () => {
-        if(pedido.status == 'producao'){
+        if (pedido.status == 'producao') {
           await firebase
-          .firestore()
-          .collection('chamado')
-          .add(
-            {
-              estabelecimento_id: pedido.estabelecimento_id,
-              mesa: {
-                numero: pedido.mesa.numero,
-                id: pedido.mesa.id,
-              },
-              status: 'ATIVO',
-              hora: new Date(),
-              tipo: 'pedidoPronto'
-            }
-          ).then(() => {
-            console.log('deu certo')
-          }).catch((error) => {
-            console.log('Erro ao criar chamado: ' + error)
-          })
+            .firestore()
+            .collection('chamado')
+            .add(
+              {
+                estabelecimento_id: pedido.estabelecimento_id,
+                mesa: {
+                  numero: pedido.mesa.numero,
+                  id: pedido.mesa.id,
+                },
+                status: 'ATIVO',
+                hora: new Date(),
+                tipo: 'pedidoPronto'
+              }
+            ).then(() => {
+              firebase
+                .firestore()
+                .collection('usuario')
+                .doc(pedido.mesa.garcom)
+                .get().then((res) => {
+                  sendMessage('PRONTO', 'pronto', res.data().tokenMessage);
+                });
+
+
+            }).catch((error) => {
+              console.log('Erro ao criar chamado: ' + error)
+            })
         }
       }
       ).catch((error) => {
@@ -56,7 +83,7 @@ export const PedidosCozinha = ({ pedido }) => {
       .doc(pedido.id)
       .update(
         { status: 'cancelado' }
-      ).then( async () => {
+      ).then(async () => {
         await firebase
           .firestore()
           .collection('chamado')
@@ -72,7 +99,16 @@ export const PedidosCozinha = ({ pedido }) => {
               tipo: 'pedidoCancelado'
             }
           ).then(() => {
-            console.log('deu certo')
+            firebase
+              .firestore()
+              .collection('usuario')
+              .doc(pedido.mesa.garcom)
+              .get().then((res) => {
+                sendMessage('CANCELADO', 'cancelado', res.data().tokenMessage);
+              });
+
+
+
           }).catch((error) => {
             console.log('Erro ao criar chamado: ' + error)
           })
@@ -93,14 +129,14 @@ export const PedidosCozinha = ({ pedido }) => {
             </p>
             {produto.variacoes &&
               <p style={{ fontSize: '12px', marginBottom: '1px' }}>
-                <b>variações:</b> 
-                {produto.variacoes.map((variacao) =>  {
-                  return(
+                <b>variações:</b>
+                {produto.variacoes.map((variacao) => {
+                  return (
                     <>
                       {` ${variacao.nome}: `}
                       {
                         variacao.opcoes.map((opcao) => {
-                          return(
+                          return (
                             <>
                               {`${opcao.nome}, `}
                             </>
