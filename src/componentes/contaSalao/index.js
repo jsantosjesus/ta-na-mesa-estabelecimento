@@ -65,7 +65,7 @@ export default function Conta({ conta, mesaId }) {
           .update(
             {
               status: 'LIVRE',
-              contaAtiva: false
+              contaAtiva: ''
             }
           )
           .then(() => {
