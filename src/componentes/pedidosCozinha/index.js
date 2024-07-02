@@ -48,6 +48,7 @@ export const PedidosCozinha = ({ pedido }) => {
             .add(
               {
                 estabelecimento_id: pedido.estabelecimento_id,
+                garcom_id: pedido.mesa.garcom,
                 mesa: {
                   numero: pedido.mesa.numero,
                   id: pedido.mesa.id,
@@ -90,6 +91,7 @@ export const PedidosCozinha = ({ pedido }) => {
           .add(
             {
               estabelecimento_id: pedido.estabelecimento_id,
+              garcom_id: pedido.mesa.garcom,
               mesa: {
                 numero: pedido.mesa.numero,
                 id: pedido.mesa.id,
