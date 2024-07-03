@@ -34,7 +34,7 @@ export default function Conta({ conta, mesaId }) {
         const newData = [];
         let totalConta = 0;
         snapshot.forEach(doc => {
-          if (doc.data().status !== 'cancelado') {
+          if (doc.data().status == 'pronto') {
             newData.push({ id: doc.id, ...doc.data() });
             totalConta += doc.data().total
           }
