@@ -215,7 +215,7 @@ body{
   }
 
   .imagemProduto{
-    width: 50%;
+    /* width: 50%; */
     text-align: center;
     justify-content: center;
    
@@ -224,7 +224,7 @@ body{
   .imagemProduto img{
     border-radius: 30%;
     /* margin-top: 10%; */
-    height: auto;
+    /* height: auto; */
     
   }
 

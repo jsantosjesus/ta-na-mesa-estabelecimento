@@ -43,7 +43,7 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImgPreview(reader.result);
-        console.log(imgPreview);
+        // console.log(imgPreview);
       };
       reader.readAsDataURL(file);
     }
@@ -325,12 +325,13 @@ function ModalProduto({ produto, onClose, categorias, onSave, user, onError }) {
               <div className="corpoProduto1">
                 <div className="imagemProduto">
                   {imgPreview ? (
-                    <img src={imgPreview} alt="imagem do produto" width="70%" />
+                    <img src={imgPreview} alt="imagem do produto"  height="300px" width="300px" />
                   ) : imagemProduto ? (
-                    <img src={imagemProduto} alt="imagem do produto" width="70%" />
+                    <img src={imagemProduto} alt="imagem do produto"  height="300px" width="300px"/>
                   ) : (
                     <CircularProgress />
                   )}
+                  <p>Imagens quadradas aparecem melhor para o cliente</p>
                   <input
                     type="file"
                     name="imagem"
