@@ -18,11 +18,13 @@ const style = {
   px: 4,
   pb: 3
 };
-export default function Conta({ conta, mesaId }) {
+export default function Conta({ conta, mesaId, mesaNumero }) {
   const [open, setOpen] = useState(false);
   const [pedidos, setPedidos] = useState();
   const [totalConta, setTotalConta] = useState(0);
   const [confirmarPagarConta, setConfirmarPagarConta] = useState(false);
+
+  let now = new Date();
 
   useEffect(() => {
 
@@ -111,8 +113,17 @@ export default function Conta({ conta, mesaId }) {
             <p id="child-modal-description" className="titleContaContent">
               --------------------------
             </p>
-            <p id="child-modal-description" className="titleContaContent">
-              Conta {conta.codigo}
+            <p
+            style={{margin: "0"}}
+            id="child-modal-description" className="titleContaContent"
+            >
+              <b>Conta da mesa {mesaNumero}</b>
+            </p>
+            <p 
+            style={{margin: "0", fontSize: "12px"}}
+            id="child-modal-description" className="titleContaContent"
+            >
+              {`${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} às ${now.getHours()}:${now.getMinutes()}`}
             </p>
 
             <p id="child-modal-description" className="titleContaContent">
