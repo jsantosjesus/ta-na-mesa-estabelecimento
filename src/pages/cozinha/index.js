@@ -10,6 +10,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import { AuthContext } from '../../contexts/auth';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CloseIcon from '@mui/icons-material/Close';
+import BuildHora from '../../componentes/buildHora';
 
 
 export const Cozinha = () => {
@@ -73,65 +74,44 @@ export const Cozinha = () => {
               {!cancelados ? <><p className='quantidadeProntosEcancelados'><b>{totalCancelados}</b></p>
                 <p className='setaProntosEcancelados' style={{ backgroundColor: 'red', color: 'white' }}><KeyboardArrowDownIcon /></p></>
                 :
-                <p className='setaProntosEcancelados' style={{ backgroundColor: 'red', color: 'white', width: '100%', textAlign: 'center'}}><CloseIcon /></p>}
-                </div>
-            {cancelados && <div className="statusPedido">
-                <h4>Cancelados</h4>
-                {pedidos && pedidos.map((pedido) => {
-                  if (pedido.status == 'cancelado') {
-                    return (<Accordion key={pedido.id}>
-                      <AccordionSummary
-                        style={{ backgroundColor: '#3520bd', color: 'white' }}
-                        aria-controls={pedido}
-                        id={pedido}>
-                        <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <PedidosCozinha pedido={pedido} />
-                      </AccordionDetails>
-                    </Accordion>)
-                  }
-                })}
-              </div>}
+                <p className='setaProntosEcancelados' style={{ backgroundColor: 'red', color: 'white', width: '100%', textAlign: 'center' }}><CloseIcon /></p>}
             </div>
-            <div className='prontos'>
-              <div className='divPoupupFechadoProntosEcancelados' onClick={prontos ? (() => setProntos(false)) : (() => setProntos(true))}>
-                {!prontos ? <><p className='setaProntosEcancelados' style={{ backgroundColor: 'green', color: 'white' }}><KeyboardArrowDownIcon /></p>
+            {cancelados && <div className="statusPedido">
+              <h4>Cancelados</h4>
+              {pedidos && pedidos.map((pedido) => {
+                if (pedido.status == 'cancelado') {
+                  return (<Accordion key={pedido.id}>
+                    <AccordionSummary
+                      style={{ backgroundColor: '#3520bd', color: 'white' }}
+                      aria-controls={pedido}
+                      id={pedido}>
+                      Pedido: mesa {pedido.mesa.numero}
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <PedidosCozinha pedido={pedido} />
+                    </AccordionDetails>
+                  </Accordion>)
+                }
+              })}
+            </div>}
+          </div>
+          <div className='prontos'>
+            <div className='divPoupupFechadoProntosEcancelados' onClick={prontos ? (() => setProntos(false)) : (() => setProntos(true))}>
+              {!prontos ? <><p className='setaProntosEcancelados' style={{ backgroundColor: 'green', color: 'white' }}><KeyboardArrowDownIcon /></p>
                 <p className='quantidadeProntosEcancelados'><b>{totalProntos}</b></p></>
                 :
-                <p className='setaProntosEcancelados' style={{ backgroundColor: 'green', color: 'white', width: '100%', textAlign: 'center'}}><CloseIcon /></p>}
-              </div>
-              {prontos && <div className="statusPedido">
-                <h4>Prontos</h4>
-                {pedidos && pedidos.map((pedido) => {
-                  if (pedido.status == 'pronto') {
-                    return (<Accordion key={pedido.id}>
-                      <AccordionSummary
-                        style={{ backgroundColor: '#3520bd', color: 'white' }}
-                        aria-controls={pedido}
-                        id={pedido}>
-                        <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <PedidosCozinha pedido={pedido} />
-                      </AccordionDetails>
-                    </Accordion>)
-                  }
-                })}
-              </div>}
+                <p className='setaProntosEcancelados' style={{ backgroundColor: 'green', color: 'white', width: '100%', textAlign: 'center' }}><CloseIcon /></p>}
             </div>
-          </div>
-          <div className="bodyCozinha">
-            <div className="statusPedido">
-              <h4>Aguardando aprovação</h4>
+            {prontos && <div className="statusPedido">
+              <h4>Prontos</h4>
               {pedidos && pedidos.map((pedido) => {
-                if (pedido.status == 'aguardando') {
+                if (pedido.status == 'pronto') {
                   return (<Accordion key={pedido.id}>
                     <AccordionSummary
                       style={{ backgroundColor: '#3520bd', color: 'white' }}
                       aria-controls={pedido}
                       id={pedido}>
-                      <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
+                      Pedido: mesa {pedido.mesa.numero}
                     </AccordionSummary>
                     <AccordionDetails>
                       <PedidosCozinha pedido={pedido} />
@@ -139,50 +119,80 @@ export const Cozinha = () => {
                   </Accordion>)
                 }
               })}
-            </div>
-            <div className="statusPedido">
-              <h4>Fila</h4>
-              {pedidos && pedidos.map((pedido) => {
-                if (pedido.status == 'fila') {
-                  return (
-                    <Accordion key={pedido.id}>
-                      <AccordionSummary
-                        style={{ backgroundColor: '#3520bd', color: 'white' }}
-                        aria-controls={pedido}
-                        id={pedido}>
-                        <b>Pedido: {pedido.codigo}  </b> (mesa {pedido.mesa.numero})
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <PedidosCozinha pedido={pedido} />
-                      </AccordionDetails>
-                    </Accordion>);
-                };
-              })};
-            </div>
-            <div className="statusPedido">
-              <h4>Preparando</h4>
-              {pedidos && pedidos.map((pedido) => {
-                if (pedido.status == 'producao') {
-                  return (<Accordion key={pedido.id}>
-                    <AccordionSummary
-                      style={{ backgroundColor: '#3520bd', color: 'white' }}
-                      aria-controls={pedido}
-                      id={pedido}>
-                      <b>Pedido: {pedido.codigo}</b> (mesa {pedido.mesa.numero})
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <PedidosCozinha pedido={pedido} />
-                    </AccordionDetails>
-                  </Accordion>)
-                }
-              })}
-            </div>
+            </div>}
           </div>
         </div>
-        {divAtivarSom && <div className='divAtivarSomCozinha'>
-          <h4>Clique na tela para ativar o som de notificação ao receber os pedidos</h4>
-          <button onClick={() => setDivAtivarSom(false)}>OK!</button>
-        </div>}
-      </>
-      );
+        <div className="bodyCozinha">
+          <div className="statusPedido">
+            <h4>Aguardando aprovação</h4>
+            {pedidos && pedidos.map((pedido) => {
+              if (pedido.status == 'aguardando') {
+                return (<Accordion key={pedido.id}>
+                  <AccordionSummary
+                    style={{ backgroundColor: '#3520bd', color: 'white' }}
+                    aria-controls={pedido}
+                    id={pedido}>
+                    Pedido: mesa {pedido.mesa.numero}
+                    <p
+                      style={{ fontSize: "12px", marginLeft: "20px" }}
+                    > <BuildHora dataPedido={pedido.dataPedido} /> </p>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <PedidosCozinha pedido={pedido} />
+                  </AccordionDetails>
+                </Accordion>)
+              }
+            })}
+          </div>
+          <div className="statusPedido">
+            <h4>Fila</h4>
+            {pedidos && pedidos.map((pedido) => {
+              if (pedido.status == 'fila') {
+                return (
+                  <Accordion key={pedido.id}>
+                    <AccordionSummary
+                      style={{ backgroundColor: '#3520bd', color: 'white' }}
+                      aria-controls={pedido}
+                      id={pedido}>
+                      Pedido: mesa {pedido.mesa.numero}
+                      <p
+                        style={{ fontSize: "12px", marginLeft: "20px" }}
+                      > <BuildHora dataPedido={pedido.dataPedido} /> </p>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <PedidosCozinha pedido={pedido} />
+                    </AccordionDetails>
+                  </Accordion>);
+              };
+            })};
+          </div>
+          <div className="statusPedido">
+            <h4>Preparando</h4>
+            {pedidos && pedidos.map((pedido) => {
+              if (pedido.status == 'producao') {
+                return (<Accordion key={pedido.id}>
+                  <AccordionSummary
+                    style={{ backgroundColor: '#3520bd', color: 'white' }}
+                    aria-controls={pedido}
+                    id={pedido}>
+                    Pedido: mesa {pedido.mesa.numero}
+                    <p
+                      style={{ fontSize: "12px", marginLeft: "20px" }}
+                    > <BuildHora dataPedido={pedido.dataPedido} /> </p>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <PedidosCozinha pedido={pedido} />
+                  </AccordionDetails>
+                </Accordion>)
+              }
+            })}
+          </div>
+        </div>
+      </div>
+      {divAtivarSom && <div className='divAtivarSomCozinha'>
+        <h4>Clique na tela para ativar o som de notificação ao receber os pedidos</h4>
+        <button onClick={() => setDivAtivarSom(false)}>OK!</button>
+      </div>}
+    </>
+  );
 };
